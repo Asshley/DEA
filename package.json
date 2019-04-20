@@ -1,0 +1,26 @@
+{
+  "name": "dea",
+  "version": "2.3.3",
+  "description": "The most inflated bot on Discord.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "lint": "node_modules/.bin/eslint . --ext .js"
+  },
+  "author": "Ash",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^6.1.0",
+    "mongodb": "^3.1.8",
+    "patron.js": "github:LJNeon/patron.js"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.0",
+    "erlpack": "github:discordapp/erlpack",
+    "zlib-sync": "^0.1.4"
+  },
+  "devDependencies": {
+    "eslint": "^5.8.0"
+  }
+}

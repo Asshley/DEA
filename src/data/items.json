@@ -1,0 +1,194 @@
+[
+  {
+    "names": ["bronze crate", "bronze crates", "bronze"],
+    "type": "crate",
+    "description": "The standard stuff.",
+    "price": 1000,
+    "item_odds":  5
+  },
+  {
+    "names": ["silver crate", "silver crates", "silver"],
+    "type": "crate",
+    "description": "Shiny silvery, real good.",
+    "price": 5000,
+    "item_odds": 25
+  },
+  {
+    "names": ["gold crate", "gold crates", "gold"],
+    "type": "crate",
+    "description": "The reason it costs a lot is because you need to pay the expenses for the gold.",
+    "price": 20000,
+    "item_odds": 100
+  },
+  {
+    "names": ["shield"],
+    "type": "armour",
+    "description": "Captain America's handy shield will protect you from anything.",
+    "damage_reduction": 50,
+    "crate_odds": 10
+  },
+  {
+    "names": ["kevlar"],
+    "type": "armour",
+    "description": "You won't even feel the bullet wearing this thing.",
+    "damage_reduction": 20,
+    "crate_odds": 30
+  },
+  {
+    "names": ["bubble wrap suit", "bubble wrap"],
+    "type": "armour",
+    "description": "You'll be untouchable.",
+    "damage_reduction": 5,
+    "crate_odds": 50
+  },
+  {
+    "names": ["sardine"],
+    "type": "fish",
+    "description": "Narly stuff.",
+    "acquire_odds": 30,
+    "health": 15
+  },
+  {
+    "names": ["shrimp"],
+    "type": "fish",
+    "description": "Dip in some fancy sauce to look fancy.",
+    "acquire_odds": 20,
+    "health": 20
+  },
+  {
+    "names": ["swordfish"],
+    "type": "fish",
+    "description": "Pointy nose, might kill.",
+    "acquire_odds": 10,
+    "health": 30
+  },
+  {
+    "names": ["shark"],
+    "type": "fish",
+    "description": "Better be careful when eating this.",
+    "acquire_odds": 5,
+    "health": 50
+  },
+  {
+    "names": ["glock"],
+    "type": "gun",
+    "bullet": "pistol bullet",
+    "description": "Weakest gun in town. Man up a bit you puss.",
+    "damage": 15,
+    "accuracy": 30,
+    "crate_odds": 40
+  },
+  {
+    "names": ["revolver"],
+    "type": "gun",
+    "bullet": "pistol bullet",
+    "description": "Slam a nigga's cock in a bridge so damn hard.",
+    "damage": 20,
+    "accuracy": 35,
+    "crate_odds": 30
+  },
+  {
+    "names": ["ar15"],
+    "type": "gun",
+    "bullet": "rifle bullet",
+    "description": "Assault fire. Assault weapon. Assault feminists. *Oh fuck dude I don't think we are allowed to put that kinda joke.*",
+    "damage": 40,
+    "accuracy": 50,
+    "crate_odds": 25
+  },
+  {
+    "names": ["intervention"],
+    "type": "gun",
+    "bullet": "sniper bullet",
+    "description": "The only weapon that affirms you have a large penis.",
+    "damage": 90,
+    "accuracy": 75,
+    "crate_odds": 3
+  },
+  {
+    "names": ["kitchen knife"],
+    "type": "knife",
+    "description": "Enough to catch your granny off guard when she is taking a nap.",
+    "damage": 5,
+    "accuracy": 20,
+    "crate_odds": 75
+  },
+  {
+    "names": ["butterfly knife"],
+    "type": "knife",
+    "description": "Tell em its to cut the butterflies out of their stomach.",
+    "damage": 10,
+    "accuracy": 45,
+    "crate_odds": 35
+  },
+  {
+    "names": ["m9 bayonet", "m9"],
+    "type": "knife",
+    "description": "Whip it out quicker than you can bust a nut, which is like 0.002 seconds.",
+    "damage": 20,
+    "accuracy": 55,
+    "crate_odds": 25
+  },
+  {
+    "names": ["karambit", "karambit knife"],
+    "type": "knife",
+    "description": "Prestige pouring out left and right.",
+    "damage": 45,
+    "accuracy": 70,
+    "crate_odds": 6
+  },
+  {
+    "names": ["huntsman knife", "huntsman"],
+    "type": "knife",
+    "description": "This knife didn't get it's name for cutting pie.",
+    "damage": 55,
+    "accuracy": 90,
+    "crate_odds": 3
+  },
+  {
+    "names": ["beef"],
+    "type": "meat",
+    "description": "For the weak.",
+    "acquire_odds": 30,
+    "health": 15
+  },
+  {
+    "names": ["chicken"],
+    "type": "meat",
+    "description": "Slightly appetizing if you are black.",
+    "acquire_odds": 20,
+    "health": 20
+  },
+  {
+    "names": ["bear meat", "bear"],
+    "type": "meat",
+    "description": "Better be worth it, was hard to get.",
+    "acquire_odds": 10,
+    "health": 30
+  },
+  {
+    "names": ["bear grylls meat", "bear grylls"],
+    "type": "meat",
+    "description": "Literally from the man himself.",
+    "acquire_odds": 5,
+    "health": 50
+  },
+  {
+    "names": ["sniper bullet", "sniper ammo", "sniper ammunition", "sniper bullets"],
+    "type": "bullet",
+    "description": "You can't shoot a gun without bullets, or **CAN YOU?** No Steve, you fucking can't. Retard.",
+    "crate_odds": 60
+  },
+  {
+    "names": ["pistol bullet", "pistol ammo", "pistol ammunition", "pistol bullets"],
+    "type": "bullet",
+    "description": "FFA more like dead server :joy:",
+    "crate_odds": 90
+  },
+  {
+    "names": ["rifle bullet", "rifle ammo", "rifle ammunition", "rile bullets"],
+    "type": "bullet",
+    "description": "Vim2meta more like dead channel",
+    "crate_odds": 70
+  }
+]
