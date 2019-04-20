@@ -1,8 +1,11 @@
 # Packages
 node_modules/
 
-# Miscellaneous
-.vscode/
-logs/
+# Authentication
 .env
+
+# NPM
 package-lock.json
+
+# IDE Files
+.vscode/
