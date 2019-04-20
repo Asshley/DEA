@@ -8,10 +8,10 @@ class MessageUpdateEvent extends Event {
       return;
     }
 
-    const { success: wasCmd, commandName } = await handler.parseCommand(oldMessage, PREFIX.length);
+    const command = await handler.parseCommand(oldMessage, PREFIX.length);
 
-    if (!wasCmd && (!newMessage.lastCommand || oldMessage.lastCommand !== newMessage.lastCommand)) {
-      newMessage.lastCommand = commandName;
+    if (!command.success && !oldMessage.editedCommand) {
+      newMessage.editedCommand = true;
       this.emitter.emit('message', newMessage);
     }
   }

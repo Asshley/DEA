@@ -9,7 +9,7 @@ Structures.extend('Message', M => {
   class Message extends M {
     constructor(...args) {
       super(...args);
-      this.lastCommand = null;
+      this.editedCommand = false;
     }
 
     get dbGang() {
