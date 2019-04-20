@@ -39,6 +39,8 @@ class MessageEvent extends Event {
 
       const result = await handler.run(msg, PREFIX.length);
 
+      msg.lastCommand = command.commandName;
+
       if (result.success) {
         Logger.log(`Successful command result: ${msg.id} User: ${msg.author.tag} User ID: \
 ${msg.author.id} Guild: ${msg.guild ? msg.guild.name : 'NA'} Content ${msg.cleanContent}`, 'DEBUG');

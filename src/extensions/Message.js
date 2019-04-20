@@ -7,6 +7,11 @@ const StringUtil = require('../utility/StringUtil.js');
 
 Structures.extend('Message', M => {
   class Message extends M {
+    constructor(...args) {
+      super(...args);
+      this.lastCommand = null;
+    }
+
     get dbGang() {
       return this.dbGuild.gangs
         .find(x => x.members.some(v => v.id === this.author.id) || x.leaderId === this.author.id);
