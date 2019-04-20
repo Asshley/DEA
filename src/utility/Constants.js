@@ -39,7 +39,6 @@ module.exports.CLIENT_OPTIONS = {
   disableEveryone: true,
   disabledEvents: [
     'CHANNEL_PINS_UPDATE',
-    'MESSAGE_UPDATE',
     'MESSAGE_REACTION_ADD',
     'MESSAGE_REACTION_REMOVE',
     'MESSAGE_REACTION_REMOVE_ALL',
