@@ -8,7 +8,7 @@
     "lint": "node_modules/.bin/eslint . --ext .js"
   },
   "author": "Ash",
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "^6.1.0",
