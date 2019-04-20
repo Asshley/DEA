@@ -62,9 +62,8 @@ class Chill extends Command {
       SEND_MESSAGES: false,
       ADD_REACTIONS: false
     });
-    await msg.createReply(
-      `Time, stop! (the channel has been chilled and won't be heated up until ${time} seconds have passed)`
-    );
+    await msg.createReply(`Time, stop! (the channel has been chilled \
+and won't be heated up until ${time} seconds have passed)`);
     await PromiseUtil.delay(args.time * TO_SECONDS);
 
     if (!msg.channel.permissionsFor(msg.guild.id).has('SEND_MESSAGES')) {
