@@ -31,6 +31,12 @@ class MessageEvent extends Event {
         return giveCash ? chatService.applyCash(msg) : null;
       }
 
+      const command = handler.parseCommand(msg, PREFIX.length);
+
+      if (!command.success) {
+        return;
+      }
+
       const result = await handler.run(msg, PREFIX.length);
 
       if (result.success) {
