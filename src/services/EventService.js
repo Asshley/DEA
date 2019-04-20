@@ -6,9 +6,7 @@ class EventService {
     const Events = await patron.RequireAll(path.join(__dirname, '../events'));
 
     for (let i = 0; i < Events.length; i++) {
-      const event = new Events[i](client);
-
-      client.on(event.eventName, event.listener);
+      new Events[i](client).listen();
     }
   }
 }

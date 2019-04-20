@@ -45,5 +45,6 @@ class GuildMemberRemoveEvent extends Event {
     });
   }
 }
+GuildMemberRemoveEvent.eventName = 'guildMemberRemove';
 
 module.exports = GuildMemberRemoveEvent;

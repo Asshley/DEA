@@ -6,5 +6,6 @@ class WarnEvent extends Event {
     Logger.log(warning, 'WARNING');
   }
 }
+WarnEvent.eventName = 'warn';
 
 module.exports = WarnEvent;

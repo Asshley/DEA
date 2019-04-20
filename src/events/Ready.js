@@ -5,15 +5,16 @@ const PRESENCE_CLEAR_INTERVAL = 1e3;
 
 class ReadyEvent extends Event {
   run() {
-    this.client.setInterval(() => {
-      for (const guild of this.client.guilds.values()) {
+    this.emitter.setInterval(() => {
+      for (const guild of this.emitter.guilds.values()) {
         guild.presences.clear();
       }
     }, PRESENCE_CLEAR_INTERVAL);
-    Logger.log(`${this.client.user.tag} has successfully connected.`, 'INFO');
+    Logger.log(`${this.emitter.user.tag} has successfully connected.`, 'INFO');
 
-    return this.client.user.setActivity(ACTIVITY);
+    return this.emitter.user.setActivity(ACTIVITY);
   }
 }
+ReadyEvent.eventName = 'ready';
 
 module.exports = ReadyEvent;

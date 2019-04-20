@@ -24,5 +24,6 @@ class ChannelDeleteEvent extends Event {
     }
   }
 }
+ChannelDeleteEvent.eventName = 'channelDelete';
 
 module.exports = ChannelDeleteEvent;

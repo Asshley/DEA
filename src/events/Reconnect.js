@@ -6,5 +6,6 @@ class ReconnectEvent extends Event {
     Logger.log('Attempting to reconnect...', 'INFO');
   }
 }
+ReconnectEvent.eventName = 'reconnect';
 
 module.exports = ReconnectEvent;

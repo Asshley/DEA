@@ -6,5 +6,6 @@ class GuildMemberAddEvent extends Event {
     return MemberService.join(member);
   }
 }
+GuildMemberAddEvent.eventName = 'guildMemberAdd';
 
 module.exports = GuildMemberAddEvent;

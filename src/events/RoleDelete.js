@@ -20,5 +20,6 @@ class RoleDeleteEvent extends Event {
     }
   }
 }
+RoleDeleteEvent.eventName = 'roleDelete';
 
 module.exports = RoleDeleteEvent;

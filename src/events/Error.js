@@ -6,5 +6,6 @@ class ErrorEvent extends Event {
     Logger.handleError(err);
   }
 }
+ErrorEvent.eventName = 'channelDelete';
 
 module.exports = ErrorEvent;

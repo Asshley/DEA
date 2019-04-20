@@ -98,5 +98,6 @@ ${result.command.getUsage()}\`\n**Example:** \`${PREFIX}${result.command.getExam
     return msg.tryCreateErrorReply(message);
   }
 }
+MessageEvent.eventName = 'message';
 
 module.exports = MessageEvent;
