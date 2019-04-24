@@ -45,7 +45,7 @@ class Deposit extends Command {
     const leader = msg.channel.guild.members.get(gang.leaderId);
 
     await MessageUtil.notify(leader, StringUtil.format(
-      messages.commands.deposit.dm,
+      messages.commands.deposit.DM,
       StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
       NumberUtil.toUSD(received)
     ), 'deposit');
