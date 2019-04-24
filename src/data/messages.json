@@ -236,7 +236,7 @@
     },
     "gangLeaderboard": {
       "none": "there are no gangs.",
-      "message": "{0}. {1} ({1}): {2}\n"
+      "message": "{0}. {1} ({2}): {3}\n"
     },
     "health": "{0}'s health: {1}.",
     "itemLeaderboard": {
