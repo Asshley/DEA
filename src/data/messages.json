@@ -318,7 +318,7 @@
       "failed": "the nigga fucking dodged the {0}, literally. What in the sac of nuts."
     },
     "shop": {
-      "needMoney": "you need {0.} to buy {1}.",
+      "needMoney": "you need {0} to buy {1}.",
       "success": "you have successfully purchased {0} {1}."
     },
     "stab": {
