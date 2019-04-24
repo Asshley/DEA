@@ -201,7 +201,7 @@ module.exports.ODDS = {
   STEAL: 80,
   SCAM: 90,
   RAPE: 50,
-  LOTTERY: 1.25,
+  LOTTERY: 0.25,
   DICE: 50,
   DOUBLE: {
     ODDS: 60,
@@ -292,7 +292,7 @@ module.exports.RESTRICTIONS = {
     MINIMUM_CASH: 5
   },
   LOTTERY: {
-    MAXIMUM_CASH: 1e4,
+    MAXIMUM_CASH: 5e3,
     MINIMUM_CASH: 1e3
   },
   LEADERBOARD_CAP: 10,
