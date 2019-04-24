@@ -51,7 +51,7 @@ class UserBased {
           }
         };
 
-        return registry.libraryHandler.highestRole(msgObject);
+        return registry.libraryHandler.highestRole(msgObject) || { position: 0 };
       }
     });
     structure.prototype.dbGang = async function() {
