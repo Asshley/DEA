@@ -58,7 +58,7 @@ class Rape extends Command {
     ), 'rape');
 
     return msg.createReply(StringUtil.format(
-      messages.command.rape.successful,
+      messages.commands.rape.successful,
       StringUtil.boldify(`${msg.author.username}#${msg.author.dimscriminator}`),
       costStr
     ));
