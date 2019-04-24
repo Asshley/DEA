@@ -31,7 +31,9 @@ class MessageCollector extends EventEmitter {
   collect(msg) {
     if (this.channel.id === msg.channel.id && this.filter(msg) && this.max > this.results.length) {
       this.results.push(msg);
-    } else if (this.max <= this.results.length) {
+    }
+
+    if (this.max <= this.results.length) {
       this.end();
     }
   }
