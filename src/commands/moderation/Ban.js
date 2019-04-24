@@ -56,7 +56,7 @@ class Ban extends Command {
       );
     }
 
-    await msg.guild.banMember(args.user.id);
+    await msg.channel.guild.banMember(args.user.id);
     await msg.createReply(StringUtil.format(
       messages.commands.ban.success,
       StringUtil.boldify(`${args.user.username}#${args.user.discriminator}`)
