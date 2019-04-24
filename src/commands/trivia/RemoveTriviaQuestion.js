@@ -35,7 +35,9 @@ class RemoveTriviaQuestion extends Command {
       }
     });
 
-    return msg.createReply(StringUtil.format(messages.commands.removeTriviaQuestion, exists));
+    return msg.createReply(StringUtil.format(
+      messages.commands.removeTriviaQuestion.success, exists
+    ));
   }
 }
 
