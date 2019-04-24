@@ -81,7 +81,7 @@ class Pot extends Command {
     const potMember = pot.addMember(member, amount);
 
     this.pots[member.guild.id] = pot;
-    await member.client.db.userRepo.modifyCash(dbGuild, member, -amount);
+    await member.guild.shard.client.db.userRepo.modifyCash(dbGuild, member, -amount);
 
     return potMember;
   }
