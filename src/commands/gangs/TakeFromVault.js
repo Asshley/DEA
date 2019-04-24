@@ -37,7 +37,7 @@ class TakeFromVault extends Command {
           type: 'int',
           example: '2',
           defaultValue: 1,
-          preconditionOptions: [{ minimum: 1 }, { maximum: 5 }],
+          preconditionOptions: [{ minimum: 1 }, { maximum: 10 }],
           preconditions: ['minimum', 'maximum', 'vaulthasamount'],
           remainder: true
         })
