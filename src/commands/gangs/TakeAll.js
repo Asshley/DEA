@@ -1,5 +1,6 @@
 const { Command } = require('patron.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
+const messages = require('../../data/messages.json');
 
 class TakeAll extends Command {
   constructor() {
@@ -16,7 +17,7 @@ class TakeAll extends Command {
     const keys = Object.keys(gang.vault).filter(x => gang.vault[x] > 0);
 
     if (!keys.length) {
-      return msg.createErrorReply('you don\'t have any items in your gang\'s vault.');
+      return msg.createErrorReply(messages.commands.takeAll.noItems);
     }
 
     const items = {
@@ -32,13 +33,15 @@ class TakeAll extends Command {
       items.vault[`gangs.${gangIndex}.vault.${keys[i]}`] = -amount;
     }
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $inc: items.inv });
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, { $inc: items.vault });
-    await msg.createReply('you have successfully taken all of your gangs items from the vault.');
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
+      $inc: items.inv
+    });
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, { $inc: items.vault });
+    await msg.createReply(messages.commands.takeAll.reply);
 
-    const leader = msg.guild.members.get(gang.leaderId);
+    const leader = msg.channel.guild.members.get(gang.leaderId);
 
-    return MessageUtil.notify(leader, 'You\'ve taken all of your gang\'s items.', 'takeall');
+    return MessageUtil.notify(leader, messages.commands.takeAll.DM, 'takeall');
   }
 }
 

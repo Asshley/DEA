@@ -1,5 +1,6 @@
 const { Command, Argument, ArgumentDefault } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Health extends Command {
   constructor() {
@@ -21,11 +22,14 @@ class Health extends Command {
   }
 
   async run(msg, args) {
-    const dbUser = await args.member.dbUser();
+    const isSelf = args.member.id === msg.author.id;
+    const dbUser = isSelf ? msg.dbUser : await args.member.dbUser();
 
-    return msg.channel.createMessage(
-      `${StringUtil.boldify(args.member.user.tag)}'s health: ${dbUser.health}.`
-    );
+    return msg.channel.sendMessage(StringUtil.format(
+      messages.commands.health,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`),
+      dbUser.health
+    ));
   }
 }
 

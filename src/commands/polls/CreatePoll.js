@@ -6,6 +6,7 @@ const {
   MISCELLANEA: { DAYS_TO_MS }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 const Poll = require('../../structures/Poll.js');
 
 class CreatePoll extends Command {
@@ -63,21 +64,24 @@ class CreatePoll extends Command {
     const choices = args.choices.split('~');
 
     if (choices.length > MAX_ANSWERS) {
-      return msg.createErrorReply(`you may not have more than \
-${MAX_ANSWERS} answers on your poll.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.createPoll.maxAnswers, MAX_ANSWERS
+      ));
     } else if (msg.dbGuild.polls.length > MAX_PER_GUILD) {
-      return msg.createErrorReply(`you may not have more than \
-${MAX_ANSWERS} polls in the guild at once.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.createPoll.maxPolls, MAX_PER_GUILD
+      ));
     }
 
     const choicesObj = {};
 
     for (let i = 0; i < choices.length; i++) {
       if (choices[i + 1] === choices[i]) {
-        return msg.createErrorReply('you may not have multiple choices that are identical.');
+        return msg.createErrorReply(messages.commands.createPoll.identicalAnswer);
       } else if (choices[i].length > MAX_ANSWER) {
-        return msg.createErrorReply(`you may not have more than \
-${MAX_ANSWER} characters in your answer.`);
+        return msg.createErrorReply(StringUtil.format(
+          messages.commands.createPoll.maxChars, MAX_ANSWER
+        ));
       }
 
       choicesObj[choices[i]] = { voters: [] };
@@ -95,10 +99,15 @@ ${MAX_ANSWER} characters in your answer.`);
       createdAt: Date.now()
     });
 
-    await msg.client.db.guildRepo.upsertGuild(msg.guild.id, { $push: { polls: poll.data } });
+    await msg._client.db.guildRepo.upsertGuild(msg.channel.guild.id, {
+      $push: {
+        polls: poll.data
+      }
+    });
 
-    return msg.createReply(`you've successfully created a poll with the name \
-${StringUtil.boldify(args.name)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.createPoll.success, StringUtil.boldify(args.name)
+    ));
   }
 }
 

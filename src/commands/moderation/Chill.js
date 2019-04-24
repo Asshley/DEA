@@ -4,8 +4,11 @@ const {
   RESTRICTIONS: { COMMANDS: { CHILL } },
   COLORS: { CHILL: CHILL_COLOR }
 } = require('../../utility/Constants.js');
+const { Constants: { Permissions } } = require('eris');
 const ModerationService = require('../../services/ModerationService.js');
-const PromiseUtil = require('../../utility/PromiseUtil.js');
+const Util = require('../../utility/Util.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 const TO_SECONDS = 1e3;
 
 class Chill extends Command {
@@ -38,41 +41,56 @@ class Chill extends Command {
   }
 
   async run(msg, args) {
-    const defaultPerms = msg.channel.permissionOverwrites.get(msg.guild.id);
-    const { deny, allow } = defaultPerms;
+    const perms = await this.getOverwrite(msg.channel, msg.channel.guild.id);
+    const { deny, allow } = perms;
 
-    if (defaultPerms && deny.has('SEND_MESSAGES') && !allow.has('SEND_MESSAGES')) {
-      return msg.createErrorReply('this channel is already chilled.');
+    if (this.hasSendPermission(deny) && !this.hasSendPermission(allow)) {
+      return msg.createErrorReply(messages.commands.chill.alreadyChilled);
     }
 
     const time = args.time.toLocaleString();
 
     await ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Chill',
       color: CHILL_COLOR,
       reason: args.reason,
       moderator: msg.author,
       user: null,
       extraInfoType: 'Duration',
-      extraInfo: `${time} seconds\n**Channel:** ${msg.channel.name} (${msg.channel})`
+      extraInfo: `${time} seconds\n**Channel:** ${msg.channel.name} (${msg.channel.mention})`
     });
-    await msg.channel.updateOverwrite(msg.guild.id, {
-      SEND_MESSAGES: false,
-      ADD_REACTIONS: false
-    });
-    await msg.createReply(`Time, stop! (the channel has been chilled \
-and won't be heated up until ${time} seconds have passed)`);
-    await PromiseUtil.delay(args.time * TO_SECONDS);
+    await msg.channel.editPermission(
+      perms.id, allow & ~Permissions.sendMessages, deny | Permissions.sendMessages, perms.type
+    );
+    await msg.createReply(StringUtil.format(messages.commands.chill.chilled, time));
+    await Util.delay(args.time * TO_SECONDS);
 
-    if (!msg.channel.permissionsFor(msg.guild.id).has('SEND_MESSAGES')) {
-      await msg.createReply('And so, time flows again.');
-      await msg.channel.updateOverwrite(msg.guild.id, {
-        SEND_MESSAGES: null,
-        ADD_REACTIONS: null
-      });
+    if (!msg.channel.permissionOverwrites.get(msg.channel.guild.id).has('sendMessages')) {
+      await msg.createReply(messages.commands.chill.thawed);
+      await msg.channel.editPermission(
+        perms.id, allow & ~Permissions.sendMessages, deny & ~Permissions.sendMessages, perms.type
+      );
     }
+  }
+
+  async getOverwrite(channel, id) {
+    let overwrite = channel.permissionOverwrites.get(id);
+
+    if (!overwrite) {
+      overwrite = await channel.editPermission(id, 0, 0, 'role');
+    }
+
+    return overwrite;
+  }
+
+  hasSendPermission(bitfield) {
+    if ((bitfield & Permissions.administrator) > 0) {
+      return true;
+    }
+
+    return (bitfield & Permissions.sendMessages) === Permissions.sendMessages;
   }
 }
 

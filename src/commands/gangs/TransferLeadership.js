@@ -1,6 +1,7 @@
 const { Command, Argument } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
+const messages = require('../../data/messages.json');
 
 class TransferLeadership extends Command {
   constructor() {
@@ -26,9 +27,9 @@ class TransferLeadership extends Command {
     const userGang = await args.member.dbGang();
 
     if (!userGang || userGang.name !== gang.name) {
-      return msg.createErrorReply('this user isn\'t in your gang.');
+      return msg.createErrorReply(messages.commands.transferLeadership.notInGang);
     } else if (args.member.id === gang.leaderId) {
-      return msg.createErrorReply('you already own this gang.');
+      return msg.createErrorReply(messages.commands.transferLeadership.alreadyLeader);
     }
 
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
@@ -43,20 +44,22 @@ class TransferLeadership extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $push: {
         [`gangs.${gangIndex}.members`]: {
           id: msg.author.id, status: 'member'
         }
       }
     });
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
-    await MessageUtil.notify(
-      args.member, `You've been transfered leadership of gang ${gang.name}.`, 'transferowner'
-    );
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
+    await MessageUtil.notify(args.member, StringUtil.format(
+      messages.commands.transferLeadership.DM, gang.name
+    ), 'transferowner');
 
-    return msg.createReply(`you've successfully transfered gang leadership to \
-${StringUtil.boldify(args.member.user.tag)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.transferLeadership.reply,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`)
+    ));
   }
 }
 

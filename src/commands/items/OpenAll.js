@@ -7,6 +7,7 @@ const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const itemService = require('../../services/ItemService.js');
 const items = require('../../data/items.json');
+const messages = require('../../data/messages.json');
 const DELAY = 5e3;
 
 class OpenAll extends Command {
@@ -24,7 +25,7 @@ class OpenAll extends Command {
           type: 'item',
           example: 'bronze crate',
           preconditionOptions: [{ types: ['crate'] }],
-          preconditions: ['nottype', 'donthave'],
+          preconditions: ['nottype', 'needitem'],
           remainder: true
         })
       ]
@@ -38,10 +39,11 @@ class OpenAll extends Command {
     let openAmount = 0;
 
     if (msg.dbUser.inventory[name] > MAX_OPENABLE) {
-      const botLagReply = await msg.createReply(`to reduce bot lag, we're only \
-opening ${MAX_OPENABLE} of your crates`);
+      const openCap = await msg.createReply(StringUtil.format(
+        messages.commands.openAll, MAX_OPENABLE
+      ));
 
-      await botLagReply.delete(DELAY);
+      await openCap.delete(DELAY);
       openAmount = MAX_OPENABLE;
     } else {
       openAmount = msg.dbUser.inventory[name];
@@ -57,13 +59,17 @@ opening ${MAX_OPENABLE} of your crates`);
       const key = keys[i];
       const plural = Util.pluralize(key, item[key]);
 
-      reply += `${StringUtil.capitialize(plural)}: ${item[key]}\n`;
+      reply += StringUtil.format(
+        messages.commands.openAll.message, StringUtil.capitialize(plural), item[key]
+      );
       object.$inc[`inventory.${key}`] = item[key];
     }
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, object);
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, object);
 
-    return msg.channel.createMessage(reply, { title: `${msg.author.tag} has won` });
+    return msg.channel.sendMessage(reply, {
+      title: `${msg.author.username}#${msg.author.discriminator} has won`
+    });
   }
 }
 

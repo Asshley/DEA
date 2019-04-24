@@ -1,4 +1,7 @@
 const { Command } = require('patron.js');
+const { awaitMessages } = require('../../utility/MessageCollector.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Reset extends Command {
   constructor() {
@@ -10,21 +13,21 @@ class Reset extends Command {
   }
 
   async run(msg) {
-    await msg.createReply(
-      `are you sure you wish to reset all ${msg.client.user.username} related data within your \
-server? Reply with "yes" to continue.`
-    );
+    await msg.createReply(StringUtil.format(
+      messages.commands.reset.confirm, msg._client.user.username
+    ));
 
-    const filter = x => x.content.toLowerCase() === 'yes' && x.author.id === msg.author.id;
-    const result = await msg.channel.awaitMessages(filter, {
-      max: 1, time: 30000
+    const filter = x => (x.content.toLowerCase() === 'yes' || x.content.toLowerCase() === 'y')
+      && x.author.id === msg.author.id;
+    const result = await awaitMessages(msg.channel, {
+      max: 1, time: 30000, filter
     });
 
-    if (result.size === 1) {
-      await msg.client.db.userRepo.deleteUsers(msg.guild.id);
-      await msg.client.db.guildRepo.deleteGuild(msg.guild.id);
+    if (result.length === 1) {
+      await msg._client.db.userRepo.deleteUsers(msg.channel.guild.id);
+      await msg._client.db.guildRepo.deleteGuild(msg.channel.guild.id);
 
-      return msg.createReply('you have successfully reset all data in your server.');
+      return msg.createReply(messages.commands.reset.success);
     }
   }
 }

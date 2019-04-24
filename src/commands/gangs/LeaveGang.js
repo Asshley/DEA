@@ -1,6 +1,7 @@
 const { Command } = require('patron.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class LeaveGang extends Command {
   constructor() {
@@ -16,11 +17,10 @@ class LeaveGang extends Command {
     const gang = msg.dbGang;
 
     if (msg.author.id === gang.leaderId) {
-      return msg.createErrorReply('you cannot leave the gang because you are the leader. \
-Please pass membership to another member of the gang or destroy the gang.');
+      return msg.createErrorReply(messages.commands.leaveGang.leader);
     }
 
-    const leader = msg.guild.members.get(gang.leaderId);
+    const leader = msg.channel.guild.members.get(gang.leaderId);
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
     const update = {
       $pull: {
@@ -30,12 +30,18 @@ Please pass membership to another member of the gang or destroy the gang.');
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
     await this.syncCooldowns(msg.member);
-    await leader.tryDM(`${StringUtil.boldify(msg.author.tag)} has left your \
-gang ${StringUtil.boldify(gang.name)}.`, { guild: msg.guild });
+    await leader.tryDM(StringUtil.format(
+      messages.commands.leaveGang.DM,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      gang.name
+    ), { guild: msg.channel.guild });
 
-    return msg.createReply(`you've successfully left ${gang.name}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.leaveGang.reply,
+      gang.name
+    ));
   }
 
   async syncCooldowns(member) {

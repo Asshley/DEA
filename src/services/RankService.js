@@ -2,11 +2,13 @@ const NumberUtil = require('../utility/NumberUtil.js');
 
 class RankService {
   static handle(dbUser, dbGuild, member) {
-    if (!member.guild.me.hasPermission('MANAGE_ROLES')) {
+    const clientMember = member.guild.members.get(member.guild.shard.client.user.id);
+
+    if (!clientMember.permission.has('manageRoles')) {
       return;
     }
 
-    const highsetRolePosition = member.guild.me.roles.highest.position;
+    const highsetRolePosition = clientMember.highestRole.position;
     const rolesToAdd = [];
     const rolesToRemove = [];
     const cash = NumberUtil.value(dbUser.cash);
@@ -19,17 +21,21 @@ class RankService {
         continue;
       }
 
-      if (!member.roles.has(role.id) && cash >= guildRoles[i].cashRequired) {
-        rolesToAdd.push(role);
+      if (!member.roles.includes(role.id) && cash >= guildRoles[i].cashRequired) {
+        rolesToAdd.push(role.id);
       } else if (cash < guildRoles[i].cashRequired) {
-        rolesToRemove.push(role);
+        rolesToRemove.push(role.id);
       }
     }
 
     if (rolesToAdd.length) {
-      return member.roles.add(rolesToAdd);
+      return member.edit({
+        roles: [...member.roles, ...rolesToAdd]
+      });
     } else if (rolesToRemove.length) {
-      return member.roles.remove(rolesToRemove);
+      return member.edit({
+        roles: member.roles.filter(x => !rolesToRemove.includes(x))
+      });
     }
   }
 

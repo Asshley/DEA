@@ -5,6 +5,7 @@ const {
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
+const messages = require('../../data/messages.json');
 
 class TakeFromVault extends Command {
   constructor() {
@@ -51,24 +52,27 @@ class TakeFromVault extends Command {
     const gang = msg.dbGang;
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, {
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
       $inc: {
         [inv]: args.amount
       }
     });
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $inc: {
         [`gangs.${gangIndex}.${vault}`]: -args.amount
       }
     });
 
-    const leader = msg.guild.members.get(gang.leaderId);
+    const leader = msg.channel.guild.members.get(gang.leaderId);
     const format = `${args.amount} ${Util.pluralize(name, args.amount)}`;
 
-    await MessageUtil.notify(leader, `${StringUtil.boldify(msg.author.tag)} has just taken \
-${format} gang's vault.`, 'takevaultitem');
+    await MessageUtil.notify(leader, StringUtil.format(
+      messages.commands.takeFromVault.DM,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      format
+    ), 'takevaultitem');
 
-    return msg.createReply(`you have successfully taken ${format} from your gang's vault.`);
+    return msg.createReply(StringUtil.format(messages.commands.takeFromVault.reply, format));
   }
 }
 

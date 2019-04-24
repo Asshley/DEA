@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class RemoveModRole extends Command {
   constructor() {
@@ -20,7 +22,7 @@ class RemoveModRole extends Command {
 
   async run(msg, args) {
     if (!msg.dbGuild.roles.mod.some(role => role.id === args.role.id)) {
-      return msg.createErrorReply('you may not remove a moderation role that has no been set.');
+      return msg.createErrorReply(messages.commands.removeModRole.noRole);
     }
 
     const update = {
@@ -31,9 +33,11 @@ class RemoveModRole extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.upsertGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.upsertGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully removed the mod role ${args.role}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.removeModRole.success, args.role.mention
+    ));
   }
 }
 

@@ -2,11 +2,11 @@ const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { GANG: { NAME: MAX_NAME, PER_GUILD } },
   REGEXES: { GANG_NAME: NAME_REGEX },
-  RESTRICTIONS: { COMMANDS: { GANG: { CREATION_COST } } },
-  MESSAGES: { GANG }
+  RESTRICTIONS: { COMMANDS: { GANG: { CREATION_COST } } }
 } = require('../../utility/Constants.js');
 const Gang = require('../../structures/Gang.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class CreateGang extends Command {
   constructor() {
@@ -31,11 +31,11 @@ class CreateGang extends Command {
 
   async run(msg, args) {
     if (msg.dbGuild.gangs.length >= PER_GUILD) {
-      return msg.createErrorReply(StringUtil.format(GANG.MAX_GANGS, PER_GUILD));
-    } else if (NAME_REGEX.test(args.name) || args.name.startsWith(' ') || args.name.endsWith(' ')) {
-      return msg.createErrorReply(GANG.INVALID_NAME);
+      return msg.createErrorReply(StringUtil.format(messages.commands.createGang.max, PER_GUILD));
+    } else if (NAME_REGEX.test(args.name) || args.name !== args.name.trim()) {
+      return msg.createErrorReply(messages.commands.createGang.invalid);
     } else if (msg.dbGuild.gangs.some(x => x.name === args.name)) {
-      return msg.createErrorReply(GANG.USED_NAME);
+      return msg.createErrorReply(messages.commands.createGang.taken);
     }
 
     const index = Gang.getEmptyIndex(msg.dbGuild);
@@ -53,12 +53,12 @@ class CreateGang extends Command {
       }
     };
 
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -CREATION_COST);
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -CREATION_COST);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(
-      StringUtil.format(GANG.CREATED_GANG, StringUtil.boldify(args.name))
-    );
+    return msg.createReply(StringUtil.format(
+      messages.commands.createGang.created, args.name
+    ));
   }
 }
 

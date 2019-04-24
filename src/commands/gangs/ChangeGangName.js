@@ -2,10 +2,10 @@ const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { GANG: { NAME: MAX_NAME } },
   REGEXES: { GANG_NAME: NAME_REGEX },
-  RESTRICTIONS: { COMMANDS: { GANG: { NAME_CHANGE_COST } } },
-  MESSAGES: { GANG }
+  RESTRICTIONS: { COMMANDS: { GANG: { NAME_CHANGE_COST } } }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class ChangeGangName extends Command {
   constructor() {
@@ -29,10 +29,12 @@ class ChangeGangName extends Command {
   }
 
   async run(msg, args) {
-    if (NAME_REGEX.test(args.name) || args.name.startsWith(' ') || args.name.endsWith(' ')) {
-      return msg.createErrorReply(GANG.INVALID_NAME);
+    if (NAME_REGEX.test(args.name) || args.name !== args.name.trim()) {
+      return msg.createErrorReply(messages.commands.changeGangName.invalid);
     } else if (msg.dbGuild.gangs.some(x => x.name === args.name)) {
-      return msg.createErrorReply(StringUtil.format(GANG.USED_NAME, args.name));
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.changeGangName.taken, args.name
+      ));
     }
 
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === msg.dbGang.name);
@@ -42,10 +44,12 @@ class ChangeGangName extends Command {
       }
     };
 
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -NAME_CHANGE_COST);
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -NAME_CHANGE_COST);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(StringUtil.format(GANG.CHANGED_NAME, msg.dbGang.name, args.name));
+    return msg.createReply(StringUtil.format(
+      messages.commands.changeGangName.changed, msg.dbGang.name, args.name
+    ));
   }
 }
 

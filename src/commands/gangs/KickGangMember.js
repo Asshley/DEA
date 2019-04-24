@@ -1,6 +1,7 @@
 const { Command, Argument } = require('patron.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class KickGangMember extends Command {
   constructor() {
@@ -26,16 +27,15 @@ class KickGangMember extends Command {
 
     if (msg.author.id !== gang.leaderId
       && !gang.members.some(v => v.status === 'elder' && v.id === msg.author.id)) {
-      return msg.createErrorReply('you cannot kick anyone from your gang since you\'re not \
-a leader or elder of it.');
+      return msg.createErrorReply(messages.commands.kickGangMember.needPerms);
     } else if (args.member.id === gang.leaderId) {
-      return msg.createErrorReply('you cannot kick the leader of your gang.');
+      return msg.createErrorReply(messages.commands.kickGangMember.kickLeader);
     }
 
     const userGang = await args.member.dbGang();
 
     if (!userGang || userGang.name !== gang.name) {
-      return msg.createErrorReply('this user isn\'t in your gang.');
+      return msg.createErrorReply(messages.commands.kickGangMember.notInGang);
     }
 
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
@@ -47,13 +47,16 @@ a leader or elder of it.');
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
     await this.syncCooldowns(args.member);
-    await args.member.tryDM(`You've been kicked from the gang \
-${StringUtil.boldify(gang.name)}.`, { guild: msg.guild });
+    await args.member.tryDM(StringUtil.format(
+      messages.commands.kickGangMember.DM, gang.name
+    ), { guild: msg.channel.guild });
 
-    return msg.createReply(`you've successfully kicked \
-${StringUtil.boldify(args.member.user.tag)} from your gang.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.kickGangMember.reply,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`)
+    ));
   }
 
   async syncCooldowns(member) {

@@ -1,6 +1,7 @@
 const { Command, Argument } = require('patron.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Vault extends Command {
   constructor() {
@@ -28,7 +29,7 @@ class Vault extends Command {
       gang = msg.dbGang;
 
       if (!gang) {
-        return msg.createErrorReply('You\'re not in a gang so you must specify one.');
+        return msg.createErrorReply(messages.commands.vault.authorNotInGang);
       }
     }
 
@@ -44,12 +45,12 @@ class Vault extends Command {
     }
 
     if (StringUtil.isNullOrWhiteSpace(description)) {
-      return msg.channel.createErrorMessage(
-        `${StringUtil.boldify(gang.name)} has nothing in their vault.`
-      );
+      return msg.channel.createErrorMessage(StringUtil.format(
+        messages.commands.vault.empty, gang.name
+      ));
     }
 
-    return msg.channel.createMessage(description, { title: `${gang.name}'s Vault:` });
+    return msg.channel.sendMessage(description, { title: `${gang.name}'s Vault:` });
   }
 }
 

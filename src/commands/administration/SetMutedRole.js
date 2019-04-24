@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class SetMutedRole extends Command {
   constructor() {
@@ -27,9 +29,11 @@ class SetMutedRole extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully set the muted role to ${args.role}.`);
+    return msg.createReply(
+      StringUtil.format(messages.commands.setMutedRole, args.role.mention)
+    );
   }
 }
 

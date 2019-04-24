@@ -1,8 +1,9 @@
 const { Command, Argument } = require('patron.js');
+const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
-const MAX_NUMBER = 2147e6;
+const messages = require('../../data/messages.json');
 
 class Trade extends Command {
   constructor() {
@@ -58,85 +59,111 @@ class Trade extends Command {
     const [wantedName] = args.item2.names;
 
     if (!dbUser.inventory[wantedName]) {
-      return msg.createErrorReply('this user doesn\'t have this item.');
+      return msg.createErrorReply(messages.commands.trade.noItemUser);
     } else if (dbUser.inventory[wantedName] < args.amount2
       || dbUser.inventory[wantedName] - args.amount2 < 0) {
-      return msg.createErrorReply('this user doesn\'t have enough of this item.');
+      return msg.createErrorReply(messages.commands.trade.notEnoughUser);
     } else if (!authorDbUser.inventory[givingName]) {
-      return msg.createErrorReply('you don\'t have this item.');
+      return msg.createErrorReply(messages.commands.trade.noItem);
     } else if (authorDbUser.inventory[givingName] <= 0
       || authorDbUser.inventory[givingName] < args.amount
       || authorDbUser.inventory[givingName] - args.amount < 0) {
-      return msg.createErrorReply('you don\'t have enough of this item.');
+      return msg.createErrorReply(messages.commands.trade.notEnough);
     }
 
-    const user = msg.client.users.get(args.member.id);
-    const key = Random.nextInt(0, MAX_NUMBER).toString();
-    const dm = await user.tryDM(`${StringUtil.boldify(msg.author.tag)} is asking to trade you \
-${args.amount} of ${StringUtil.capitialize(givingName)} for ${args.amount2} of \
-${StringUtil.capitialize(wantedName)}. Reply with "${key}" within the next 5 minutes to accept \
-this trade.`, { guild: msg.guild });
+    const user = msg._client.users.get(args.member.id);
+    const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString();
+    const dm = await user.tryDM(StringUtil.format(
+      messages.commands.trade.dm,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      args.amount, StringUtil.capitialize(givingName),
+      args.amount2, StringUtil.capitialize(wantedName), key
+    ), { guild: msg.channel.guild });
 
     if (!dm) {
-      return msg.createErrorReply(`I am unable to DM ${args.member.user.tag}.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.trade.cantDM, StringUtil.boldify(`${user.username}#${user.discriminator}`)
+      ));
     }
 
-    await msg.createReply('the user has been informed of this trade.');
+    await msg.createReply(messages.commands.trade.informed);
 
-    const res = await this.verify(msg.client.db, msg.member, args, key);
+    const res = await this.verify(msg._client.db, msg.member, args, key);
 
     if (res) {
-      await user.tryDM(`You've successfully traded with \
-${StringUtil.boldify(msg.author.tag)}.`, { guild: msg.guild });
+      await user.tryDM(StringUtil.format(
+        messages.commands.trade.success,
+        StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
+      ), { guild: msg.channel.guild });
 
-      return msg.author.tryDM(`You've successfully traded with \
-${StringUtil.boldify(user.tag)}.`, { guild: msg.guild });
+      return msg.author.tryDM(StringUtil.format(
+        messages.commands.trade.success,
+        StringUtil.boldify(`${user.username}#${user.discriminator}`)
+      ), { guild: msg.channel.guild });
     }
   }
 
   async verify(db, giver, args, key) {
     const fn = m => m.author.id === args.member.id && m.content.includes(key);
-    const result = await args.member.user.dmChannel.awaitMessages(fn, {
-      time: 300000, max: 1
+    const result = await awaitMessages(await args.member.user.getDMChannel(), {
+      time: 300000, max: 1, filter: fn
     });
 
-    if (result.size >= 1) {
-      const dbReciever = await args.member.dbUser();
-      const dbGiver = await giver.dbUser();
-      const [givingName] = args.item.names;
-      const [wantingName] = args.item2.names;
-      const pluralWanting = Util.pluralize(StringUtil.capitialize(wantingName), args.amount2);
-      const pluralGiving = Util.pluralize(StringUtil.capitialize(givingName), args.amount);
-
-      if (!dbReciever.inventory[wantingName]) {
-        return args.member.tryDM(`You don't have any ${pluralWanting} anymore.`);
-      } else if (dbReciever.inventory[wantingName] <= 0
-        || dbReciever.inventory[wantingName] < args.amount2
-        || dbReciever.inventory[wantingName] - args.amount2 < 0) {
-        return args.member.tryDM(`You don't own ${args.amount2} ${pluralWanting} anymore.`);
-      } else if (!dbGiver.inventory[givingName]) {
-        return args.member.tryDM(`${giver.tag} doesn't have any ${pluralGiving} anymore.`);
-      } else if (dbGiver.inventory[givingName] <= 0 || dbGiver.inventory[givingName] < args.amount
-        || dbGiver.inventory[givingName] - args.amount < 0) {
-        return args.member
-          .tryDM(`${giver.tag} doesn't own ${args.amount} ${pluralGiving} anymore.`);
-      }
-
-      await db.userRepo.updateUser(giver.id, args.member.guild.id, {
-        $inc: {
-          [`inventory.${givingName}`]: -args.amount, [`inventory.${wantingName}`]: args.amount2
-        }
-      });
-      await db.userRepo.updateUser(args.member.id, args.member.guild.id, {
-        $inc: {
-          [`inventory.${wantingName}`]: -args.amount2, [`inventory.${givingName}`]: args.amount
-        }
-      });
-
-      return true;
+    if (!result.length) {
+      return false;
     }
 
-    return false;
+    const dbReciever = await args.member.dbUser();
+    const dbGiver = await giver.dbUser();
+    const [givingName] = args.item.names;
+    const [wantingName] = args.item2.names;
+    const pluralWanting = Util.pluralize(StringUtil.capitialize(wantingName), args.amount2);
+    const pluralGiving = Util.pluralize(StringUtil.capitialize(givingName), args.amount);
+
+    if (!dbReciever.inventory[wantingName]) {
+      return args.member.tryDM(StringUtil.format(
+        messages.commands.trade.duringNoItem, pluralWanting
+      ));
+    } else if (dbReciever.inventory[wantingName] <= 0
+      || dbReciever.inventory[wantingName] < args.amount2
+      || dbReciever.inventory[wantingName] - args.amount2 < 0) {
+      return args.member.tryDM(StringUtil.format(
+        messages.commands.trade.duringNotEnough, args.amount2, pluralWanting
+      ));
+    } else if (!dbGiver.inventory[givingName]) {
+      return args.member.tryDM(StringUtil.format(
+        messages.commands.trade.duringNoItemUser,
+        `${giver.username}#${giver.discriminator}`, pluralGiving
+      ));
+    } else if (dbGiver.inventory[givingName] <= 0 || dbGiver.inventory[givingName] < args.amount
+      || dbGiver.inventory[givingName] - args.amount < 0) {
+      return args.member.tryDM(StringUtil.format(
+        messages.commands.trade.duringNotEnoughUser,
+        `${giver.username}#${giver.discriminator}`, args.amount, pluralGiving
+      ));
+    }
+
+    await this.updateDatabase(db, {
+      giver, giving: givingName, amount: args.amount
+    }, {
+      reciever: args.member, wanting: wantingName, amount2: args.amount2
+    });
+
+    return true;
+  }
+
+  async updateDatabase(db, { giver, giving, amount }, { reciever, wanting, amount2 }) {
+    await db.userRepo.updateUser(giver.id, giver.guild.id, {
+      $inc: {
+        [`inventory.${giving}`]: -amount, [`inventory.${wanting}`]: amount2
+      }
+    });
+
+    return db.userRepo.updateUser(reciever.id, reciever.guild.id, {
+      $inc: {
+        [`inventory.${wanting}`]: -amount2, [`inventory.${giving}`]: amount
+      }
+    });
   }
 }
 

@@ -2,6 +2,8 @@ const { Argument, Command } = require('patron.js');
 const {
   MAX_AMOUNTS: { TRIVIA: MAX_TRIVIA }
 } = require('../../utility/Constants.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class AddTriviaQuestion extends Command {
   constructor() {
@@ -33,19 +35,25 @@ class AddTriviaQuestion extends Command {
   }
 
   async run(msg, args) {
-    const keys = Object.keys(msg.dbGuild.trivia);
+    const keys = Object.keys(msg.dbGuild.trivia.questions);
 
     if (keys.length > MAX_TRIVIA) {
-      return msg.createErrorReply('this server has the max amount of trivia questions.');
+      return msg.createErrorReply(messages.commands.addTriviaQuestion.maxQuestions);
     } else if (keys.some(x => x.toLowerCase() === args.question.toLowerCase())) {
-      return msg.createErrorReply('this question already exists.');
+      return msg.createErrorReply(messages.commands.addTriviaQuestion.exists);
     }
 
-    const question = `trivia.${args.question}`;
+    const question = `trivia.questions.${args.question}`;
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, { $set: { [question]: args.answer } });
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
+      $set: {
+        [question]: args.answer
+      }
+    });
 
-    return msg.createReply(`you've successfully added question the **${args.question}**.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.addTriviaQuestion.success, args.question
+    ));
   }
 }
 

@@ -3,6 +3,8 @@ const {
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT }
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class AddRank extends Command {
   constructor() {
@@ -33,7 +35,7 @@ class AddRank extends Command {
     const ranks = msg.dbGuild.roles.rank;
 
     if (ranks.some(role => role.id === args.role.id)) {
-      return msg.createErrorReply('this rank role has already been set.');
+      return msg.createErrorReply(messages.commands.addRank.existing);
     }
 
     const update = {
@@ -45,10 +47,11 @@ class AddRank extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully added the rank role ${args.role} with a cash \
-required amount of ${NumberUtil.toUSD(args.cashRequired)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.addRank.successful, args.role.mention, NumberUtil.toUSD(args.cashRequired)
+    ));
   }
 }
 

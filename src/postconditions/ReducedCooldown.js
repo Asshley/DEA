@@ -4,7 +4,7 @@ const {
   INVESTMENTS: { CONVOY: { COOLDOWN_REDUCTION: CD_REDUCTION } },
   PREFIX
 } = require('../utility/Constants.js');
-const handler = require('../singletons/handler.js');
+const handler = require('../services/handler.js');
 
 class ReducedCooldown extends Postcondition {
   constructor() {
@@ -13,7 +13,7 @@ class ReducedCooldown extends Postcondition {
 
   run(msg, result) {
     if (msg.dbUser.investments.includes('convoy') && result.success !== false) {
-      return MULTI_MUTEX.sync(msg.guild.id, async () => {
+      return MULTI_MUTEX.sync(msg.channel.guild.id, async () => {
         const { command } = await handler.parseCommand(msg, PREFIX.length);
 
         if (!command.hasCooldown) {
@@ -21,9 +21,9 @@ class ReducedCooldown extends Postcondition {
         }
 
         const { cooldowns: { users, time } } = command;
-        const userCD = users[`${msg.author.id}-${msg.guild.id}`].resets;
+        const userCD = users[`${msg.author.id}-${msg.channel.guild.id}`].resets;
 
-        users[`${msg.author.id}-${msg.guild.id}`].resets = userCD - (time * CD_REDUCTION);
+        users[`${msg.author.id}-${msg.channel.guild.id}`].resets = userCD - (time * CD_REDUCTION);
       });
     }
   }

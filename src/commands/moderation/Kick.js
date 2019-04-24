@@ -3,6 +3,8 @@ const {
   COLORS: { KICK: KICK_COLOR }
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Kick extends Command {
   constructor() {
@@ -32,21 +34,35 @@ class Kick extends Command {
   }
 
   async run(msg, args) {
-    await args.member.kick(args.reason);
-    await msg.createReply(`you have successfully kicked ${args.member.user.tag}.`);
-    await ModerationService.tryInformUser(
-      msg.guild, msg.author, 'kicked', args.member.user, args.reason
-    );
+    if (this.constructor.canKick(args.member)) {
+      await ModerationService.tryInformUser(
+        msg.channel.guild, msg.author, 'kicked', args.member.user, args.reason
+      );
+    }
+
+    await args.member.kick();
+    await msg.createReply(StringUtil.format(
+      messages.commands.kick,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`)
+    ));
 
     return ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Kick',
       color: KICK_COLOR,
       reason: args.reason,
       moderator: msg.author,
       user: args.member.user
     });
+  }
+
+  static canKick(member) {
+    const clientMember = member.guild.members.get(member.guild.shard.client.user.id);
+
+    return member.id !== clientMember.id
+      && member.id !== member.guild.ownerID
+      && clientMember.highestRole.position > member.highestRole.position;
   }
 }
 

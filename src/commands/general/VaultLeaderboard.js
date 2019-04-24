@@ -3,18 +3,19 @@ const {
   RESTRICTIONS: { LEADERBOARD_CAP }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
-class VaultLB extends Command {
+class VaultLeaderboard extends Command {
   constructor() {
     super({
-      names: ['vaultleaderboards', 'vaultlb', 'vaultleaderboard', 'vaults'],
+      names: ['vaultleaderboard', 'vaultlb', 'vaults'],
       groupName: 'general',
       description: 'View the most armed gangs.'
     });
   }
 
   async run(msg) {
-    const guilds = await msg.client.db.guildRepo.findMany({ guildId: msg.guild.id });
+    const guilds = await msg._client.db.guildRepo.findMany({ guildId: msg.channel.guild.id });
     const fn = (accumulator, currentValue) => accumulator + currentValue;
     let message = '';
 
@@ -32,17 +33,21 @@ class VaultLB extends Command {
 
         const gang = notEmpty[m];
 
-        message += `${m + 1}. ${StringUtil.boldify(gang.name)}: \
-${Object.values(gang.vault).reduce(fn)}\n`;
+        message += StringUtil.format(
+          messages.commands.vaultLeaderboard.message,
+          m + 1,
+          StringUtil.boldify(gang.name),
+          Object.values(gang.vault).reduce(fn)
+        );
       }
     }
 
     if (StringUtil.isNullOrWhiteSpace(message)) {
-      return msg.createErrorReply('there is nobody on the leaderboards.');
+      return msg.createErrorReply(messages.commands.vaultLeaderboard.none);
     }
 
-    return msg.channel.createMessage(message, { title: 'The Vault Leaderboards' });
+    return msg.channel.sendMessage(message, { title: 'The Vault Leaderboards' });
   }
 }
 
-module.exports = new VaultLB();
+module.exports = new VaultLeaderboard();

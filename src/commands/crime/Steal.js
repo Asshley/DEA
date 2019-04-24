@@ -1,6 +1,5 @@
 const { Command } = require('patron.js');
 const {
-  MESSAGES,
   ODDS: { STEAL: STEAL_ODDS },
   RESTRICTIONS: { COMMANDS: { STEAL } },
   COOLDOWNS: { STEAL: STEAL_COOLDOWN }
@@ -8,6 +7,7 @@ const {
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const messages = require('../../data/messages.json');
 
 class Steal extends Command {
   constructor() {
@@ -21,22 +21,21 @@ class Steal extends Command {
   }
 
   async run(msg) {
+    const store = Random.arrayElement(messages.commands.steal.stores);
+
     if (Random.roll() < STEAL_ODDS) {
       const prize = Random.nextFloat(STEAL.MINIMUM_CASH, STEAL.MAXIMUM_CASH);
 
-      await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, prize);
+      await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, prize);
 
-      return msg.createReply(
-        StringUtil.format(
-          Random.arrayElement(MESSAGES.STEAL),
-          Random.arrayElement(MESSAGES.STORES),
-          NumberUtil.toUSD(prize)
-        )
-      );
+      return msg.createReply(StringUtil.format(
+        Random.arrayElement(messages.commands.steal.successful), store, NumberUtil.toUSD(prize)
+      ));
     }
 
-    return msg.createErrorReply(`you ran over to ${Random.arrayElement(MESSAGES.STORES)}, \
-tried to steal a nerf gun but got jumped by some autistic emo kid and he stole your money!`);
+    return msg.createErrorReply(StringUtil.format(
+      messages.commands.steal.failed, store
+    ));
   }
 }
 

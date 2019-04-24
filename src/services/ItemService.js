@@ -157,7 +157,7 @@ class ItemService {
     return NumberUtil.round(reduce);
   }
 
-  takeInv(killerID, deadUser, guildID, db) {
+  takeInventory(killerID, deadUser, guildID, db) {
     const keys = Object.keys(deadUser.inventory);
 
     if (!keys.length) {

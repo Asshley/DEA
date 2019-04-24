@@ -1,12 +1,14 @@
 const { Command, Context } = require('patron.js');
 const {
-  MESSAGES: { INFORMATION: INFORMATION_MESSAGE },
-  RESTRICTIONS: { LOTTERY },
+  RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
   COOLDOWNS: { MESSAGE_CASH },
-  MISCELLANEA: { CASH_PER_MESSAGE }
+  MISCELLANEA: { CASH_PER_MESSAGE },
+  PREFIX,
+  CHANNEL_TYPES
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const messages = require('../../data/messages.json');
 
 class Info extends Command {
   constructor() {
@@ -20,18 +22,22 @@ class Info extends Command {
 
   async run(msg) {
     await msg.author.DM(StringUtil.format(
-      INFORMATION_MESSAGE,
-      msg.client.user.username,
+      messages.commands.info.message,
+      msg._client.user.username,
       NumberUtil.msToTime(MESSAGE_CASH).seconds,
+      MINIMUM_MESSAGE_LENGTH,
       NumberUtil.toUSD(CASH_PER_MESSAGE),
       LOTTERY.MAXIMUM_CASH,
-      msg.client.user.username,
-      msg.client.user.username
+      PREFIX,
+      PREFIX,
+      PREFIX,
+      msg._client.user.username,
+      msg._client.user.username,
+      PREFIX
     ));
 
-    if (msg.channel.type !== 'dm') {
-      return msg.createReply(`you have been DMed all the information about the \
-${msg.client.user.username} Cash System!`);
+    if (msg.channel.type !== CHANNEL_TYPES.DM) {
+      return msg.createReply(messages.commands.info.dm);
     }
   }
 }

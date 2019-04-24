@@ -1,4 +1,4 @@
-const { LINKS } = require('../utility/Constants.js');
+const { BOT_LINK } = require('../utility/Constants.js');
 const StringUtil = require('../utility/StringUtil.js');
 
 class ModerationService {
@@ -11,18 +11,19 @@ class ModerationService {
     let permLevel = 0;
 
     for (let i = 0; i < roles.length; i++) {
-      if (member.guild.roles.has(roles[i].id) && member.roles.has(roles[i].id)) {
+      if (member.guild.roles.has(roles[i].id) && member.roles.includes(roles[i].id)) {
         permLevel = roles[i].permissionLevel;
       }
     }
 
-    return member.hasPermission('ADMINISTRATOR') && permLevel
+    return member.permission.has('administrator') && permLevel
       < this.PERMISSION_LEVELS.ADMINISTRATOR ? this.PERMISSION_LEVELS.ADMINISTRATOR : permLevel;
   }
 
   static tryInformUser(guild, moderator, action, user, reason = '') {
-    return user.tryDM(`${StringUtil.boldify(moderator.tag)} has ${action} you${StringUtil
-      .isNullOrWhiteSpace(reason) ? '.' : ` for the following reason: ${reason}.`}`, { guild });
+    return user.tryDM(`${StringUtil.boldify(`${moderator.username}#${moderator.discriminator}`)} \
+has ${action} you${StringUtil.isNullOrWhiteSpace(reason) ? '.' : ` for the following \
+reason: ${reason}.`}`, { guild });
   }
 
   static async tryModLog(data) {
@@ -39,20 +40,20 @@ class ModerationService {
     const { description, options } = this._formatModLog(data, data.dbGuild);
     const update = {
       $inc: {
-        'misc.caseNumber': 1
+        caseNumber: 1
       }
     };
 
-    await data.guild.client.db.guildRepo.upsertGuild(data.guild.id, update);
+    await data.guild.shard.client.db.guildRepo.upsertGuild(data.guild.id, update);
 
-    return channel.tryCreateMessage(description, options);
+    return channel.trySendMessage(description, options);
   }
 
   static _formatModLog(data, dbGuild) {
     const options = {
       color: data.color,
       footer: {
-        text: `Case #${dbGuild.misc.caseNumber}`,
+        text: `Case #${dbGuild.caseNumber}`,
         icon: 'http://i.imgur.com/BQZJAqT.png'
       },
       timestamp: true
@@ -60,9 +61,9 @@ class ModerationService {
 
     if (data.moderator) {
       options.author = {
-        name: data.moderator.tag,
-        icon: data.moderator.displayAvatarURL(),
-        URL: LINKS.BOT
+        name: `${data.moderator.username}#${data.moderator.discriminator}`,
+        icon: data.moderator.avatarURL,
+        URL: BOT_LINK
       };
     }
 
@@ -73,7 +74,8 @@ class ModerationService {
     }
 
     if (data.user) {
-      description += `**User:** ${data.user.tag} (${data.user.id})\n`;
+      description += `**User:** ${data.user.username}#${data.user.discriminator} \
+(${data.user.id})\n`;
     }
 
     if (!StringUtil.isNullOrWhiteSpace(data.reason)) {

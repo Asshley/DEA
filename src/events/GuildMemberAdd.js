@@ -1,11 +1,12 @@
 const MemberService = require('../services/MemberService.js');
 const Event = require('../structures/Event.js');
+const { CLIENT_EVENTS } = require('../utility/Constants.js');
 
-class GuildMemberAddEvent extends Event {
-  run(member) {
+class GuildMemberAdd extends Event {
+  run(_, member) {
     return MemberService.join(member);
   }
 }
-GuildMemberAddEvent.eventName = 'guildMemberAdd';
+GuildMemberAdd.EVENT_NAME = CLIENT_EVENTS.GUILD_MEMBER_ADD;
 
-module.exports = GuildMemberAddEvent;
+module.exports = GuildMemberAdd;

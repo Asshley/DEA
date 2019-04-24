@@ -1,4 +1,3 @@
-const { Util: { escapeMarkdown } } = require('discord.js');
 const { REGEXES } = require('./Constants.js');
 
 class StringUtil {
@@ -7,11 +6,11 @@ class StringUtil {
   }
 
   static boldify(str) {
-    return `**${escapeMarkdown(str)}**`;
+    return `**${str.replace(REGEXES.MARKDOWN, '')}**`;
   }
 
-  static upperFirstChar(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+  static upperFirstChar(str, forceLower = false) {
+    return str.charAt(0).toUpperCase() + (forceLower ? str.slice(1).toLowerCase() : str.slice(1));
   }
 
   static format(str, ...args) {

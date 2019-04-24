@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class RemoveTriviaQuestion extends Command {
   constructor() {
@@ -20,20 +22,20 @@ class RemoveTriviaQuestion extends Command {
   }
 
   async run(msg, args) {
-    const exists = Object.keys(msg.dbGuild.trivia)
+    const exists = Object.keys(msg.dbGuild.trivia.questions)
       .find(x => x.toLowerCase() === args.question.toLowerCase());
 
     if (!exists) {
-      return msg.createErrorReply('this trivia question doesn\'t exist.');
+      return msg.createErrorReply(messages.commands.removeTriviaQuestion.invalid);
     }
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $unset: {
-        [`trivia.${exists}`]: ''
+        [`trivia.questions.${exists}`]: ''
       }
     });
 
-    return msg.createReply(`you've successfully removed the question **${args.question}**.`);
+    return msg.createReply(StringUtil.format(messages.commands.removeTriviaQuestion, exists));
   }
 }
 

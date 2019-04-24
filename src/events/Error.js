@@ -1,11 +1,12 @@
 const Logger = require('../utility/Logger.js');
 const Event = require('../structures/Event.js');
+const { CLIENT_EVENTS } = require('../utility/Constants.js');
 
-class ErrorEvent extends Event {
+class _Error extends Event {
   run(err) {
     Logger.handleError(err);
   }
 }
-ErrorEvent.eventName = 'channelDelete';
+_Error.EVENT_NAME = CLIENT_EVENTS.ERROR;
 
-module.exports = ErrorEvent;
+module.exports = _Error;

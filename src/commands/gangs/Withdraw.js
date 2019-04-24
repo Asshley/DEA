@@ -7,6 +7,7 @@ const {
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
+const messages = require('../../data/messages.json');
 
 class Withdraw extends Command {
   constructor() {
@@ -24,7 +25,7 @@ class Withdraw extends Command {
           type: 'amount',
           example: '500',
           preconditionOptions: [{ minimum: MINIMUM_AMOUNT }],
-          preconditions: ['minimumcash', 'withdrawprec']
+          preconditions: ['minimumcash', 'withdraw']
         })
       ]
     });
@@ -32,12 +33,12 @@ class Withdraw extends Command {
 
   async run(msg, args) {
     const gang = msg.dbGang;
-    const leader = msg.guild.members.get(gang.leaderId);
+    const leader = msg.channel.guild.members.get(gang.leaderId);
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
     const taken = -args.transfer * TO_PERCENT_AMOUNT;
 
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, args.transfer);
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, args.transfer);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $inc: {
         [`gangs.${gangIndex}.wealth`]: NumberUtil.round(taken, DECIMAL_ROUND_AMOUNT)
       }
@@ -45,11 +46,18 @@ class Withdraw extends Command {
 
     const wealth = gang.wealth + taken;
 
-    await MessageUtil.notify(leader, `${StringUtil.boldify(msg.author.tag)} has withdrawn \
-${NumberUtil.toUSD(args.transfer)} from your gang.`, 'withdraw');
+    await MessageUtil.notify(leader, StringUtil.format(
+      messages.commands.withdraw.DM,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      NumberUtil.toUSD(args.transfer)
+    ), 'withdraw');
 
-    return msg.createReply(`you have successfully withdrawn ${NumberUtil.toUSD(args.transfer)} \
-from your gang. ${gang.name}'s Wealth: ${NumberUtil.format(wealth)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.withdraw.reply,
+      NumberUtil.toUSD(args.transfer),
+      gang.name,
+      NumberUtil.format(wealth)
+    ));
   }
 }
 

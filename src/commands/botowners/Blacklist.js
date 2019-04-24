@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Blacklist extends Command {
   constructor() {
@@ -19,15 +21,11 @@ class Blacklist extends Command {
   }
 
   async run(msg, args) {
-    const isBlacklisted = await msg.client.db.blacklistRepo.anyBlacklist(args.user.id);
+    await msg._client.db.blacklistRepo.insertBlacklist(args.user.id);
 
-    if (isBlacklisted) {
-      return msg.createErrorReply('this user is already blacklisted.');
-    }
-
-    await msg.client.db.blacklistRepo.insertBlacklist(args.user.id);
-
-    return msg.createReply(`you have successfully blacklisted ${args.user.tag}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.blacklist, `${args.user.username}#${args.user.discriminator}`
+    ));
   }
 }
 

@@ -1,5 +1,6 @@
 const { Command, Argument, ArgumentDefault } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class ModifyInventory extends Command {
   constructor() {
@@ -39,11 +40,13 @@ class ModifyInventory extends Command {
       }
     };
 
-    await msg.client.db.userRepo.updateUser(args.member.id, msg.guild.id, update);
+    await msg._client.db.userRepo.updateUser(args.member.id, msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully modifed \
-${args.member.id === msg.author.id ? 'your' : `${StringUtil.boldify(args.member.user.tag)}'s`} \
-inventory.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.modifyInventory,
+      args.member.id === msg.author.id ? 'your' : `${StringUtil
+        .boldify(`${args.member.user.username}#${args.member.user.discriminator}`)}'s`
+    ));
   }
 }
 

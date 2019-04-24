@@ -2,6 +2,8 @@ const { Command } = require('patron.js');
 const {
   PERMISSION_LEVELS: { MODERATOR, ADMINISTRATOR, OWNER }
 } = require('../../services/ModerationService.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class ModRoles extends Command {
   constructor() {
@@ -17,19 +19,24 @@ class ModRoles extends Command {
       .sort((a, b) => a.permissionLevel - b.permissionLevel);
 
     if (!roles.length) {
-      return msg.createErrorReply('there are no mod roles yet.');
+      return msg.createErrorReply(messages.commands.modRoles.none);
     }
 
     let description = '';
 
     for (let i = 0; i < roles.length; i++) {
-      const rank = msg.guild.roles.get(roles[i].id);
+      const rank = msg.channel.guild.roles.get(roles[i].id);
 
       description += `${rank}: ${roles[i].permissionLevel}\n`;
     }
 
-    return msg.channel.createMessage(`${description}\n**Permission Levels:**
-${MODERATOR}: Moderator\n${ADMINISTRATOR}: Administrator\n${OWNER}: Owner`, { title: 'Mod Roles' });
+    return msg.channel.sendMessage(StringUtil.format(
+      messages.commands.modRoles.mesage,
+      description,
+      MODERATOR,
+      ADMINISTRATOR,
+      OWNER
+    ), { title: 'Mod Roles' });
   }
 }
 

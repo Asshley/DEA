@@ -6,12 +6,14 @@ const {
   }
 } = require('../../utility/Constants.js');
 const { MULTI_MUTEX } = require('../../utility/Util.js');
+const DELAY = 3000;
+const OPERATIONS = ['*', '+', '-'];
+const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
-const PromiseUtil = require('../../utility/PromiseUtil.js');
-const DELAY = 3000;
-const OPERATIONS = ['*', '+', '-'];
+const Util = require('../../utility/Util.js');
+const messages = require('../../data/messages.json');
 
 class Bet extends Command {
   constructor() {
@@ -41,27 +43,30 @@ class Bet extends Command {
   }
 
   async run(msg, args) {
-    if (await this.isInGame(msg.author, args.member, msg)) {
+    const inGame = await this.isInGame(msg.author, args.member, msg);
+
+    if (inGame) {
       return;
     }
 
+    const mutexKey = `${msg.channel.id}-${msg.author.id}-bet`;
     const verified = await MULTI_MUTEX
-      .sync(`${msg.guild.id}-bet`, () => this.verify(msg, msg.member, args.member));
+      .sync(mutexKey, () => this.verify(msg, msg.member, args.member));
 
-    if (!verified.success) {
-      if (verified.reason === 'no response') {
-        return msg.createErrorReply('your opponent has not agreed to the bet.');
+    if (verified !== this.constructor.Response.Success) {
+      if (verified === this.constructor.Response.NoReply) {
+        return msg.createErrorReply(messages.commands.bet.noReply);
       }
     }
 
     const index = this.activeBets.push({
       id: msg.author.id,
-      guild: msg.guild.id,
+      guild: msg.channel.guild.id,
       opponent: args.member.id
     }) - 1;
 
-    await msg.createReply('the bet will be starting shortly.');
-    await PromiseUtil.delay(DELAY);
+    await msg.createReply(messages.commands.bet.starting);
+    await Util.delay(DELAY);
     await this.play(msg, args.member, args.amount);
 
     return this.activeBets.splice(index, 1);
@@ -74,37 +79,46 @@ class Bet extends Command {
     const format = randomNums.map((x, i) => `${x} ${ops[i] || ''}`).join(' ');
     const answer = eval(format);
 
-    await msg.createReply(`what is ${format}?`);
+    await msg.createReply(StringUtil.format(messages.commands.bet.question, format));
 
     const fn = m => (m.author.id === msg.author.id || m.author.id === opponent.id)
       && m.content === answer.toString();
-    const result = await msg.channel.awaitMessages(fn, {
-      time: 30000, max: 1
+    const result = await awaitMessages(msg.channel, {
+      time: 30000, max: 1, filter: fn
     });
 
-    if (result.size) {
-      const winner = result.first();
+    if (result.length) {
+      const [winner] = result;
       const loser = winner.member.id === opponent.id ? msg.member : opponent;
 
-      await msg.client.db.userRepo.modifyCash(msg.dbGuild, winner.member, amount);
-      await msg.client.db.userRepo.modifyCash(msg.dbGuild, loser, -amount);
-      await msg.channel.createMessage(`${StringUtil.boldify(winner.author.tag)} has won \
-  ${NumberUtil.toUSD(amount)} for winning the bet with ${loser.user.tag}.`);
-    } else {
-      await msg.createErrorReply('since neither you nor your opponent answered correctly, \
-    the money has been sent to help fund Vanalk\'s server.');
+      await msg._client.db.userRepo.modifyCash(msg.dbGuild, winner.member, amount);
+      await msg._client.db.userRepo.modifyCash(msg.dbGuild, loser, -amount);
+
+      return msg.channel.sendMessage(StringUtil.format(
+        messages.commands.bet.winner,
+        StringUtil.boldify(`${winner.author.username}#${winner.author.discriminator}`),
+        NumberUtil.toUSD(amount),
+        StringUtil.boldify(`${loser.user.username}#${loser.user.discriminator}`)
+      ));
     }
+
+    return msg.createErrorReply(messages.commands.bet.noWinner);
   }
 
   async isInGame(challenger, opponent, msg) {
-    const opponentBet = this.activeBets.find(x => x.id === opponent.id && x.guild === msg.guild.id);
-    const userBet = this.activeBets.find(x => x.id === challenger && x.guild === msg.guild.id);
+    const opponentBet = this.activeBets
+      .find(x => x.id === opponent.id && x.guild === msg.channel.guild.id);
+    const userBet = this.activeBets
+      .find(x => x.id === challenger.id && x.guild === msg.channel.guild.id);
 
     if (userBet || opponentBet) {
-      const { tag } = msg.client.users.get(userBet ? userBet.opponent : opponentBet.opponent);
+      const user = msg._client.users.get(userBet ? userBet.opponent : opponentBet.opponent);
 
-      await msg
-        .createErrorReply(`${userBet ? 'you\'re' : 'this user is'} already in a bet with ${tag}`);
+      await msg.createErrorReply(StringUtil.format(
+        messages.commands.bet.inGame,
+        userBet ? 'you\'re' : 'this user is',
+        StringUtil.boldify(`${user.username}#${user.discriminator}`)
+      ));
 
       return true;
     }
@@ -113,30 +127,29 @@ class Bet extends Command {
   }
 
   async verify(msg, challenger, opponent) {
-    await msg.channel.createMessage(`${StringUtil.boldify(opponent.user.tag)}, reply with \`yes\` \
-to accept the bet.`);
+    await msg.channel.sendMessage(StringUtil.format(
+      messages.commands.bet.verify,
+      StringUtil.boldify(`${opponent.user.username}#${opponent.user.discriminator}`)
+    ));
 
     const fn = m => m.author.id === opponent.id && m.content.toLowerCase() === 'yes';
-    const result = await msg.channel.awaitMessages(fn, {
-      time: 15000, max: 1
+    const result = await awaitMessages(msg.channel, {
+      time: 15000, max: 1, filter: fn
     });
 
     if (await this.isInGame(challenger, opponent, msg)) {
-      return {
-        success: false,
-        reason: 'ingame'
-      };
-    } else if (!result.size) {
-      return {
-        success: false,
-        reason: 'no response'
-      };
+      return this.constructor.Response.InGame;
+    } else if (!result.length) {
+      return this.constructor.Response.NoReply;
     }
 
-    return {
-      success: true
-    };
+    return this.constructor.Response.Success;
   }
 }
+Bet.Response = {
+  NoReply: Symbol('Response.NoReply'),
+  InGame: Symbol('Response.InGame'),
+  Success: Symbol('Response.Success')
+};
 
 module.exports = new Bet();

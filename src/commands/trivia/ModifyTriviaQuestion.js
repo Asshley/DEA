@@ -1,5 +1,6 @@
 const { Command, Argument } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class ModifyTriviaQuestion extends Command {
   constructor() {
@@ -31,23 +32,24 @@ class ModifyTriviaQuestion extends Command {
   }
 
   async run(msg, args) {
-    const keys = Object.keys(msg.dbGuild.trivia);
+    const keys = Object.keys(msg.dbGuild.trivia.questions);
     const key = keys.find(x => x.toLowerCase() === args.question.toLowerCase());
 
     if (!key) {
-      return msg.createErrorReply('this trivia question doesn\'t exist.');
+      return msg.createErrorReply(messages.commands.modifyTriviaQuestion.invalid);
     }
 
-    const question = `trivia.${key}`;
+    const question = `trivia.questions.${key}`;
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $rename: {
-        [question]: `trivia.${args.newQuestion}`
+        [question]: `trivia.questions.${args.newQuestion}`
       }
     });
 
-    return msg.createReply(`you have successfully modified the question \
-${StringUtil.boldify(key)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.modifyTriviaQuestion, key
+    ));
   }
 }
 

@@ -1,7 +1,7 @@
 class Event {
   constructor(emitter) {
     this.emitter = emitter;
-    this.eventName = this.constructor.eventName;
+    this.eventName = this.constructor.EVENT_NAME;
     this.listener = this.run.bind(this);
   }
 

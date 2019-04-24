@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class DeleteGang extends Command {
   constructor() {
@@ -19,7 +21,7 @@ class DeleteGang extends Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $pull: {
         gangs: {
           name: args.gang.name
@@ -27,7 +29,9 @@ class DeleteGang extends Command {
       }
     });
 
-    return msg.createReply(`successfully deleted gang ${args.gang.name}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.deleteGang, args.gang.name
+    ));
   }
 }
 

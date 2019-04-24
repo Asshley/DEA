@@ -1,5 +1,7 @@
 const { Command } = require('patron.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Ranks extends Command {
   constructor() {
@@ -14,19 +16,22 @@ class Ranks extends Command {
     const ranks = msg.dbGuild.roles.rank;
 
     if (!ranks.length) {
-      return msg.createErrorReply('there are no rank roles yet.');
+      return msg.createErrorReply(messages.commands.ranks.none);
     }
 
-    const sortedRanks = ranks.sort((a, b) => a.cashRequired - b.cashRequired);
+    ranks.sort((a, b) => a.cashRequired - b.cashRequired);
+
     let description = '';
 
-    for (let i = 0; i < sortedRanks.length; i++) {
-      const rank = msg.guild.roles.get(sortedRanks[i].id);
+    for (let i = 0; i < ranks.length; i++) {
+      const rank = msg.channel.guild.roles.get(ranks[i].id);
 
-      description += `${rank}: ${NumberUtil.toUSD(sortedRanks[i].cashRequired)}\n`;
+      description += StringUtil.format(
+        messages.commands.ranks.message, rank.mention, NumberUtil.toUSD(ranks[i].cashRequired)
+      );
     }
 
-    return msg.channel.createMessage(description, { title: 'Ranks' });
+    return msg.channel.sendMessage(description, { title: 'Ranks' });
   }
 }
 

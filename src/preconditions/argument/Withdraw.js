@@ -5,9 +5,9 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 
-class WithdrawPrec extends ArgumentPrecondition {
+class Withdraw extends ArgumentPrecondition {
   constructor() {
-    super({ name: 'withdrawprec' });
+    super({ name: 'withdraw' });
   }
 
   async run(command, msg, argument, args, value) {
@@ -37,4 +37,4 @@ wealth, that is ${NumberUtil.toUSD(maxVal)}.`
   }
 }
 
-module.exports = new WithdrawPrec();
+module.exports = new Withdraw();

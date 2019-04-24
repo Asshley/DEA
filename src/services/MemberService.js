@@ -1,18 +1,20 @@
 class MemberService {
   static async join(member) {
+    const { client } = member.guild.shard;
     const dbGuild = await member.guild.dbGuild();
-    const isMuted = await member.client.db.muteRepo.anyMute(member.id, member.guild.id);
+    const isMuted = await client.db.muteRepo.anyMute(member.id, member.guild.id);
 
     if (dbGuild.roles.muted && isMuted) {
       const role = member.guild.roles.get(dbGuild.roles.muted);
-      const ignore = !role || !member.guild.me.hasPermission('MANAGE_ROLES')
-        || role.position >= member.guild.me.roles.highest.position;
+      const clientMember = member.guild.members.get(client.user.id);
+      const needPerms = !role || role.position >= clientMember.highestRole.position
+        || !clientMember.permission.has('manageRoles');
 
-      if (ignore) {
+      if (needPerms) {
         return;
       }
 
-      return member.roles.add(role);
+      return member.addRole(dbGuild.roles.muted);
     }
   }
 }

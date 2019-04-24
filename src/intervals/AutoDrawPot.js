@@ -7,6 +7,7 @@ const Pot = require('../structures/Pot.js');
 const StringUtil = require('../utility/StringUtil.js');
 const NumberUtil = require('../utility/NumberUtil.js');
 const Interval = require('../structures/Interval.js');
+const messages = require('../data/messages.json');
 
 class AutoDrawPot extends Interval {
   constructor(client) {
@@ -15,7 +16,8 @@ class AutoDrawPot extends Interval {
 
   async onTick() {
     const { pots } = this.client.registry.commands.find(x => x.names[0] === 'pot');
-    const expired = [...pots.filter(x => x.expired && x.members.length >= MINIMUM_MEMBERS).keys()];
+    const keys = Object.keys(pots);
+    const expired = keys.filter(x => pots[x].expired && pots[x].members.length >= MINIMUM_MEMBERS);
 
     for (let i = 0; i < expired.length; i++) {
       const guildID = expired[i];
@@ -25,24 +27,29 @@ class AutoDrawPot extends Interval {
         continue;
       }
 
-      const pot = pots.get(guildID);
+      const pot = pots[guildID];
       const winner = pot.draw();
-      const member = guild.member(winner.id);
+      const member = guild.members.get(winner.id);
       const rawWon = Pot.totalCash(pot);
       const fee = rawWon * POT_FEE;
       const profit = rawWon - fee;
       const dbGuild = await guild.dbGuild();
 
       await this.client.db.userRepo.modifyCash(dbGuild, member, profit);
-      pots.delete(guildID);
 
       const channel = this.client.channels.get(pot.channel);
 
       if (channel) {
-        return channel.tryCreateMessage(`Congratulations ${StringUtil.boldify(member.user.tag)}. \
-After a fee of ${POT_FEE * TO_PERCENT_AMOUNT}%, you have automatically won \
-${NumberUtil.toUSD(profit)} with ${winner.odds}% chance of winning the pot!`);
+        return channel.trySendMessage(StringUtil.format(
+          messages.intervals.autoDrawPot,
+          StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`),
+          POT_FEE * TO_PERCENT_AMOUNT,
+          NumberUtil.toUSD(process),
+          winner.odds
+        ));
       }
+
+      delete pots[guildID];
     }
   }
 }

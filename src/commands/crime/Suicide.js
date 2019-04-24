@@ -3,6 +3,8 @@ const {
   RESTRICTIONS: { COMMANDS: { SUICIDE } }
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Suicide extends Command {
   constructor() {
@@ -15,9 +17,9 @@ class Suicide extends Command {
 
   async run(msg) {
     if (NumberUtil.value(msg.dbUser.cash) < SUICIDE.CASH_REQUIRED) {
-      return msg.createErrorReply(
-        `You need ${NumberUtil.toUSD(SUICIDE.CASH_REQUIRED)} to buy yourself a good noose.`
-      );
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.suicide.failed, NumberUtil.toUSD(SUICIDE.CASH_REQUIRED)
+      ));
     }
 
     const update = {
@@ -29,9 +31,9 @@ class Suicide extends Command {
       }
     };
 
-    await msg.client.db.userRepo.updateUser(msg.member.id, msg.guild.id, update);
+    await msg._client.db.userRepo.updateUser(msg.member.id, msg.channel.guild.id, update);
 
-    return msg.createReply('you\'ve successfully killed yourself.');
+    return msg.createReply(messages.commands.suicide.successful);
   }
 }
 

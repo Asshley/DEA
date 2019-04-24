@@ -1,11 +1,11 @@
 const { Command } = require('patron.js');
 const {
-  MAX_AMOUNTS: { VAULT: { UNIQUE_ITEMS, ITEMS: MAX_ITEMS } },
-  MESSAGES: { VAULT }
+  MAX_AMOUNTS: { VAULT: { UNIQUE_ITEMS, ITEMS: MAX_ITEMS } }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
+const messages = require('../../data/messages.json');
 
 class DumpVault extends Command {
   constructor() {
@@ -22,14 +22,14 @@ class DumpVault extends Command {
     const inv = Object.keys(msg.dbUser.inventory).filter(x => msg.dbUser.inventory[x] > 0);
 
     if (!inv.length) {
-      return msg.createErrorReply(VAULT.NO_DUMP_ITEMS);
+      return msg.createErrorReply(messages.commands.dumpVault.noItems);
     }
 
     const vault = Object.keys(gang.vault).filter(x => gang.vault[x] > 0);
     const cappedItems = vault.filter(x => gang.vault[x] >= MAX_ITEMS);
 
     if (vault.length >= UNIQUE_ITEMS && cappedItems.length >= UNIQUE_ITEMS) {
-      return msg.createErrorReply(VAULT.MAXIMUM_AMOUNT);
+      return msg.createErrorReply(messages.commands.dumpVault.maxItems);
     }
 
     const { trimmed, needs, dumped, items } = this.getDumpable(msg, inv, gang, vault);
@@ -37,21 +37,25 @@ class DumpVault extends Command {
     if (!trimmed.length && needs.length) {
       const string = Util.list(needs, 'or', StringUtil.capitialize);
 
-      return msg.createErrorReply(
-        StringUtil.format(VAULT.NEEDED_ITEMS, needs.length > 1 ? 's' : '', string)
-      );
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.dumpVault.neededItems, needs.length > 1 ? 'items' : 'item', string
+      ));
     }
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $inc: items.inv });
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, { $inc: items.vault });
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
+      $inc: items.inv
+    });
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, { $inc: items.vault });
 
-    const leader = msg.guild.members.get(gang.leaderId);
+    const leader = msg.channel.guild.members.get(gang.leaderId);
 
-    await MessageUtil.notify(
-      leader, StringUtil.format(VAULT.DUMPED_DM, StringUtil.boldify(msg.author.tag), dumped), 'dump'
-    );
+    await MessageUtil.notify(leader, StringUtil.format(
+      messages.commands.dumpVault.DM,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      dumped
+    ), 'dump');
 
-    return msg.createReply(StringUtil.format(VAULT.DUMPED_REPLY, dumped));
+    return msg.createReply(StringUtil.format(messages.commands.dumpVault.reply, dumped));
   }
 
   getDumpable(msg, inv, gang, vault) {

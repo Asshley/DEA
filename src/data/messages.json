@@ -1,0 +1,515 @@
+{
+  "commands": {
+    "addGambleChannel": {
+      "existing": "this channel is already a gambling channel.",
+      "successful": "you have successfully added {0} as a gambling channel."
+    },
+    "addRank": {
+      "existing": "this rank role is already set.",
+      "successful": "you have successfully added the rank role {0} with a cash required amount of {0}."
+    },
+    "ignoreChannel": {
+      "existing": "this channel is already an ignored channel.",
+      "successful": "you have successfully added {0} as an ignored channel."
+    },
+    "removeGambleChannel": {
+      "notGambleChannel": "this channel isn't a gambling channel",
+      "successful": "you have successfully removed {0} as a gambling channel"
+    },
+    "removeRank": {
+      "notSet": "this rank role has not been set.",
+      "successful": "you have successfully removed the rank role {0}."
+    },
+    "setModLog": "you have sucessfully set the mod log channel to {0}.",
+    "setMutedRole": "you have successfully set the muted role to {0}",
+    "unignoreChannel": {
+      "notIgnored": "this channel isn't an ignored channel.",
+      "successful": "you have successfully removed {0} as an ignored channel."
+    },
+    "blacklist": "you have successfully blacklisted {0}.",
+    "removeBlacklist": "you have successfully removed {0}'s blacklist.",
+    "addBounty": "you've successfully added a bounty of {0} to {1}, making their total bounty {2}.",
+    "bully": "you just __BULLIED__ {0} to {1}.",
+    "investments": {
+      "store": "{0}, **Cost:** {1} | {2}",
+      "successful": "you have successfully purchased {0}."
+    },
+    "jump": {
+      "failed": "you pulled out infront of someone on the street and they jumped your dumbass with a crowbar!",
+      "messages": [
+        "you were walking down the street when some homeless guy walked up to you, and then as you were giving him 17 cents you see the cracker has {0} worth of drugs, so you jacked them.",
+        "after a nice bust at the local strip club, you were walking home when you spotted Judge Woody, the cracker who busted you last week, sitting on a bench. You decided to jump his fatass, snipe {0} from his wallet, and walk away unharmed.",
+        "you jump some dick that got you in court last month, stole his pants and ran. Turns out those pants were worth {0}.",
+        "you decide to waltz over to Compton to show your strength. Fortunately, you found some wallet some guy dropped in a gang fight. The wallet didn't have jack inside of it, but the it turns out the leather it was made of was worth {0}."
+      ]
+    },
+    "rape": {
+      "successful": "you raped his **GODDAMN ASSHOLE** :joy:! {0} needed to spend {1} just to get his anus working again!",
+      "dm": "Listen here bucko, {0} just raped your fucking asshole and forced you to spend {1} on rectal repairs.",
+      "failed": "MAYDAY MY NIGGA! **MAYDAY!** {0} counter-raped you, forcing you to spend {1} on rectal repairs."
+    },
+    "rob": {
+      "successful": "whilst your target was at the bank, you disguised yourself as a clerk and offered to help him with his deposit. Luckily, you managed to snipe some cash from his account and the dude walked away without noticing. You robbed {0}.",
+      "failed": "you snuck up behind the dude at the bank and surprised his fatass. Unfortunately for you, he was a SWAT agent and sent you to jail. You lost all the resources in the process."
+    },
+    "scam": {
+      "successful": [
+        "you ripped some grass off the ground, went up to some gangster and sold it to him as weed. He gave you {0} for it, and you got out of there before he noticed anything.",
+        "you knocked on your neighbor's door, asked for some flour to bake a cake, and you sold it to your other neighbor as cocaine. You managed to make {0}.",
+        "you bought a Monopoly board game, took the fake cash, went to the bank and traded it for USD. You walked away with {0}, moved to Cuba, while the US government was chasing you down.",
+        "you waited in line for some new Adidas Yeezys, bought 10 pairs and sold them to your idiot friends for {0}. Hopefully they won't notice your scam."
+      ],
+      "failed": "you waited in line for some new Adidas Yeezys and bought 10 just to realise they were fake!."
+    },
+    "steal": {
+      "stores": [
+        "7-Eleven",
+        "Speedway",
+        "Couche-Tard",
+        "QuikTrip",
+        "Kroger",
+        "Circle K",
+        "Admiral Petroleum",
+        "Big Apple",
+        "Bucky's Express"
+      ],
+      "successful": [
+        "you and a couple of buddies decide to go bust out the fake nerf guns, stroll over to your local {0}, and rob their asses. You got {1} for your share.",
+        "while you were shopping at {0}, you thought it was a good idea to nut all over the counter. The owner decided to sauce you {1} because he assumed the cum was toxic."
+      ],
+      "failed": "you ran over to {0}, tried to steal a nerf gun but got jumped by some autistic emo kid and he stole your money!"
+    },
+    "suicide": {
+      "failed": "You need {0} to buy yourself a good noose.",
+      "successful": "you have successfully killed yourself."
+    },
+    "gambling": {
+      "gambleChannels": "you may only gamble in one of the designated gambling channels ({0}).",
+      "successful": "you rolled: {0}. Congrats, you won {1}. Balance: {2}.",
+      "failed": "you rolled: {0}. Unfortunately, you lost {1}. Balance: {2}."
+    },
+    "dice": {
+      "successful": "{0} won you {1]. Balance: {2}.",
+      "failed": "{0} lost you {1]. Balance: {2}."
+    },
+    "double": {
+      "needsCash": "you need at least {0} for me to work my magic.",
+      "reply": "I have successfully doubled your cash. If your cash isn't doubled by now then it will automatically replenish itself over time."
+    },
+    "pot": {
+      "inactive": "there is no active pot in this server.",
+      "created": "you have successfully created a new pot with {0}.",
+      "maxCapacity": "adding {0} will make the pot hold too much cash, retard.",
+      "maxMembers": "there can only be {0} participants in a pot.",
+      "deposited": "you have successfully added {0} to the pot, making your total amount deposited {1}."
+    },
+    "addToVault": {
+      "reply": "you have successfully added {0} {1} to your gang's vault.",
+      "DM": "{0} has just added {1} {2} to your gang's vault."
+    },
+    "changeGangName": {
+      "invalid": "your gang's name may only be alphanumeric and contain 1 consecutive space that isn't at the beginning or end.",
+      "taken": "a gang by the name `{0}` already exists.",
+      "changed": "you have successfully changed your gang's name from `{0}` to `{1}`."
+    },
+    "createGang": {
+      "max": "there can only be a maximum of {0} gangs in a server.",
+      "invalid": "your gang's name may only be alphanumeric and contain 1 consecutive space that isn't at the beginning or end.",
+      "taken": "a gang by the name `{0}` already exists.",
+      "created": "you have successfully created a gang with the name `{0}`."
+    },
+    "demoteMember": {
+      "failed": "this member isn't an elder.",
+      "successful": "you have successfully demoted {0} from an elder in your gang."
+    },
+    "deposit": {
+      "reply": "you have successfully deposited {0} to your gang. Transaction fee: {1}.",
+      "DM": "{0} has deposited {1} to your gang"
+    },
+    "destroyGang": "you have successfully destroyed your gang.",
+    "dumpVault": {
+      "noItems": "you don't have any items to dump into your gang's vault.",
+      "maxItems": "your gang's vault cannot hold any more items.",
+      "neededItems": "you don't have any of the following {0} to dump: {1}.",
+      "DM": "{0} has dumped the following into your gang's vault:\n{1}",
+      "reply": "you have successfully dumped the following into your gang's vault:\n{0}"
+    },
+    "findUserGang": "{0} not in a gang.",
+    "findGang": "{0} not in a gang.",
+    "inviteToGang": {
+      "maxMembers": "your gang has the maximum amount of members in it.",
+      "inGang": "{0} is already in a gang.",
+      "needPerms": "you cannot invite anyone to your gang since you're not a leader nor elder.",
+      "invited": "{0} is trying to invite you to his gang {1}, reply with \"{2}\" within 5 minutes to accept this.",
+      "cantDM": "I am unable to inform {0} of your join request.",
+      "DM": "this user has successfully been informed of your join request.",
+      "joinedGang": "{0} has already joined a gang.",
+      "joinedGangDM": "You're unable to join `{0}` since you're already in a gang.",
+      "successfulDM": "You have successfully let {0} join your gang.",
+      "successfulMemberDM": "You have successfully joined the gang `{0}`.",
+      "failure": "{0} didn't respond to your join request."
+    },
+    "joinGang": {
+      "maxMembers": "this gang has the maximum amount of members in it.",
+      "inGang": "{0} is already in a gang.",
+      "needPerms": "you cannot invite anyone to your gang since you're not a leader nor elder.",
+      "invite": "{0} is trying join your gang {1}, reply with \"{2}\" within 5 minutes to accept this.",
+      "cantDM": "I am unable to inform {0} of your join request.",
+      "DM": "the leader has successfully been informed of your join request.",
+      "joinedGang": "{0} has already joined a gang.",
+      "joinedGangDM": "You're unable to join `{0}` since you're already in a gang.",
+      "successfulDM": "You have successfully let {0} join your gang.",
+      "successfulMemberDM": "You have successfully joined the gang `{0}`.",
+      "failure": "{0} didn't respond to your join request."
+    },
+    "kickGangMember": {
+      "needPerms": "you cannot kick anyone from your gang since you're not a leader or elder of it.",
+      "kickLeader": "you cannot kick the leader of your gang.",
+      "notInGang": "this user isn't in your gang.",
+      "DM": "You have been kicked from the gang `{0}`.",
+      "reply": "you have successfully kicked {0} from your gang."
+    },
+    "leaveGang": {
+      "leader": "you cannot leave the gang because you are the leader. Consider tranferring ownership or destroying your gang.",
+      "DM": "{0} has left your gang `{1}`.",
+      "reply": "you have successfully left the gang `{0}`."
+    },
+    "promoteMember": {
+      "alreadyElder": "this member is already an elder.",
+      "notInGang": "this user isn't in your gang.",
+      "successful": "you have successfully promoted {0} to an elder in your gang."
+    },
+    "raid": {
+      "raidedDM": "{0} raided {1} from `{2}`.",
+      "DM": "`{0}` has raided {1} from your gang.",
+      "reply": "you have successfully raided {0} from `{1}`.",
+      "failedRaidedDM": "{0} attempted to raid {1} from `{2}` but you failed horribly.",
+      "failedDM": "{0} has attempted to raid {1} from your gang but failed horribily.",
+      "failedReply": "unfortunately your gang has failed to raid {0} from `{1}`."
+    },
+    "takeAll": {
+      "noItems": "you don't have any items in your gang's vault.",
+      "reply": "you have successfully taken all of your gangs items from the vault.",
+      "DM": "You have taken all of your gang's items.'"
+    },
+    "takeFromVault": {
+      "DM": "{0} has just taken {1} from your gang's vault.",
+      "reply": "you have successfully taken {0} from your gang's vault."
+    },
+    "transferLeadership": {
+      "notInGang": "this user isn't in your gang.",
+      "alreadyLeader": "you already own this gang.",
+      "DM": "You have been transfered leadership of gang `{0}`.",
+      "reply": "you have successfully transfered your gang's leadership to {0}."
+    },
+    "vault": {
+      "authorNotInGang": "you're not in a gang.",
+      "empty": "`{0}` has nothing in their vault."
+    },
+    "withdraw": {
+      "DM": "{0} has withdrawn {1} from your gang.",
+      "reply": "you have successfully withdrawn {0} from your gang. {1}'s Wealth: {2}."
+    },
+    "bet": {
+      "inGame": "{0} already in a bet with {1}.",
+      "verify": "{0}, reply with `yes` to accept the bet.",
+      "noReply": "your opponent has not agreed to the bet.",
+      "question": "what is {0}?",
+      "starting": "the bet will be starting shortly.",
+      "winner": "{0} has won {1} for winning the bet with {1}.",
+      "noWinner": "since neither you nor your opponent answered correctly, the money has been sent to help fund Vanalk's server."
+    },
+    "cooldowns": "all of {0} commands are ready for use.",
+    "disableNotifications": {
+      "alreadyDisabled": "you have already disabled {0}.",
+      "success": "you've successfully disabled the following DM notifications:\n`{0}`."
+    },
+    "drawWinner": {
+      "inactive": "there is no active pot in this server.",
+      "notHost": "only the creator of the pot may draw the winner.",
+      "minimumMembers": "there needs to be at least {0} members in order to draw a winner.",
+      "winner": "Congratulations {0}. After a fee of {1}%, you won {2} with {3}% chance of winning the pot!"
+    },
+    "enableNotifications": {
+      "alreadyEnabled": "there are no new notifications to enable.",
+      "success": "you have successfully enabled the following DM notifications:\n`{0}`."
+    },
+    "gangLeaderboard": {
+      "none": "there are no gangs.",
+      "message": "{0}. {1} ({1}): {2}\n"
+    },
+    "health": "{0}'s health: {1}.",
+    "itemLeaderboard": {
+      "none": "there is nobody on the item leaderboard.",
+      "message": "{0}. {1}: {2}\n"
+    },
+    "leaderboard": {
+      "none": "there is nobody on the leaderboard",
+      "message": "{0}. {1}: {2}\n"
+    },
+    "modRoles": {
+      "none": "there are no mod roles yet.",
+      "message": "{0}\n**Permission Levels:**\n{1}: Moderator\n{2}: Administrator\n{3}: Owner"
+    },
+    "money": "{0}'s balance: {1}.",
+    "rank": "**Balance:** {0}\n**Health:** {1}\n**Position:** {2}{3}{4}",
+    "ranks": {
+      "none": "there are no rank roles yet.",
+      "message": "{0}: {1}\n"
+    },
+    "transfer": "you have successfully transfered {0} to {1}. Transaction fee: {2}. Balance: {3)}.",
+    "vaultLeaderboard": {
+      "none": "there is nobody on the vault leaderboard.",
+      "message": "{0}. {1}: ${2}\n"
+    },
+    "wantedLeaderboard": {
+      "none": "there is nobody on the wanted leaderboard.",
+      "message": "{0}. {1}: {2}\n"
+    },
+    "eat": "You ate: {0} increasing your health by {1}. Health: {2}.",
+    "fish": {
+      "caught": "RIP NEMO LMFAO. Finding nemo, more like EATING NEMO ROFL! Good buddy, you got: {0}.",
+      "lost": "You had the fucking fish in your pocket on the way to the supermarket to get some spices, and the nigga flipping fish jumped into the sink and pulled some goddamn Finding Nemo shit and bounced.",
+      "broken": [
+        "you almost fucked up some hobo's cock with that broken {0}.",
+        "you hit some hobo's dick but his rock hard boner shattered your {0}.",
+        "that rusty old {0} that your grandpa gave you broke faster than I could nut.",
+        "someone ratted you out to the cops and the SWAT team destroyed your {0}.",
+        "you tried to slam a nigga but their surprise attack broke your {0}.",
+        "you got horny and tried to use {0} as a dildo, but you got it stuck and couldn't get it out."
+      ]
+    },
+    "hunt": {
+      "broken": [
+        "you almost fucked up some hobo's cock with that broken {0}.",
+        "you hit some hobo's dick but his rock hard boner shattered your {0}.",
+        "that rusty old {0} that your grandpa gave you broke faster than I could nut.",
+        "someone ratted you out to the cops and the SWAT team destroyed your {0}.",
+        "you tried to slam a nigga but their surprise attack broke your {0}.",
+        "you got horny and tried to use {0} as a dildo, but you got it stuck and couldn't get it out."
+      ],
+      "caught": "Clean kill. Boss froth. Smooth beans. You got: {0}.",
+      "lost": "Nigga you just about had that deer but then he did that hoof kick thing and fucked up your buddy Chuck, so you had to go bust a nut all over him and the GODDAMN deer got away."
+    },
+    "inventory": {
+      "none": "{0} has nothing in their inventory.",
+      "message": "{0}: {1}\n"
+    },
+    "openAll": {
+      "max": "you can only open a maximum of {0} crates at a time.",
+      "message": "{0}: {1}\n"
+    },
+    "openCrate": "congrats! You have won a {0}.",
+    "shoot": {
+      "broken": [
+        "you almost fucked up some hobo's cock with that broken {0}.",
+        "you hit some hobo's dick but his rock hard boner shattered your {0}.",
+        "that rusty old {0} that your grandpa gave you broke faster than I could nut.",
+        "someone ratted you out to the cops and the SWAT team destroyed your {0}.",
+        "you tried to slam a nigga but their surprise attack broke your {0}.",
+        "you got horny and tried to use {0} as a dildo, but you got it stuck and couldn't get it out."
+      ],
+      "killedDM": "Unfortunately, you were killed by {0}. All your data has been reset.",
+      "killed": "woah, you just killed {0}. You just earned {1} **AND** their inventory, congrats.",
+      "revived": "you managed to kill {0}, but he was revived with his snowcap investment.",
+      "revivedDM": "{0} tried to kill you, but you were brought you back to life thanks to your snowcap investment.",
+      "userDM": "{0} tried to kill you, but nigga you *AH, HA, HA, HA, STAYIN' ALIVE*. -{1} health. Current Health: {2}",
+      "reply": "nice shot, you just dealt {0} damage to {1}.",
+      "failed": "the nigga fucking dodged the {0}, literally. What in the sac of nuts."
+    },
+    "shop": {
+      "needMoney": "you need {0.} to buy {1}.",
+      "success": "you have successfully purchased {0} {1}."
+    },
+    "stab": {
+      "broken": [
+        "you almost fucked up some hobo's cock with that broken {0}.",
+        "you hit some hobo's dick but his rock hard boner shattered your {0}.",
+        "that rusty old {0} that your grandpa gave you broke faster than I could nut.",
+        "someone ratted you out to the cops and the SWAT team destroyed your {0}.",
+        "you tried to slam a nigga but their surprise attack broke your {0}.",
+        "you got horny and tried to use {0} as a dildo, but you got it stuck and couldn't get it out."
+      ],
+      "killedDM": "Unfortunately, you were killed by {0}. All your data has been reset.",
+      "killed": "woah, you just killed {0}. You just earned {1} **AND** their inventory, congrats.",
+      "revived": "you managed to kill {0}, but he was revived with his snowcap investment.",
+      "revivedDM": "{0} tried to kill you, but you were brought you back to life thanks to your snowcap investment.",
+      "userDM": "{0} tried to kill you, but nigga you *AH, HA, HA, HA, STAYIN' ALIVE*. -{1} health. Current Health: {2}",
+      "reply": "just stabbed that nigga in the heart, you just dealt {0} damage to {1}.",
+      "failed": "this nigga actually did some acrobatics shit and bounced out of the way before you stabbed him."
+    },
+    "store": "**{0}:** {1}\n",
+    "trade": {
+      "noItemUser": "this user doesn't have this item.",
+      "notEnoughUser": "this user doesn't have enough of this item.",
+      "noItem": "you don't have this item.",
+      "notEnough": "you don't have enough of this item.",
+      "dm": "{0} is asking to trade you {1} of {2} for {3} of {4}. Reply with \"{5}\" within the next 5 minutes to accept this trade.",
+      "cantDM": "I am unable to DM {0}.",
+      "informed": "this user has been informed of this trade.",
+      "success": "You have successfully traded with {0}.",
+      "duringNoItemUser": "{0} doesn't have any {1} anymore.",
+      "duringNotEnoughUser": "{0} doesn't own {1} {2} anymore.",
+      "duringNoItem": "You don't have any {0} anymore.",
+      "duringNotEnough": "You don't own {0} {1} anymore."
+    },
+
+    "ban": {
+      "permLevel": "you cannot ban someone with the same or higher permission level",
+      "success": "you have successfully banned {0}."
+    },
+    "chill": {
+      "alreadyChilled": "this channel is already chilled.",
+      "chilled": "Time, stop! (the channel has been chilled and won't be heated up until {0} seconds have passed).",
+      "thawed": "And so, time flows again."
+    },
+    "clear": "You have successfully deleted {0} messages.",
+    "kick": "you have successfully kicked {0}.",
+    "mute": {
+      "noMutedRole": "you must set a muted role with the `{0}setmute @Role` command before you can mute users.",
+      "alreadyMuted": "this user is already muted.",
+      "deletedRole": "the muted role has been deleted. Please set a new one with the `{0}setmute Role` command.",
+      "success": "you have successfully muted {0} for {1}."
+    },
+    "thaw": {
+      "alreadyThawed": "this channel is already thawed.",
+      "success": "the channel has been thawed."
+    },
+    "unban": "you have successfully unbanned {0}.",
+    "unmute": {
+      "noMutedRole": "you must set a muted role with the `{0}setmute @Role` command before you can unmute users.",
+      "notMuted": "this user isn't muted.",
+      "deletedRole": "the muted role has been deleted. Please set a new one with the `{0}setmute Role` command.",
+      "success": "you have successfully unmuted {0}."
+    },
+
+    "addModRole": {
+      "roles": "permission levels:\nModerator: {0}\nAdministrator: {1}\nOwner: {2}",
+      "alreadySet": "this moderation role has already been set.",
+      "success": "you have successfully added the mod role {0} with a permission level of {1}."
+    },
+    "autoDisableTrivia": "you've successfully set trivia to{0} be disabled automatically{1}.",
+    "autoTrivia": "you have successfully {0} auto trivia for this server.",
+    "deleteGang": "you have successfully deleted the gang `{0}`.",
+    "modifyCash": "you have successfully modifed {0} balance to {1}.",
+    "modifyGangVault": {
+      "notInGang": "you are not in a gang.",
+      "success": "you have successfully added {0} {1} to {2}'s vault."
+    },
+    "modifyGangWealth": {
+      "notInGang": "you are not in a gang.",
+      "success": "you have successfully added {0} to {1}'s wealth."
+    },
+    "modifyHealth": "you have successfully modifed {0} health to {1}.",
+    "modifyInventory": "you have successfully modifed {0} inventory.",
+    "removeModRole": {
+      "noRole": "you may not remove a moderation role that has no been set.",
+      "success": "you have successfully removed the mod role {0}."
+    },
+    "reset": {
+      "confirm": "are you sure you wish to reset all {0} related data within your server? Reply with \"y(es)\" to continue.",
+      "success": "you have successfully reset all data in your server."
+    },
+    "resetCooldowns": "you have successfully reset all of {0} cooldowns.",
+    "resetUser": "you have successfully reset all of {0} data.",
+    "setMultiplier": "you have successfully set the cash multiplier to {0}.",
+    "setRegenHealth": "you have successfully set the server's regen amount to {0} per hour.",
+
+    "createPoll": {
+      "maxAnswers": "you may not have more than {0} answers on your poll.",
+      "maxPolls": "you may not have more than {0} polls in the guild at once.",
+      "identicalAnswer": "you may not have multiple choices that are identical.",
+      "maxChars": "you may not have more than {0} characters in your answer.",
+      "success": "you have successfully created a poll with the name `{0}`."
+    },
+    "poll": "**Index:** {0}\n**Creator:** {1} ({2})\n**Answers:** \n{3}\n**Ending:** {4} days, {5} hours, {6} minutes, {7}\n**Mod Only:** {8}",
+    "polls": {
+      "none": "there's currently no active polls in this server.",
+      "message": "{0}. {1}\n",
+      "success": "you have been DMed with all the polls in this server."
+    },
+    "removePoll": {
+      "notOwner": "you're not the creator of this poll.",
+      "success": "you have successfully destroyed your poll `{0}`."
+    },
+    "vote": {
+      "requirement": "you may not vote on this poll until you've been in this server for {0} days.",
+      "modOnly": "you may only vote on this poll if you're a moderator.",
+      "sameChoice": "you may not vote on the same choice twice.",
+      "success": "you have successfully voted `{0}` on `{1}`."
+    },
+
+    "help": {
+      "message": "{0} is **THE** cleanest bot around, and you can have it in **YOUR** server simply by clicking here: {1}.\n\nFor all information about a module and their commands do `${module.exports.PREFIX}module [module]`.\n\nThe `{2}help <command>` command may be used for view the usage and an example of any command.\n\nIf you have **ANY** questions, you may join the **Official {3} Discord Server:** {4} for instant support along with a great community.",
+      "dm": "you have been DMed with all the command information!",
+      "invalidCommand": "this command doesn't exist.",
+      "usage": "**Description:** {0}\n**Usage:** `{1}{2}`\n**Example:** `{3}{4}`"
+    },
+    "info": {
+      "message": "The {0} cash system is based around **CHATTING**. For every message that you send every {1} seconds that is at least {2} characters long, you will get {3} from this server.\n\nIf you are extra lucky, when sending messages you can win up to {4} in the **lottery**! The odds of winning the lottery are very low, but the more you chat, the higher chance you have of winning it!\n\nYou can watch yourself climb the `{5}leaderboards` or you can just view your own cash with the `{6}cash [user]` command.\n\nUse the `{7}ranks` command to view the current ranks of a server. Whenever you reach the cash required for a rank, {8} will automatically give you the role.\nFor all the other {9} related command information, use the `{10}help` command which will provide you with everything you need to know!",
+      "dm": "you have been DMed all the information about the {0} Cash System"
+    },
+    "invite": "you may add cleanest bot around by clicking here: {0}.\nIf you have any questions or concerns, you may always join the **Official {1} Support Server:** {2}",
+    "modules": {
+      "message": "**Description**: {0}\n**Commands:** ",
+      "invalid": "this module doesn't exist."
+    },
+    "statistics": "you have been DMed with all {0} statistics!",
+
+    "addTriviaQuestion": {
+      "maxQuestions": "this server has the max amount of trivia questions.",
+      "exists": "this question already exists.",
+      "success": "you have successfully added question the `{0}`."
+    },
+    "answers": {
+      "none": "there are no trivia questions in this server.",
+      "message": "{0}. {1}: {2}\n",
+      "cantDM": "I am unable to DM you.",
+      "success": "you have been DM'd with all of the answers to the trivia questions."
+    },
+    "modifyTriviaAnswer": {
+      "invalid": "this trivia question doesn't exist.",
+      "success": "you have successfully modified the answer for the question `{0}` to `{1}`."
+    },
+    "modifyTriviaQuestion": {
+      "invalid": "this trivia question doesn't exist.",
+      "success": "you have successfully modified the question `{0}`."
+    },
+    "questions": {
+      "none": "there are no trivia questions in this server.",
+      "message": "{0}. {1}\n",
+      "cantDM": "I am unable to DM you.",
+      "success": "you have been DM'd with all trivia questions."
+    },
+    "removeTriviaQuestion": {
+      "invalid": "this trivia question doesn't exist.",
+      "success": "you have successfully removed the question `{0}`."
+    },
+    "trivia": {
+      "none": "this server has no trivia questions set.",
+      "winner": "Congratulations {0} for winning {1} in trivia!",
+      "failed": "Damn you fuckers were that slow and retarded.\nFINE I'll give you the answer it's: {0}."
+    }
+  },
+
+
+  "intervals": {
+    "autoDrawPot": "Congratulations {0}. After a fee of {1}%, you have automatically won {2} with {3}% chance of winning the pot!",
+    "autoRemovePoll": "{0}Final Poll Results Of {1} Poll.",
+    "autoTrivia": {
+      "winner": "Congratulations {0} for winning {1} in trivia!",
+      "failed": "Damn you fuckers were that slow and retarded.\nFINE I'll give you the answer, it's: {0}.",
+      "autoDisabled": "Auto trivia has been automatically disabled."
+    }
+  },
+
+
+  "lottery": [
+    "CONGRATS MY MAN, you just won {0} in the goddamn lottery!",
+    "hot fucking pockets, you just won {0} in the lottery!",
+    "well sonny, looks like today is your goddamn lucky day, you just won {0} in the lottery!",
+    "Jiminy crickets, you made some bank! You just won {0} from the lottery!",
+    "sweet baby Jesus you just won {0} in the fucking lottery!",
+    "well I'll be damned, you just won {0} in the goddamn lottery!"
+  ]
+}

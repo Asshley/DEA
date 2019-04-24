@@ -5,7 +5,9 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const Util = require('../../utility/Util.js');
+const StringUtil = require('../../utility/StringUtil.js');
 const ModerationService = require('../../services/ModerationService.js');
+const messages = require('../../data/messages.json');
 
 class Mute extends Command {
   constructor() {
@@ -28,7 +30,11 @@ class Mute extends Command {
           type: 'float',
           example: '48',
           defaultValue: DEFAULT_MUTE,
-          preconditionOptions: [{ minimum: 0.000001 }],
+          preconditionOptions: [
+            {
+              minimum: 0, exclusive: true
+            }
+          ],
           preconditions: ['minimum']
         }),
         new Argument({
@@ -44,33 +50,39 @@ class Mute extends Command {
   }
 
   async run(msg, args) {
-    const role = msg.guild.roles.get(msg.dbGuild.roles.muted);
+    const role = msg.channel.guild.roles.get(msg.dbGuild.roles.muted);
     const hours = `${args.hours} ${Util.pluralize('hour', args.hours)}`;
 
     if (!msg.dbGuild.roles.muted) {
-      return msg.createErrorReply(`you must set a muted role with the \`${PREFIX}setmute @Role\` \
-command before you can mute users.`);
-    } else if (args.member.roles.has(msg.dbGuild.roles.muted)) {
-      return msg.createErrorReply('this user is already muted.');
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.mute.noMutedRole, PREFIX
+      ));
+    } else if (args.member.roles.includes(msg.dbGuild.roles.muted)) {
+      return msg.createErrorReply(messages.commands.mute.alreadyMuted);
     }
 
     if (!role) {
-      return msg.createErrorReply(`rhe set muted role has been deleted. Please set a new one with \
-the \`${PREFIX}setmute Role\` command.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.mute.deletedRole, PREFIX
+      ));
     }
 
-    await args.member.roles.add(role);
-    await msg.createReply(`you have successfully muted ${args.member.user.tag} for ${hours}.`);
-    await msg.client.db.muteRepo.insertMute(
-      args.member.id, msg.guild.id, NumberUtil.hoursToMs(args.hours)
+    await args.member.addRole(role.id);
+    await msg.createReply(StringUtil.format(
+      messages.commands.mute.success,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`),
+      hours
+    ));
+    await msg._client.db.muteRepo.insertMute(
+      args.member.id, msg.channel.guild.id, NumberUtil.hoursToMs(args.hours)
     );
     await ModerationService.tryInformUser(
-      msg.guild, msg.author, 'muted', args.member.user, args.reason
+      msg.channel.guild, msg.author, 'muted', args.member.user, args.reason
     );
 
     return ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Mute',
       color: MUTE_COLOR,
       reason: args.reason,

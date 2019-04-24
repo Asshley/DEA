@@ -43,7 +43,7 @@ class Item extends Command {
       }
     }
 
-    return msg.channel.createMessage(reply, { title: StringUtil.capitialize(args.item.names[0]) });
+    return msg.channel.sendMessage(reply, { title: StringUtil.capitialize(args.item.names[0]) });
   }
 }
 

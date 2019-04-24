@@ -1,4 +1,6 @@
 const { Command } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class AutoTrivia extends Command {
   constructor() {
@@ -10,12 +12,13 @@ class AutoTrivia extends Command {
   }
 
   async run(msg) {
-    const autoTrivia = !msg.dbGuild.autoTrivia;
+    const auto = !msg.dbGuild.trivia.auto;
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, { $set: { autoTrivia } });
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, { $set: { 'trivia.auto': auto } });
 
-    return msg.createReply(`you've successfully \
-${autoTrivia ? 'enabled' : 'disabled'} auto trivia for this server.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.autoTrivia, auto ? 'enabled' : 'disabled'
+    ));
   }
 }
 

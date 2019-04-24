@@ -3,11 +3,11 @@ const {
   RESTRICTIONS: { COMMANDS: { POT: { MAXIMUM_MEMBERS, MINIMUM_CASH } } },
   MISCELLANEA: { POT_EXPIRES }
 } = require('../../utility/Constants.js');
-const { Collection } = require('discord.js');
+const PAD_AMOUNT = 2;
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const _Pot = require('../../structures/Pot.js');
-const PAD_AMOUNT = 2;
+const messages = require('../../data/messages.json');
 
 class Pot extends Command {
   constructor() {
@@ -27,53 +27,60 @@ class Pot extends Command {
         })
       ]
     });
-    this.pots = new Collection();
+    this.pots = {};
   }
 
   async run(msg, args) {
-    const pot = this.pots.get(msg.guild.id);
+    const pot = this.pots[msg.channel.guild.id];
 
     if (args.amount === 'null') {
       if (!pot) {
-        return msg.createErrorReply('there is no active pot in this server.');
+        return msg.createErrorReply(messages.commands.pot.inactive);
       }
 
-      const { response, options } = this.potInfo(pot, msg.client);
+      const { response, options } = this.potInfo(pot, msg._client);
 
-      return msg.channel.createMessage(response, options);
+      return msg.channel.sendMessage(response, options);
     } else if (!pot) {
       await this.createPot(msg.member, msg.dbGuild, args.amount, msg.channel);
 
-      return msg.createReply(`you've successfully created a new pot \
-starting with ${NumberUtil.toUSD(args.amount)}.`);
+      return msg.createReply(StringUtil.format(
+        messages.commands.pot.created, NumberUtil.toUSD(args.amount)
+      ));
     }
 
     const totalCash = _Pot.totalCash(pot);
 
     if (!Number.isFinite(totalCash + args.amount)) {
-      return msg.createErrorReply(`adding ${NumberUtil.toUSD(args.amount)} will make the \
-pot hold too much cash.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.pot.maxCapacity, NumberUtil.toUSD(args.amount)
+      ));
     }
 
     const existing = pot.members.some(x => x.id === msg.author.id);
 
     if (!existing && pot.members.length >= MAXIMUM_MEMBERS) {
-      return msg.createErrorReply(`there can only be ${MAXIMUM_MEMBERS} participants in a pot.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.pot.maxMembers, MAXIMUM_MEMBERS
+      ));
     }
 
     const member = pot.addMoney(msg.author, args.amount);
 
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.amount);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.amount);
 
-    return msg.createReply(`you've successfully added ${NumberUtil.toUSD(args.amount)} to \
-the pot, making your total amount deposited ${NumberUtil.toUSD(member.deposited)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.pot.deposited,
+      NumberUtil.toUSD(args.amount),
+      NumberUtil.toUSD(member.deposited)
+    ));
   }
 
   async createPot(member, dbGuild, amount, channel) {
     const pot = new _Pot(member.id, channel.id);
     const potMember = pot.addMember(member, amount);
 
-    this.pots.set(member.guild.id, pot);
+    this.pots[member.guild.id] = pot;
     await member.client.db.userRepo.modifyCash(dbGuild, member, -amount);
 
     return potMember;
@@ -84,8 +91,9 @@ the pot, making your total amount deposited ${NumberUtil.toUSD(member.deposited)
       const user = client.users.get(x.id);
       const amount = NumberUtil.toUSD(x.deposited);
       const odds = _Pot.calculateOdds(pot, x.id);
+      const tag = `${user.username}#${user.discriminator}`;
 
-      return `${user.tag}${pot.owner === x.id ? ' (Creator)' : ''}: ${amount} (${odds}%)`;
+      return `${tag}: ${amount} (${odds}%)`;
     }).join('\n');
     const currentTime = Date.now();
     let timeLeft = '';
@@ -99,8 +107,9 @@ the pot, making your total amount deposited ${NumberUtil.toUSD(member.deposited)
       timeLeft = ` | ${StringUtil.pad(minutes, PAD_AMOUNT)}:${StringUtil.pad(seconds, PAD_AMOUNT)}`;
     }
 
+    const { username, discriminator } = client.users.get(pot.owner);
     const options = {
-      title: 'Current Pot',
+      title: `Current Pot - ${username}#${discriminator}`,
       footer: {
         text: `${NumberUtil.toUSD(_Pot.totalCash(pot))}${timeLeft}`
       }

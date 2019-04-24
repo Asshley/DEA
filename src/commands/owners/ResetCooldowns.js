@@ -1,5 +1,6 @@
 const { Command, Argument, ArgumentDefault } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class ResetCooldowns extends Command {
   constructor() {
@@ -21,15 +22,17 @@ class ResetCooldowns extends Command {
   }
 
   async run(msg, args) {
-    const commands = msg.client.registry.commands.filter(command => command.hasCooldown);
+    const commands = msg._client.registry.commands.filter(command => command.hasCooldown);
 
     for (let i = 0; i < commands.length; i++) {
-      commands[i].cooldowns.users[`${args.member.id}-${msg.guild.id}`] = null;
+      commands[i].cooldowns.users[`${args.member.id}-${msg.channel.guild.id}`] = null;
     }
 
-    return msg.createReply(`you have successfully reset all of \
-${args.member.id === msg.author.id ? 'your' : `${StringUtil.boldify(args.member.user.tag)}'s`} \
-cooldowns.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.resetCooldowns,
+      args.member.id === msg.author.id ? 'your' : `${StringUtil
+        .boldify(`${args.member.user.username}#${args.member.user.discriminator}`)}'s`
+    ));
   }
 }
 

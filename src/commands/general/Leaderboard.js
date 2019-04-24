@@ -4,16 +4,17 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
-class Leaderboards extends Command {
+class Leaderboard extends Command {
   constructor() {
     super({
       names: [
-        'leaderboards',
+        'leaderboard',
         'lb',
         'highscores',
         'highscore',
-        'leaderboard'
+        'leaderboards'
       ],
       groupName: 'general',
       description: 'View the richest Drug Traffickers.'
@@ -21,7 +22,7 @@ class Leaderboards extends Command {
   }
 
   async run(msg) {
-    const users = await msg.client.db.userRepo.findMany({ guildId: msg.guild.id });
+    const users = await msg._client.db.userRepo.findMany({ guildId: msg.channel.guild.id });
     let message = '';
 
     users.sort((a, b) => b.cash - a.cash);
@@ -31,7 +32,7 @@ class Leaderboards extends Command {
         break;
       }
 
-      const user = msg.client.users.get(users[i].userId);
+      const user = msg._client.users.get(users[i].userId);
 
       if (!user) {
         users.splice(i, 1);
@@ -39,15 +40,20 @@ class Leaderboards extends Command {
         continue;
       }
 
-      message += `${i + 1}. ${StringUtil.boldify(user.tag)}: ${NumberUtil.format(users[i].cash)}\n`;
+      message += StringUtil.format(
+        messages.commands.leaderboard.message,
+        i + 1,
+        StringUtil.boldify(`${user.username}#${user.discriminator}`),
+        NumberUtil.format(users[i].cash)
+      );
     }
 
     if (StringUtil.isNullOrWhiteSpace(message)) {
-      return msg.createErrorReply('there is nobody on the leaderboards.');
+      return msg.createErrorReply(messages.commands.leaderboard.none);
     }
 
-    return msg.channel.createMessage(message, { title: 'The Richest Traffickers' });
+    return msg.channel.sendMessage(message, { title: 'The Richest Traffickers' });
   }
 }
 
-module.exports = new Leaderboards();
+module.exports = new Leaderboard();

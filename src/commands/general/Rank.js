@@ -3,6 +3,7 @@ const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
 const RankService = require('../../services/RankService.js');
+const messages = require('../../data/messages.json');
 
 class Rank extends Command {
   constructor() {
@@ -25,35 +26,34 @@ class Rank extends Command {
 
   async run(msg, args) {
     const dbUser = await args.member.dbUser();
-    const rank = RankService.getRank(dbUser, msg.dbGuild, msg.guild);
+    const rank = RankService.getRank(dbUser, msg.dbGuild, msg.channel.guild);
     const { investments: invested } = dbUser;
     const options = {
-      title: `${args.member.user.tag}'s Rank`,
+      title: `${args.member.user.username}#${args.member.user.discriminator}'s Rank`,
       footer: {
         text: invested.length ? `Investments: \
 ${Util.list(invested, 'and', StringUtil.upperFirstChar)}` : ''
       }
     };
-    const info = await this.formatInfo(dbUser, rank, msg.client.db);
+    const info = await this.formatInfo(dbUser, rank, msg._client.db);
 
-    return msg.channel.createMessage(info, options);
+    return msg.channel.sendMessage(info, options);
   }
 
   async formatInfo(dbUser, rank, db) {
     const users = (await db.userRepo.findMany({ guildId: dbUser.guildId }))
       .sort((a, b) => b.cash - a.cash);
-    let string = `**Balance:** ${NumberUtil.format(dbUser.cash)}\n**Health:** ${dbUser.health}
-**Position:** ${users.findIndex(x => x.userId === dbUser.userId) + 1}`;
+    const bounty = dbUser.bounty ? `\n**Bounty:** ${NumberUtil.format(dbUser.bounty)}` : '';
+    const userRank = rank ? `\n**Rank:** ${rank}` : '';
 
-    if (dbUser.bounty) {
-      string += `\n**Bounty:** ${NumberUtil.format(dbUser.bounty)}`;
-    }
-
-    if (rank) {
-      string += `\n**Rank:** ${rank}`;
-    }
-
-    return string;
+    return StringUtil.format(
+      messages.commands.rank,
+      NumberUtil.format(dbUser.cash),
+      dbUser.health,
+      users.findIndex(x => x.userId === dbUser.userId) + 1,
+      bounty,
+      userRank
+    );
   }
 }
 

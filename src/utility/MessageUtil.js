@@ -1,4 +1,3 @@
-const { MessageEmbed } = require('discord.js');
 const {
   COLORS: { DEFAULTS },
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT: EVEN_VALUE }
@@ -6,41 +5,50 @@ const {
 const Random = require('./Random.js');
 
 class MessageUtil {
-  static createFieldsMessage(channel, fieldsAndValues, inline = true, color = null) {
-    const embed = new MessageEmbed()
-      .setColor(color ? color : Random.arrayElement(DEFAULTS));
+  static sendFieldsMessage(channel, fields, inline = true, color = null) {
+    const embed = {
+      color: color ? color : Random.arrayElement(DEFAULTS),
+      fields: []
+    };
 
-    for (let i = 0; i < fieldsAndValues.length - 1; i++) {
+    for (let i = 0; i < fields.length - 1; i++) {
       if (!(i % EVEN_VALUE)) {
-        embed.addField(fieldsAndValues[i], fieldsAndValues[i + 1], inline);
+        embed.fields.push({
+          name: fields[i], value: fields[i + 1], inline
+        });
       }
     }
 
-    return channel.send({ embed });
+    return channel.createMessage({ embed });
   }
 
-  static createMessage(channel, description, options = {}) {
-    const embed = new MessageEmbed()
-      .setColor(options.color ? options.color : Random.arrayElement(DEFAULTS))
-      .setDescription(description);
+  static sendMessage(channel, description, options = {}) {
+    const embed = {
+      color: options.color ? options.color : Random.arrayElement(DEFAULTS),
+      description
+    };
 
     if (options.title) {
-      embed.setTitle(options.title);
+      embed.title = options.title;
     }
 
     if (options.author) {
-      embed.setAuthor(options.author.name, options.author.icon, options.author.URL);
+      embed.author = {
+        name: options.author.name, icon_url: options.author.icon, url: options.author.URL
+      };
     }
 
     if (options.footer) {
-      embed.setFooter(options.footer.text, options.footer.icon);
+      embed.footer = {
+        text: options.footer.text, icon_url: options.footer.icon
+      };
     }
 
     if (options.timestamp) {
-      embed.setTimestamp();
+      embed.timestamp = new Date();
     }
 
-    return channel.send({ embed });
+    return channel.createMessage({ embed });
   }
 
   static async notify(member, message, type) {

@@ -5,6 +5,7 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Transfer extends Command {
   constructor() {
@@ -35,14 +36,17 @@ class Transfer extends Command {
   async run(msg, args) {
     const transactionFee = args.transfer * TRANSACTION_FEE;
     const received = args.transfer - transactionFee;
-    const newDbUser = await msg.client.db.userRepo
-      .modifyCash(msg.dbGuild, msg.member, -args.transfer);
+    const res = await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.transfer);
 
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, args.member, received);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, args.member, received);
 
-    return msg.createReply(`you have successfully transfered ${NumberUtil.toUSD(received)} to \
-${StringUtil.boldify(args.member.user.tag)}. Transaction fee: ${NumberUtil.toUSD(transactionFee)}. \
-Balance: ${NumberUtil.format(newDbUser.cash)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.transfer,
+      NumberUtil.toUSD(received),
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`),
+      NumberUtil.toUSD(transactionFee),
+      NumberUtil.format(res.cash)
+    ));
   }
 }
 

@@ -3,6 +3,8 @@ const {
   COLORS: { UNBAN: UNBAN_COLOR }
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Unban extends Command {
   constructor() {
@@ -31,11 +33,14 @@ class Unban extends Command {
   }
 
   async run(msg, args) {
-    await msg.guild.members.unban(args.user);
-    await msg.createReply(`you have successfully unbanned ${args.user.tag}.`);
+    await msg.channel.guild.unbanMember(args.user.id);
+    await msg.createReply(StringUtil.format(
+      messages.commands.unban,
+      StringUtil.boldify(`${args.user.username}#${args.user.discriminator}`)
+    ));
     await ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Unban',
       color: UNBAN_COLOR,
       reason: args.reason,
@@ -44,7 +49,7 @@ class Unban extends Command {
     });
 
     return ModerationService.tryInformUser(
-      msg.guild, msg.author, 'unbanned', args.user, args.reason
+      msg.channel.guild, msg.author, 'unbanned', args.user, args.reason
     );
   }
 }

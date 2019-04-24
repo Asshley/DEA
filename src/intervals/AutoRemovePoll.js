@@ -1,5 +1,7 @@
 const { COOLDOWNS } = require('../utility/Constants.js');
 const Interval = require('../structures/Interval.js');
+const StringUtil = require('../utility/StringUtil.js');
+const messages = require('../data/messages.json');
 
 class AutoRemovePoll extends Interval {
   constructor(client) {
@@ -32,7 +34,7 @@ class AutoRemovePoll extends Interval {
 
         await this.client.db.guildRepo.updateGuild(guild.id, { $pull: { polls: polls[j] } });
 
-        const creator = guild.member(polls[i].author);
+        const creator = guild.members.get(polls[i].author);
 
         if (!creator) {
           continue;
@@ -42,9 +44,9 @@ class AutoRemovePoll extends Interval {
           .map(x => `\`${x}\` Votes: ${polls[j].choices[x].voters.length},`)
           .join('\n');
 
-        await creator.user.tryDM(
-          `${choices}Final Poll Results Of ${polls[j].name} Poll.`, { guild }
-        );
+        await creator.user.tryDM(StringUtil.format(
+          messages.intervals.autoRemovePoll, choices, polls[j].name
+        ), { guild });
       }
     }
   }

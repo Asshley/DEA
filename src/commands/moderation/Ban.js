@@ -3,6 +3,8 @@ const {
   COLORS: { BAN: BAN_COLOR }
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Ban extends Command {
   constructor() {
@@ -12,8 +14,7 @@ class Ban extends Command {
         'hammer',
         'nuke',
         'snap',
-        'clap',
-        'meme'
+        'clap'
       ],
       groupName: 'moderation',
       description: 'Swing the ban hammer on any member.',
@@ -38,32 +39,44 @@ class Ban extends Command {
   }
 
   async run(msg, args) {
-    if (msg.guild.members.has(args.user.id) && msg.guild.member(args.user.id).bannable) {
-      const userPerm = ModerationService.getPermLevel(msg.dbGuild, msg.guild.member(args.user));
+    const member = msg.guild.members.get(args.user.id);
+
+    if (member && this.constructor.canBan(member)) {
+      const userPerm = ModerationService.getPermLevel(msg.dbGuild, member);
       const authorPerm = ModerationService.getPermLevel(msg.dbGuild, msg.member);
 
       if (userPerm >= authorPerm) {
-        return msg.createErrorReply('you cannot ban someone with the same or \
-higher permission level.');
+        return msg.createErrorReply(messages.commands.ban.permLevel);
       }
 
       await ModerationService.tryInformUser(
-        msg.guild, msg.author, 'banned', args.user, args.reason
+        msg.channel.guild, msg.author, 'banned', args.user, args.reason
       );
     }
 
-    await msg.guild.members.ban(args.user);
-    await msg.createReply(`you have successfully banned ${args.user.tag}.`);
+    await msg.guild.banMember(args.user.id);
+    await msg.createReply(StringUtil.format(
+      messages.commands.ban.success,
+      StringUtil.boldify(`${args.user.username}#${args.user.discriminator}`)
+    ));
 
     return ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Ban',
       color: BAN_COLOR,
       reason: args.reason,
       moderator: msg.author,
       user: args.user
     });
+  }
+
+  static canBan(member) {
+    const clientMember = member.guild.members.get(member.guild.shard.client.user.id);
+
+    return member.id !== clientMember.id
+      && member.id !== member.guild.ownerID
+      && clientMember.highestRole.position > member.highestRole.position;
   }
 }
 

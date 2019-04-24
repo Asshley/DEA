@@ -3,6 +3,7 @@ const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Eat extends Command {
   constructor() {
@@ -17,7 +18,7 @@ class Eat extends Command {
           type: 'item',
           example: 'beef',
           preconditionOptions: [{ types: ['fish', 'meat'] }],
-          preconditions: ['nottype', 'donthave'],
+          preconditions: ['nottype', 'needitem'],
           remainder: true
         })
       ]
@@ -33,14 +34,20 @@ class Eat extends Command {
       }
     };
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, update);
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, update);
 
     const food = `inventory.${args.item.names[0]}`;
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $inc: { [food]: -1 } });
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
+      $inc: { [food]: -1 }
+    });
 
-    return msg.createReply(`You ate: ${StringUtil.capitialize(args.item.names[0])} increasing your \
-health by ${args.item.health}. Health: ${amount}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.eat,
+      StringUtil.capitialize(args.items.name[0]),
+      args.item.health,
+      amount
+    ));
   }
 }
 

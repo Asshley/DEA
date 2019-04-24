@@ -26,7 +26,7 @@ class Pot {
 
     this.members.push(obj);
 
-    if (this.members.length >= MINIMUM_MEMBERS) {
+    if (this.members.length >= MINIMUM_MEMBERS && !this.readyAt) {
       this.readyAt = Date.now();
     }
 

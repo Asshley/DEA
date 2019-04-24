@@ -3,10 +3,12 @@ const {
   ODDS: { DICE: DICE_ODDS },
   RESTRICTIONS: { GAMBLING, COMMANDS: { DICE } }
 } = require('../../utility/Constants.js');
+const MAX_DICE_ROLL = 7;
 const Random = require('../../utility/Random.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
-const MAX_DICE_ROLL = 7;
+const messages = require('../../data/messages.json');
 
 class Dice extends Command {
   constructor() {
@@ -34,18 +36,25 @@ class Dice extends Command {
     const baseMessage = `you rolled ${Util.list(rolls, 'and')}. Your ${type} ${total}`;
 
     if (Random.roll() >= DICE_ODDS) {
-      const newDbUser = await msg.client.db.userRepo
-        .modifyCash(msg.dbGuild, msg.member, args.bet * DICE.PAYOUT);
+      const res = await msg._client.db
+        .userRepo.modifyCash(msg.dbGuild, msg.member, args.bet * DICE.PAYOUT);
 
-      return msg.createReply(`${baseMessage} won you ${NumberUtil.toUSD(args.bet)}. Balance: \
-${NumberUtil.format(newDbUser.cash)}.`);
+      return msg.createReply(StringUtil.format(
+        messages.commands.dice.successful,
+        baseMessage,
+        NumberUtil.toUSD(args.bet),
+        NumberUtil.format(res.cash)
+      ));
     }
 
-    const newDbUser = await msg.client.db.userRepo
-      .modifyCash(msg.dbGuild, msg.member, -args.bet);
+    const res = await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.bet);
 
-    return msg.createReply(`${baseMessage} lost you ${NumberUtil.toUSD(args.bet)}. Balance: \
-${NumberUtil.format(newDbUser.cash)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.dice.failed,
+      baseMessage,
+      NumberUtil.toUSD(args.bet),
+      NumberUtil.format(res.cash)
+    ));
   }
 }
 

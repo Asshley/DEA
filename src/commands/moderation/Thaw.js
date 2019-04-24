@@ -2,7 +2,9 @@ const { Command, Argument } = require('patron.js');
 const {
   COLORS: { CHILL: CHILL_COLOR }
 } = require('../../utility/Constants.js');
+const { Constants: { Permissions } } = require('eris');
 const ModerationService = require('../../services/ModerationService.js');
+const messages = require('../../data/messages.json');
 
 class Thaw extends Command {
   constructor() {
@@ -25,29 +27,41 @@ class Thaw extends Command {
   }
 
   async run(msg, args) {
-    const defaultPerms = msg.channel.permissionsFor(msg.guild.id);
+    const perms = msg.channel.permissionOverwrites.get(msg.channel.guild.id);
+    const guildPerms = msg.channel.guild.roles.get(msg.channel.guild.id).permissions;
 
-    if (defaultPerms.has('SEND_MESSAGES')) {
-      return msg.createErrorReply('this channel is already thawed.');
+    if ((!perms && guildPerms.has('sendMessages')) || perms.has('sendMessages')) {
+      return msg.createErrorReply(messages.commands.thaw.alreadyThawed);
     }
 
-    await msg.channel.updateOverwrite(msg.guild.id, {
-      SEND_MESSAGES: null,
-      ADD_REACTIONS: null
-    });
-    await msg.createReply('the channel has been thawed.');
+    const { deny, allow } = perms;
+
+    await msg.channel.editPermission(
+      perms.id, allow & ~Permissions.sendMessages, deny & ~Permissions.sendMessages, perms.type
+    );
+    await msg.createReply(messages.commands.thaw.success);
 
     return ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Thaw',
       color: CHILL_COLOR,
       reason: args.reason,
       moderator: msg.author,
       user: null,
       extraInfoType: 'Channel',
-      extraInfo: `${msg.channel.name} (${msg.channel})`
+      extraInfo: `${msg.channel.name} (${msg.channel.mention})`
     });
+  }
+
+  async getOverwrite(channel, id) {
+    let overwrite = channel.permissionOverwrites.get(id);
+
+    if (!overwrite) {
+      overwrite = await channel.editPermission(id, 0, 0, 'role');
+    }
+
+    return overwrite;
   }
 }
 

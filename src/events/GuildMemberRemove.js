@@ -1,14 +1,20 @@
+const Eris = require('eris');
+const { CLIENT_EVENTS } = require('../utility/Constants.js');
 const Event = require('../structures/Event.js');
 
-class GuildMemberRemoveEvent extends Event {
-  async run(member) {
+class GuildMemberRemove extends Event {
+  async run(_, member) {
+    if (member.constructor.name !== Eris.Member.constructor.name) {
+      return;
+    }
+
     const gang = await member.dbGang();
 
     if (!gang) {
       return;
     }
 
-    const { client: { db: { guildRepo } } } = this;
+    const { emitter: { db: { guildRepo } } } = this;
     const dbGuild = await member.guild.dbGuild();
     const gangIndex = dbGuild.gangs.findIndex(x => x.name === gang.name);
 
@@ -45,6 +51,6 @@ class GuildMemberRemoveEvent extends Event {
     });
   }
 }
-GuildMemberRemoveEvent.eventName = 'guildMemberRemove';
+GuildMemberRemove.EVENT_NAME = CLIENT_EVENTS.GUILD_MEMBER_REMOVE;
 
-module.exports = GuildMemberRemoveEvent;
+module.exports = GuildMemberRemove;

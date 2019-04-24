@@ -1,12 +1,12 @@
 const { Command, Argument } = require('patron.js');
 const {
-  MAX_AMOUNTS: { GANG: { MEMBERS: MAX_MEMBERS } },
-  MESSAGES: { GANG }
+  MAX_AMOUNTS: { GANG: { MEMBERS: MAX_MEMBERS } }
 } = require('../../utility/Constants.js');
+const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const MAX_NUMBER = 2147e6;
+const messages = require('../../data/messages.json');
 
 class InviteToGang extends Command {
   constructor() {
@@ -32,66 +32,82 @@ class InviteToGang extends Command {
     const userGang = await args.member.dbGang();
 
     if (userGang) {
-      return msg.createErrorReply(StringUtil.format(GANG.IN_GANG, 'this user'));
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.inviteToGang.inGang, 'this user'
+      ));
     } else if (gang.members.length >= MAX_MEMBERS) {
-      return msg.createErrorReply(GANG.MAXIMUM_MEMBERS);
+      return msg.createErrorReply(messages.commands.inviteToGang.maxMembers);
     } else if (msg.author.id !== gang.leaderId
       && !gang.members.some(v => v.status === 'elder' && v.id === msg.author.id)) {
-      return msg.createErrorReply(StringUtil.format(GANG.LACK_PERMS, 'invite'));
+      return msg.createErrorReply(messages.commands.inviteToGang.needPerms);
     }
 
-    const key = Random.nextInt(0, MAX_NUMBER).toString();
-
-    if (!args.member.dmChannel) {
-      await args.member.createDM();
-    }
-
-    const dm = await args.member.tryDM(StringUtil.format(
-      GANG.INVITED, StringUtil.boldify(msg.author.tag), StringUtil.boldify(gang.name), key
-    ), { guild: msg.guild });
+    const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString();
+    const dm = await this.DM(msg, args.member, key);
 
     if (!dm) {
-      return msg.createErrorReply(StringUtil.format(
-        GANG.UNINFORMED_REQUEST, StringUtil.boldify(args.member.user.tag)
-      ));
+      return;
     }
-
-    await msg.createReply(GANG.INFORMED_REQUEST);
 
     const res = await this.verify(msg, args.member, key);
 
     if (res) {
       await msg.author.tryDM(StringUtil.format(
-        GANG.INVITER_JOINED_DM, StringUtil.boldify(args.member.user.tag)
-      ), { guild: msg.guild });
+        messages.commands.inviteToGang.successfulDM,
+        StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`)
+      ), { guild: msg.channel.guild });
 
       return args.member.tryDM(StringUtil.format(
-        GANG.MEMBER_JOINED_DM, StringUtil.boldify(gang.name)
-      ), { guild: msg.guild });
+        messages.commands.inviteToGang.successfulMemberDM, gang.name
+      ), { guild: msg.channel.guild });
     }
 
     return msg.author.tryDM(StringUtil.format(
-      GANG.NO_RESPONSE_REPLY, StringUtil.boldify(args.member.user.tag)
-    ), { guild: msg.guild });
+      messages.commands.inviteToGang.failure,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`)
+    ), { guild: msg.channel.guild });
+  }
+
+  async DM(msg, member, key) {
+    const dm = await member.tryDM(StringUtil.format(
+      messages.commands.inviteToGang.invited,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      msg.dbGang.name,
+      key
+    ), { guild: msg.channel.guild });
+
+    if (!dm) {
+      await msg.createErrorReply(StringUtil.format(
+        messages.commands.inviteToGang.cantDM,
+        StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
+      ));
+
+      return false;
+    }
+
+    await msg.createReply(messages.commands.inviteToGang.DM);
+
+    return true;
   }
 
   async verify(msg, member, key) {
     const fn = m => m.author.id === member.id && m.content.includes(key);
-    const result = await member.user.dmChannel.awaitMessages(fn, {
-      time: 300000, max: 1
+    const result = await awaitMessages(await member.user.getDMChannel(), {
+      time: 300000, max: 1, filter: fn
     });
 
-    if (result.size >= 1) {
+    if (result.length >= 1) {
       const gang = await member.dbGang();
 
       if (gang) {
         await msg.author.tryDM(StringUtil.format(
-          GANG.ALREADY_JOINED_GANG_DM, StringUtil.boldify(msg.author.tag)
+          messages.commands.inviteToGang.joinedGang,
+          StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
         ), { guild: member.guild });
 
         return member.tryDM(StringUtil.format(
-          GANG.REQUESTED_JOINED_GANG_DM, StringUtil.boldify(gang.name)
-        ), { guild: msg.guild });
+          messages.commands.inviteToGang.joinedGangDM, gang.name
+        ), { guild: msg.channel.guild });
       }
 
       await this.syncCooldowns(member, msg.dbGang);
@@ -105,7 +121,7 @@ class InviteToGang extends Command {
         }
       };
 
-      await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+      await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
       return true;
     }

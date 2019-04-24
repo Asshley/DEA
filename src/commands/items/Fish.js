@@ -1,12 +1,12 @@
 const { Command, Argument } = require('patron.js');
 const {
-  MESSAGES: { BROKEN_ITEM, FISH: { CAUGHT, LOST } },
   COOLDOWNS: { FISH: FISH_COOLDOWN }
 } = require('../../utility/Constants.js');
 const itemService = require('../../services/ItemService.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const items = require('../../data/items.json');
+const messages = require('../../data/messages.json');
 
 class Fish extends Command {
   constructor() {
@@ -23,7 +23,7 @@ class Fish extends Command {
           type: 'item',
           example: 'huntsman knife',
           preconditionOptions: [{ types: ['knife', 'gun'] }],
-          preconditions: ['nottype', 'donthave'],
+          preconditions: ['nottype', 'needitem'],
           remainder: true
         })
       ]
@@ -31,14 +31,13 @@ class Fish extends Command {
   }
 
   async run(msg, args) {
-    const broken = await itemService.break(msg.client.db, msg.guild, msg.author, args.item);
+    const broken = await itemService
+      .break(msg._client.db, msg.channel.guild, msg.author, args.item);
 
     if (broken) {
-      const response = StringUtil.format(
-        Random.arrayElement(BROKEN_ITEM), StringUtil.boldify(args.item.names[0])
-      );
-
-      return msg.createErrorReply(response);
+      return msg.createErrorReply(StringUtil.format(
+        Random.arrayElement(messages.commands.fish.broken), StringUtil.boldify(args.item.names[0])
+      ));
     }
 
     const caught = itemService.fish(args.item, items);
@@ -54,9 +53,9 @@ class Fish extends Command {
           [gained]: 1
         }
       };
-      reply = StringUtil.format(CAUGHT, StringUtil.capitialize(name));
+      reply = StringUtil.format(messages.commands.fish.caught, StringUtil.capitialize(name));
     } else {
-      reply = LOST;
+      reply = messages.commands.fish.lost;
     }
 
     if (args.item.type === 'gun') {
@@ -72,7 +71,7 @@ class Fish extends Command {
     }
 
     if (update) {
-      await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, update);
+      await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, update);
     }
 
     return msg.createReply(reply);

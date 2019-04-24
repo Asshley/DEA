@@ -1,18 +1,13 @@
-const { Structures } = require('discord.js');
+const Eris = require('eris');
 
-Structures.extend('Guild', G => {
-  class Guild extends G {
-    dbGuild() {
-      return this.client.db.guildRepo.getGuild(this.id);
-    }
+Eris.Guild.prototype.dbGuild = function() {
+  return this.shard.client.db.guildRepo.getGuild(this.id);
+};
+Object.defineProperty(Eris.Guild.prototype, 'mainChannel', {
+  get() {
+    const text = this.channels.filter(x => x.type === 'text');
+    const generalChannel = text.find(x => x.name === 'general' || x.name.includes('main'));
 
-    get mainChannel() {
-      const text = this.channels.filter(x => x.type === 'text');
-      const generalChannel = text.find(x => x.name === 'general' || x.name.includes('main'));
-
-      return generalChannel || text.sort((a, b) => a.createdAt - b.createdAt).first();
-    }
+    return generalChannel || text.sort((a, b) => a.createdAt - b.createdAt)[0];
   }
-
-  return Guild;
 });

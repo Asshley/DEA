@@ -3,18 +3,19 @@ const {
   RESTRICTIONS: { LEADERBOARD_CAP }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
-class ItemLB extends Command {
+class ItemLeaderboard extends Command {
   constructor() {
     super({
-      names: ['itemleaderboards', 'itemlb', 'itemleaderboard'],
+      names: ['itemleaderboard', 'itemlb', 'itemleaderboard'],
       groupName: 'general',
       description: 'View the most armed people.'
     });
   }
 
   async run(msg) {
-    const getUsers = await msg.client.db.userRepo.findMany({ guildId: msg.guild.id });
+    const getUsers = await msg._client.db.userRepo.findMany({ guildId: msg.channel.guild.id });
     const users = getUsers.filter(x => Object.values(x.inventory).length > 0);
     const fn = (accumulator, currentValue) => accumulator + currentValue;
     let message = '';
@@ -28,7 +29,7 @@ class ItemLB extends Command {
         break;
       }
 
-      const user = msg.client.users.get(users[i].userId);
+      const user = msg._client.users.get(users[i].userId);
 
       if (!user) {
         users.splice(i, 1);
@@ -36,16 +37,20 @@ class ItemLB extends Command {
         continue;
       }
 
-      message += `${i + 1}. ${StringUtil.boldify(user.tag)}: \
-${Object.values(users[i].inventory).reduce(fn)}\n`;
+      message += StringUtil.format(
+        messages.commands.itemLeaderboard.message,
+        i + 1,
+        StringUtil.boldify(`${user.username}#${user.discriminator}`),
+        Object.values(users[i].inventory).reduce(fn)
+      );
     }
 
     if (StringUtil.isNullOrWhiteSpace(message)) {
-      return msg.createErrorReply('there is nobody on the item leaderboards.');
+      return msg.createErrorReply(messages.commands.itemLeaderboard.none);
     }
 
-    return msg.channel.createMessage(message, { title: 'The Item Leaderboards' });
+    return msg.channel.sendMessage(message, { title: 'The Item Leaderboards' });
   }
 }
 
-module.exports = new ItemLB();
+module.exports = new ItemLeaderboard();

@@ -2,18 +2,10 @@ const { Command } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const items = require('../../data/items.json');
 
-class OpenAll extends Command {
+class AllItems extends Command {
   constructor() {
     super({
-      names: [
-        'items',
-        'allitems',
-        'fishs',
-        'meats',
-        'weapons',
-        'guns',
-        'knives'
-      ],
+      names: ['items', 'allitems'],
       groupName: 'items',
       description: 'View all items.'
     });
@@ -37,8 +29,8 @@ class OpenAll extends Command {
       reply += str;
     }
 
-    return msg.channel.createMessage(reply, { title: 'All Items' });
+    return msg.channel.sendMessage(reply, { title: 'All Items' });
   }
 }
 
-module.exports = new OpenAll();
+module.exports = new AllItems();

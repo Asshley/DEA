@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class IgnoreChannel extends Command {
   constructor() {
@@ -22,7 +24,7 @@ class IgnoreChannel extends Command {
     const { channels } = msg.dbGuild;
 
     if (channels.ignore.includes(args.channel.id)) {
-      return msg.createErrorReply('this channel is already an ignored channel.');
+      return msg.createErrorReply(messages.commands.ignoreChannel.existing);
     }
 
     const update = {
@@ -31,9 +33,11 @@ class IgnoreChannel extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully added ${args.channel} as an ignored channel.`);
+    return msg.createReply(
+      StringUtil.format(messages.commands.ignoreChannel.successful, args.channel.mention)
+    );
   }
 }
 

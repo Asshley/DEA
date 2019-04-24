@@ -1,11 +1,11 @@
 const { Command, Argument } = require('patron.js');
 const {
-  MAX_AMOUNTS: { VAULT: { UNIQUE_ITEMS, ITEMS: MAX_ITEMS } },
-  MESSAGES: { VAULT }
+  MAX_AMOUNTS: { VAULT: { UNIQUE_ITEMS, ITEMS: MAX_ITEMS } }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const Util = require('../../utility/Util.js');
+const messages = require('../../data/messages.json');
 
 class AddToVault extends Command {
   constructor() {
@@ -20,7 +20,7 @@ class AddToVault extends Command {
           key: 'item',
           type: 'item',
           example: 'intervention',
-          preconditions: ['donthave']
+          preconditions: ['needitem']
         }),
         new Argument({
           name: 'amount',
@@ -48,25 +48,32 @@ class AddToVault extends Command {
     const vault = `vault.${name}`;
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === msg.dbGang.name);
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, {
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
       $inc: { [inv]: -args.amount }
     });
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $inc: {
         [`gangs.${gangIndex}.${vault}`]: args.amount
       }
     });
 
-    const leader = msg.guild.members.get(msg.dbGang.leaderId);
+    const leader = msg.channel.guild.members.get(msg.dbGang.leaderId);
     const format = Util.pluralize(StringUtil.upperFirstChar(name), args.amount);
 
     await MessageUtil.notify(
       leader,
-      StringUtil.format(VAULT.ADD_DM, StringUtil.boldify(msg.author.tag), args.amount, format),
+      StringUtil.format(
+        messages.commands.addToVault.DM,
+        StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+        args.amount,
+        format
+      ),
       'addvaultitem'
     );
 
-    return msg.createReply(StringUtil.format(VAULT.ADD_REPLY, args.amount, format));
+    return msg.createReply(StringUtil.format(
+      messages.commands.addToVault.reply, args.amount, format
+    ));
   }
 }
 

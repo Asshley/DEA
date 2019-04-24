@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class SetModLog extends Command {
   constructor() {
@@ -31,9 +33,11 @@ class SetModLog extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully set the mod log channel to ${args.channel}.`);
+    return msg.createReply(
+      StringUtil.format(messages.commands.setModLog, args.channel.mention)
+    );
   }
 }
 

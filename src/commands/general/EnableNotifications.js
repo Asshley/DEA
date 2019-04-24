@@ -1,6 +1,8 @@
 const { Command, Argument } = require('patron.js');
 const { NOTIFICATIONS } = require('../../utility/Constants.js');
 const Util = require('../../utility/Util.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class EnableNotifications extends Command {
   constructor() {
@@ -27,10 +29,10 @@ class EnableNotifications extends Command {
     const remove = values.filter(x => msg.dbUser.notifications.includes(x));
 
     if (!remove.length) {
-      return msg.createErrorReply('there are no new notifications to enable.');
+      return msg.createErrorReply(messages.commands.enableNotifications.alreadyEnabled);
     }
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, {
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
       $pull: {
         notifications: {
           $in: remove
@@ -40,8 +42,9 @@ class EnableNotifications extends Command {
 
     const list = Util.list(remove);
 
-    return msg.createReply(`you've successfully enabled the following DM notifications:
-${list}`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.enableNotifications.success, list
+    ));
   }
 }
 

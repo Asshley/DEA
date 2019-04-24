@@ -1,13 +1,13 @@
 const { Command } = require('patron.js');
-const Random = require('../../utility/Random.js');
-const NumberUtil = require('../../utility/NumberUtil.js');
-const StringUtil = require('../../utility/StringUtil.js');
 const {
   COOLDOWNS: { JUMP: JUMP_COOLDOWN },
-  MESSAGES: { JUMP: JUMP_MESSAGES },
   RESTRICTIONS: { COMMANDS: { JUMP } },
   ODDS: { JUMP: JUMP_ODDS }
 } = require('../../utility/Constants.js');
+const Random = require('../../utility/Random.js');
+const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Jump extends Command {
   constructor() {
@@ -24,18 +24,16 @@ class Jump extends Command {
     if (Random.roll() < JUMP_ODDS) {
       const prize = Random.nextFloat(JUMP.MINIMUM_CASH, JUMP.MAXIMUM_CASH);
 
-      await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, prize);
+      await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, prize);
 
       const message = StringUtil.format(
-        Random.arrayElement(JUMP_MESSAGES),
-        NumberUtil.toUSD(prize)
+        Random.arrayElement(messages.commands.jump.messages), NumberUtil.toUSD(prize)
       );
 
       return msg.createReply(message);
     }
 
-    return msg.createErrorReply('you pulled out infront of someone on the street and they jumped \
-your dumbass with a crowbar!');
+    return msg.createErrorReply(messages.commands.jump);
   }
 }
 

@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class RemoveRank extends Command {
   constructor() {
@@ -22,7 +24,7 @@ class RemoveRank extends Command {
     const ranks = msg.dbGuild.roles.rank;
 
     if (!ranks.some(role => role.id === args.role.id)) {
-      return msg.createErrorReply('you may not remove a rank role that has not been set.');
+      return msg.createErrorReply(messages.commands.removeRank.notSet);
     }
 
     const update = {
@@ -33,9 +35,11 @@ class RemoveRank extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully removed the rank role ${args.role}.`);
+    return msg.createReply(
+      StringUtil.format(messages.commands.removeRank.successful, args.role.mention)
+    );
   }
 }
 

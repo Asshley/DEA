@@ -19,7 +19,7 @@ class CashTypeReader extends TypeReader {
 
     this.inputtedAll = false;
 
-    const amountReader = message.client.registry.typeReaders.find(x => x.type === 'amount');
+    const amountReader = message._client.registry.typeReaders.find(x => x.type === 'amount');
     const result = await amountReader.read(command, message, argument, args, input);
 
     if (!result.success) {

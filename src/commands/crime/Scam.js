@@ -1,6 +1,5 @@
 const { Command } = require('patron.js');
 const {
-  MESSAGES,
   ODDS: { SCAM: SCAM_ODDS },
   RESTRICTIONS: { COMMANDS: { SCAM } },
   COOLDOWNS: { SCAM: SCAM_COOLDOWN }
@@ -8,6 +7,7 @@ const {
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const messages = require('../../data/messages.json');
 
 class Scam extends Command {
   constructor() {
@@ -24,16 +24,14 @@ class Scam extends Command {
     if (Random.roll() < SCAM_ODDS) {
       const prize = Random.nextFloat(SCAM.MINIMUM_CASH, SCAM.MAXIMUM_CASH);
 
-      await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, prize);
+      await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, prize);
 
-      return msg.createReply(
-        StringUtil.format(Random.arrayElement(MESSAGES.SCAM), NumberUtil.toUSD(prize))
-      );
+      return msg.createReply(StringUtil.format(
+        Random.arrayElement(messages.commands.scam.successful), NumberUtil.toUSD(prize)
+      ));
     }
 
-    return msg.createErrorReply(
-      'you waited in line for some new Adidas Yeezys and bought 10 just to realise they were fake!.'
-    );
+    return msg.createErrorReply(messages.commands.scam.failed);
   }
 }
 

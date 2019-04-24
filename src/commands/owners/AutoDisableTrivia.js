@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class AutoDisableTrivia extends Command {
   constructor() {
@@ -20,12 +22,17 @@ class AutoDisableTrivia extends Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
-      $set: { autoDisableTrivia: args.amount }
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
+      $set: {
+        'trivia.autoDisable': args.amount
+      }
     });
 
-    return msg.createReply(`you've successfully set trivia to ${args.amount ? '' : 'never'} \
-be disabled automatically${args.amount ? ` after ${args.amount} inactive trivia questions` : ''}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.autoDisableTrivia,
+      args.amount ? '' : ' never',
+      args.amount ? ` after ${args.amount} inactive trivia questions` : ''
+    ));
   }
 }
 

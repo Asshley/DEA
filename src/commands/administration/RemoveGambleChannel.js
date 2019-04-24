@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class RemoveGambleChannel extends Command {
   constructor() {
@@ -28,7 +30,7 @@ class RemoveGambleChannel extends Command {
     const { channels } = msg.dbGuild;
 
     if (!channels.gamble.includes(args.channel.id)) {
-      return msg.createErrorReply('this channel isn\'t a gambling channel.');
+      return msg.createErrorReply(messages.commands.removeGambleChannel.notGambleChannel);
     }
 
     const update = {
@@ -37,9 +39,11 @@ class RemoveGambleChannel extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully removed ${args.channel} as a gambling channel.`);
+    return msg.createReply(
+      StringUtil.format(messages.commands.removeGambleChannel.sucessful, args.channel.mention)
+    );
   }
 }
 

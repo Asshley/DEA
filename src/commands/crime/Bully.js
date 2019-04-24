@@ -4,6 +4,7 @@ const {
   COOLDOWNS: { BULLY: BULLY_COOLDOWN }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Bully extends Command {
   constructor() {
@@ -37,8 +38,11 @@ class Bully extends Command {
   async run(msg, args) {
     await args.member.setNickname(args.nickname);
 
-    return msg.createReply(`you just __BULLIED__ ${StringUtil.boldify(args.member.user.tag)} \
-to ${StringUtil.boldify(args.nickname)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.bully,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`),
+      StringUtil.boldify(args.nickname)
+    ));
   }
 }
 

@@ -23,7 +23,7 @@ class AutoUnmute extends Interval {
         continue;
       }
 
-      const member = guild.member(mutes[i].userId);
+      const member = guild.members.get(mutes[i].userId);
 
       if (!member) {
         continue;
@@ -31,14 +31,15 @@ class AutoUnmute extends Interval {
 
       const dbGuild = await guild.dbGuild();
       const role = guild.roles.get(dbGuild.roles.muted);
-      const ignore = !role || !member.roles.has(dbGuild.roles.muted) || !guild.me
-        .hasPermission('MANAGE_ROLES') || role.position >= guild.me.roles.highest.position;
+      const ignore = !role || !member.roles.includes(dbGuild.roles.muted)
+        || !guild.members.get(this.client.user.id).permission.has('manageRoles')
+        || role.position >= guild.members.get(this.client.user.id).highestRole.position;
 
       if (ignore) {
         continue;
       }
 
-      await member.roles.remove(role);
+      await member.removeRole(role.id);
       await ModerationService.tryModLog({
         dbGuild,
         guild,

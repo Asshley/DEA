@@ -1,7 +1,7 @@
-const patron = require('patron.js');
+const { ArgumentPrecondition, PreconditionResult } = require('patron.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 
-class Cash extends patron.ArgumentPrecondition {
+class Cash extends ArgumentPrecondition {
   constructor() {
     super({ name: 'cash' });
   }
@@ -15,10 +15,10 @@ class Cash extends patron.ArgumentPrecondition {
     }
 
     if (val === 'null' || realValue >= val) {
-      return patron.PreconditionResult.fromSuccess();
+      return PreconditionResult.fromSuccess();
     }
 
-    return patron.PreconditionResult.fromError(command, `you do not have ${NumberUtil.toUSD(val)}. \
+    return PreconditionResult.fromError(command, `you do not have ${NumberUtil.toUSD(val)}. \
 Balance: ${NumberUtil.toUSD(realValue)}.`);
   }
 }

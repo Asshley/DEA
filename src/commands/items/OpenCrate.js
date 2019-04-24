@@ -5,6 +5,7 @@ const {
 const itemService = require('../../services/ItemService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const items = require('../../data/items.json');
+const messages = require('../../data/messages.json');
 
 class OpenCrate extends Command {
   constructor() {
@@ -21,7 +22,7 @@ class OpenCrate extends Command {
           type: 'item',
           example: 'bronze crate',
           preconditionOptions: [{ types: ['crate'] }],
-          preconditions: ['nottype', 'donthave'],
+          preconditions: ['nottype', 'needitem'],
           remainder: true
         })
       ]
@@ -34,13 +35,15 @@ class OpenCrate extends Command {
     const item = itemService.openCrate(args.item, items);
     const gained = `inventory.${item.names[0]}`;
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, {
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
       $inc: {
         [gained]: 1, [cases]: -1
       }
     });
 
-    return msg.createReply(`congrats! You've won a ${StringUtil.capitialize(item.names[0])}`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.openCrate, StringUtil.capitialize(item.names[0])
+    ));
   }
 }
 

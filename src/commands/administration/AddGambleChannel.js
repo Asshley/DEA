@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class AddGambleChannel extends Command {
   constructor() {
@@ -22,7 +24,7 @@ class AddGambleChannel extends Command {
     const gambling = msg.dbGuild.channels.gamble;
 
     if (gambling.includes(args.channel.id)) {
-      return msg.createErrorReply('this channel is already a gambling channel.');
+      return msg.createErrorReply(messages.commands.addGambleChannel.existing);
     }
 
     const update = {
@@ -31,9 +33,11 @@ class AddGambleChannel extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully added ${args.channel} as a gambling channel.`);
+    return msg.createReply(
+      StringUtil.format(messages.commands.addGambleChannel.successful, args.channel.mention)
+    );
   }
 }
 

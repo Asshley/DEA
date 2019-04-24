@@ -1,8 +1,9 @@
 const { Command, Context } = require('patron.js');
 const {
-  MESSAGES: { INVITE: INVITE_MESSAGE }
+  BOT_LINK, SERVER_LINK
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Invite extends Command {
   constructor() {
@@ -15,7 +16,9 @@ class Invite extends Command {
   }
 
   run(msg) {
-    return msg.createReply(StringUtil.format(INVITE_MESSAGE, msg.client.user.username));
+    return msg.createReply(StringUtil.format(
+      messages.commands.invite, BOT_LINK, msg._client.user.username, SERVER_LINK
+    ));
   }
 }
 

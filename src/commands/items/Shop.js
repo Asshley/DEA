@@ -1,6 +1,8 @@
 const { Command, Argument } = require('patron.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
+const messages = require('../../data/messages.json');
 
 class Shop extends Command {
   constructor() {
@@ -38,17 +40,21 @@ class Shop extends Command {
     const plural = `${Util.pluralize(name, args.amount)}`;
 
     if (NumberUtil.value(msg.dbUser.cash) < cost) {
-      return msg.createErrorReply(`you need ${NumberUtil.toUSD(cost)} to buy ${plural}.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.shop.needMoney, NumberUtil.toUSD(cost), plural
+      ));
     }
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, {
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
       $inc: {
         [item]: args.amount
       }
     });
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -cost);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -cost);
 
-    return msg.createReply(`you have successfully purchased ${args.amount} ${plural}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.shop.success, args.amount, plural
+    ));
   }
 }
 

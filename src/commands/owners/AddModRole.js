@@ -2,6 +2,8 @@ const { Command, Argument } = require('patron.js');
 const {
   PERMISSION_LEVELS: { MODERATOR, ADMINISTRATOR, OWNER }
 } = require('../../services/ModerationService.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class AddModRole extends Command {
   constructor() {
@@ -29,10 +31,12 @@ class AddModRole extends Command {
 
   async run(msg, args) {
     if (args.permissionLevel < MODERATOR || args.permissionLevel > OWNER) {
-      return msg.createErrorReply(`permission levels:\nModerator: ${MODERATOR}
-Administrator: ${ADMINISTRATOR}\nOwner: ${OWNER}`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.addModRole.roles,
+        MODERATOR, ADMINISTRATOR, OWNER
+      ));
     } else if (msg.dbGuild.roles.mod.some(role => role.id === args.role.id)) {
-      return msg.createErrorReply('this moderation role has already been set.');
+      return msg.createErrorReply(messages.commands.addModRole.alreadySet);
     }
 
     const update = {
@@ -43,10 +47,11 @@ Administrator: ${ADMINISTRATOR}\nOwner: ${OWNER}`);
       }
     };
 
-    await msg.client.db.guildRepo.upsertGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.upsertGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully added the mod role ${args.role} with \
-a permission level of ${args.permissionLevel}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.addModRole.success, args.role.mention, args.permissionLevel
+    ));
   }
 }
 

@@ -1,6 +1,7 @@
 const { Command, Argument, ArgumentDefault } = require('patron.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Money extends Command {
   constructor() {
@@ -24,9 +25,11 @@ class Money extends Command {
   async run(msg, args) {
     const dbUser = args.member.id === msg.member.id ? msg.dbUser : await args.member.dbUser();
 
-    return msg.channel.createMessage(
-      `${StringUtil.boldify(args.member.user.tag)}'s balance: ${NumberUtil.format(dbUser.cash)}.`
-    );
+    return msg.channel.sendMessage(StringUtil.format(
+      messages.commands.money,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`),
+      NumberUtil.format(dbUser.cash)
+    ));
   }
 }
 

@@ -1,5 +1,7 @@
 const { Command, Argument } = require('patron.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Poll extends Command {
   constructor() {
@@ -21,7 +23,7 @@ class Poll extends Command {
 
   async run(msg, args) {
     let choices = '';
-    const creator = msg.client.users.get(args.poll.author);
+    const creator = msg._client.users.get(args.poll.author);
     const {
       days, hours, minutes, seconds
     } = NumberUtil.msToTime(args.poll.length - (Date.now() - args.poll.createdAt));
@@ -35,12 +37,14 @@ class Poll extends Command {
       }
     }
 
-    const string = `**Index:** ${args.poll.index}\n**Creator:** ${creator.tag} (${creator.id})
-**Answers:** \n${choices}\n**Ending:** ${days} days, ${hours} hours, ${minutes} minutes, ${seconds}\
- seconds\n**Elder Only:** ${args.poll.eldersOnly ? 'Yes' : 'No'}
-**Mod Only:** ${args.poll.modsOnly ? 'Yes' : 'No'}`;
-
-    return msg.channel.createMessage(string, { title: args.poll.name });
+    return msg.channel.sendMessage(StringUtil.format(
+      messages.commands.poll,
+      args.poll.index,
+      `${creator.username}#${creator.discriminator}`, creator.id,
+      choices,
+      days, hours, minutes, seconds,
+      args.poll.modsOnly ? 'Yes' : 'No'
+    ), { title: args.poll.name });
   }
 }
 

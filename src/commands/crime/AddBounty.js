@@ -3,6 +3,8 @@ const {
   RESTRICTIONS: { COMMANDS: { BOUNTY: { MINIMUM: MINIMUM_BOUNTY } } }
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class AddBounty extends Command {
   constructor() {
@@ -31,13 +33,16 @@ class AddBounty extends Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.bounty);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.bounty);
 
-    const newDbUser = await msg.client.db.userRepo
-      .modifyBounty(msg.dbGuild, args.member, args.bounty);
+    const res = await msg._client.db.userRepo.modifyBounty(msg.dbGuild, args.member, args.bounty);
 
-    return msg.createReply(`you've successfully added a bounty of ${NumberUtil.toUSD(args.bounty)} \
-to ${args.member.user.tag}, making his total bounty ${NumberUtil.format(newDbUser.bounty)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.addBounty,
+      NumberUtil.toUSD(args.bounty),
+      `${args.member.user.username}#${args.member.user.discriminator}`,
+      NumberUtil.format(res.bounty)
+    ));
   }
 }
 

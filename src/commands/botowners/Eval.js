@@ -2,6 +2,7 @@ const { Command, Argument, Context } = require('patron.js');
 const {
   COLORS: { ERROR: ERROR_COLOR }
 } = require('../../utility/Constants.js');
+const ERR_LENGTH = 900;
 const util = require('util');
 
 class Eval extends Command {
@@ -26,8 +27,7 @@ class Eval extends Command {
   async run(msg, args) {
     try {
       /* eslint-disable no-unused-vars */
-      const { client, client: { db }, guild, channel, author, member } = msg;
-      const message = msg;
+      const { _client: client, _client: { db }, channel, channel: { guild }, author, member } = msg;
       /* eslint-enable no-unused-vars */
       let result = eval(args.code);
 
@@ -39,15 +39,21 @@ class Eval extends Command {
         result = util.inspect(result, { depth: 0 });
       }
 
-      result = result.replace(msg.client.token, ' ');
+      result = result.replace(msg._client.token, ' ');
 
-      return msg.channel.createFieldsMessage(
+      return msg.channel.sendFieldsMessage(
         ['Eval', `\`\`\`js\n${args.code}\`\`\``, 'Returns', `\`\`\`js\n${result}\`\`\``],
         false
       );
     } catch (err) {
-      return msg.channel.createFieldsMessage(
-        ['Eval', `\`\`\`js\n${args.code}\`\`\``, 'Error', `\`\`\`js\n${err}\`\`\``],
+      return msg.channel.sendFieldsMessage(
+        [
+          'Eval',
+          `\`\`\`js\n${args.code}\`\`\``,
+          'Error',
+          `\`\`\`js\n${err.stack
+            .slice(0, ERR_LENGTH)}\`\`\``
+        ],
         false,
         ERROR_COLOR
       );

@@ -1,8 +1,8 @@
 const { ArgumentPrecondition, PreconditionResult } = require('patron.js');
 
-class NotItem extends ArgumentPrecondition {
+class NeedItem extends ArgumentPrecondition {
   constructor() {
-    super({ name: 'donthave' });
+    super({ name: 'needitem' });
   }
 
   async run(command, msg, argument, args, value) {
@@ -16,4 +16,4 @@ class NotItem extends ArgumentPrecondition {
   }
 }
 
-module.exports = new NotItem();
+module.exports = new NeedItem();

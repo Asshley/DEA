@@ -4,10 +4,10 @@ const {
   RESTRICTIONS: { COMMANDS: { DOUBLE } },
   ODDS: { DOUBLE: DOUBLE_ODDS }
 } = require('../../utility/Constants.js');
-const { Collection } = require('discord.js');
-const history = new Collection();
 const NumberUtil = require('../../utility/NumberUtil.js');
+const StringUtil = require('../../utility/StringUtil.js');
 const Random = require('../../utility/Random.js');
+const messages = require('../../data/messages.json');
 
 class Double extends Command {
   constructor() {
@@ -16,31 +16,36 @@ class Double extends Command {
       groupName: 'gambling',
       description: 'Double your cash with no strings attached.'
     });
+    this.history = {};
   }
 
   async run(msg) {
     if (NumberUtil.value(msg.dbUser.cash) < DOUBLE.MINIMUM) {
-      return msg.createErrorReply(
-        `you need at least ${NumberUtil.toUSD(DOUBLE.MINIMUM)} for me to work with.`
-      );
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.double.needsCash,
+        NumberUtil.toUSD(DOUBLE.MINIMUM)
+      ));
     }
 
-    const key = `${msg.author.id}-${msg.guild.id}`;
-    const value = history.get(key) || 0;
+    const key = `${msg.author.id}-${msg.channel.guild.id}`;
+    const value = this.history[key] || 0;
     const roll = Random.roll();
     const inGang = msg.dbGang;
     const odds = inGang ? DOUBLE_ODDS.GANG_ODDS : DOUBLE_ODDS.ODDS;
 
     if (value < DOUBLE_WINS && roll < odds) {
-      await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $mul: { cash: 2 } });
-      history.set(key, value + 1);
+      await msg._client.db.userRepo.updateUser(
+        msg.author.id, msg.channel.guild.id, { $mul: { cash: 2 } }
+      );
+      this.history[key] = value + 1;
     } else {
-      history.set(key, 1);
-      await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, { $set: { cash: 0 } });
+      this.history[key] = 1;
+      await msg._client.db.userRepo.updateUser(
+        msg.author.id, msg.channel.guild.id, { $set: { cash: 0 } }
+      );
     }
 
-    return msg.createReply('I\'ve successfully doubled your cash. If your cash isn\'t doubled by \
-now then it will automatically replenish itself over time.');
+    return msg.createReply(messages.commands.double.reply);
   }
 }
 

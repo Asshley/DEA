@@ -1,14 +1,11 @@
-const { Client: _Client } = require('discord.js');
-const { CLIENT_OPTIONS } = require('../utility/Constants.js');
-const Database = require('../database/Database.js');
-const registry = require('../singletons/registry.js');
+const { Client: ErisClient } = require('eris');
 
-class Client extends _Client {
-  constructor(reg, db, options) {
-    super(options);
-    Object.defineProperty(this, 'registry', { value: reg });
-    Object.defineProperty(this, 'db', { value: db });
+class Client extends ErisClient {
+  constructor(options) {
+    super(options.token, options.erisOptions);
+    Object.defineProperty(this, 'registry', { value: options.registry });
+    Object.defineProperty(this, 'db', { value: options.db });
   }
 }
 
-module.exports = new Client(registry, new Database(), CLIENT_OPTIONS);
+module.exports = Client;

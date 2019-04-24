@@ -1,6 +1,5 @@
 const { Command, Argument } = require('patron.js');
 const {
-  MESSAGES: { ROB: ROB_MESSAGES },
   COOLDOWNS: { ROB: ROB_COOLDOWN },
   ODDS: { ROB: ROB_ODDS },
   RESTRICTIONS: { COMMANDS: { ROB: { MINIMUM_CASH, MAXIMUM_CASH } } }
@@ -8,6 +7,7 @@ const {
 const Random = require('../../utility/Random.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Rob extends Command {
   constructor() {
@@ -38,7 +38,7 @@ class Rob extends Command {
   }
 
   async run(msg, args) {
-    const reader = msg.client.registry.typeReaders.find(x => x.type === 'cash');
+    const reader = msg._client.registry.typeReaders.find(x => x.type === 'cash');
 
     if (reader.inputtedAll) {
       args.resources = args['resources-all'];
@@ -47,15 +47,17 @@ class Rob extends Command {
     const roll = Random.roll();
 
     if (roll < ROB_ODDS) {
-      await msg.client.db.userRepo.modifyCash(msg.dbGuild, args.member, -args.resources);
-      await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, args.resources);
+      await msg._client.db.userRepo.modifyCash(msg.dbGuild, args.member, -args.resources);
+      await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, args.resources);
 
-      return msg.createReply(StringUtil.format(ROB_MESSAGES.OK, NumberUtil.toUSD(args.resources)));
+      return msg.createReply(StringUtil.format(
+        messages.commands.rob.successful, NumberUtil.toUSD(args.resources)
+      ));
     }
 
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.resources);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.resources);
 
-    return msg.createReply(ROB_MESSAGES.FAIL);
+    return msg.createReply(messages.commands.rob.failed);
   }
 }
 

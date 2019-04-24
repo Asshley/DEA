@@ -4,6 +4,7 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class ModifyGangWealth extends Command {
   constructor() {
@@ -44,7 +45,7 @@ class ModifyGangWealth extends Command {
       gang = msg.dbGang;
 
       if (!gang) {
-        return msg.createErrorReply('you are not in a gang.');
+        return msg.createErrorReply(messages.commands.modifyGangWealth.notInGang);
       }
     }
 
@@ -55,10 +56,13 @@ class ModifyGangWealth extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully added ${NumberUtil.toUSD(args.amount)} to \
-${gang.leaderId === msg.author.id ? 'your gang' : gang.name}'s wealth.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.modifyGangWealth.success,
+      NumberUtil.toUSD(args.amount),
+      gang.leaderId === msg.author.id ? 'your gang' : gang.name
+    ));
   }
 }
 

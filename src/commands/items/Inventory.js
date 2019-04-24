@@ -1,6 +1,7 @@
 const { Command, Argument, ArgumentDefault } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
+const messages = require('../../data/messages.json');
 
 class Inventory extends Command {
   constructor() {
@@ -31,16 +32,21 @@ class Inventory extends Command {
       const plural = Util.pluralize(keys[i], dbUser.inventory[key]);
 
       if (dbUser.inventory[key]) {
-        reply += `${StringUtil.capitialize(plural)}: ${dbUser.inventory[key]}\n`;
+        reply += StringUtil.format(
+          messages.commands.inventory.message, StringUtil.capitialize(plural), dbUser.inventory[key]
+        );
       }
     }
 
+    const tag = `${args.member.user.username}#${args.member.user.discriminator}`;
+
     if (StringUtil.isNullOrWhiteSpace(reply)) {
-      return msg.channel.createErrorMessage(`${StringUtil.boldify(args.member.user.tag)} \
-has nothing in their inventory.`);
+      return msg.channel.createErrorMessage(StringUtil.format(
+        messages.commands.inventory.none, StringUtil.boldify(tag)
+      ));
     }
 
-    return msg.channel.createMessage(reply, { title: `${args.member.user.tag}'s Inventory:` });
+    return msg.channel.sendMessage(reply, { title: `${tag}'s Inventory:` });
   }
 }
 

@@ -1,5 +1,6 @@
 const { Command, Argument } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class RemovePoll extends Command {
   constructor() {
@@ -21,13 +22,16 @@ class RemovePoll extends Command {
 
   async run(msg, args) {
     if (msg.author.id !== args.poll.author) {
-      return msg.createErrorReply('you\'re not the creator of this poll.');
+      return msg.createErrorReply(messages.commands.removePoll.notOwner);
     }
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, { $pull: { polls: args.poll } });
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
+      $pull: { polls: args.poll }
+    });
 
-    return msg.createReply(`successfully destroyed your poll \
-${StringUtil.boldify(args.poll.name)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.removePoll.success, args.poll.name
+    ));
   }
 }
 

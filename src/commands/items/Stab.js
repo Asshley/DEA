@@ -1,6 +1,5 @@
 const { Command, Argument } = require('patron.js');
 const {
-  MESSAGES: { BROKEN_ITEM, REVIVAL },
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH },
   COOLDOWNS: { STAB: STAB_COOLDOWN },
   INVESTMENTS: { SNOWCAP },
@@ -13,6 +12,7 @@ const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const items = require('../../data/items.json');
+const messages = require('../../data/messages.json');
 
 class Stab extends Command {
   constructor() {
@@ -36,7 +36,7 @@ class Stab extends Command {
           type: 'item',
           example: 'huntsman knife',
           preconditionOptions: [{ types: ['knife'] }],
-          preconditions: ['nottype', 'donthave', 'allied'],
+          preconditions: ['nottype', 'needitem', 'allied'],
           remainder: true
         })
       ]
@@ -44,20 +44,20 @@ class Stab extends Command {
   }
 
   async run(msg, args) {
-    const broken = await itemService.break(msg.client.db, msg.guild, msg.author, args.item);
+    const broken = await itemService
+      .break(msg._client.db, msg.channel.guild, msg.author, args.item);
 
     if (broken) {
-      const response = StringUtil.format(
-        Random.arrayElement(BROKEN_ITEM), StringUtil.boldify(args.item.names[0])
-      );
-
-      return msg.createErrorReply(response);
+      return msg.createErrorReply(StringUtil.format(
+        Random.arrayElement(messages.commands.stab.broken), StringUtil.boldify(args.item.names[0])
+      ));
     }
 
-    return this.stab(msg, args.member, args.item, msg.client.db);
+    return this.stab(msg, args.member, args.item, msg._client.db);
   }
 
-  async stab(msg, member, item, db) {
+  async stab(msg, member, item) {
+    const { db } = msg._client;
     const roll = Random.roll();
     const dbUser = await member.dbUser();
 
@@ -69,45 +69,72 @@ class Stab extends Command {
           return this.revive(msg, member);
         }
 
-        itemService.takeInv(msg.author.id, dbUser, msg.guild.id, msg.client.db);
-        await db.userRepo.modifyCashExact(msg.dbGuild, msg.member, dbUser.bounty);
-        await db.userRepo.modifyCashExact(msg.dbGuild, msg.member, dbUser.cash);
+        const earned = await this.loot(msg.member, member, msg);
 
-        const amount = await this.takeWealth(msg, await member.dbGang());
-        const totalEarning = dbUser.bounty + dbUser.cash + amount;
+        await MessageUtil.notify(member, StringUtil.format(
+          messages.commands.stab.killedDM,
+          StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
+        ), 'killed');
 
-        await db.userRepo.deleteUser(member.id, msg.guild.id);
-        await MessageUtil.notify(member, `Unfortunately, you were killed by \
-${StringUtil.boldify(msg.author.tag)}. All your data has been reset.`, 'killed');
-
-        return msg.createReply(`woah, you just killed ${StringUtil.boldify(member.user.tag)}. \
-You just earned ${NumberUtil.format(totalEarning)} **AND** their inventory, congrats.`);
+        return msg.createReply(StringUtil.format(
+          messages.commands.stab.killed,
+          StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`),
+          NumberUtil.format(earned)
+        ));
       }
 
-      await db.userRepo.updateUser(member.id, msg.guild.id, {
+      await db.userRepo.updateUser(member.id, msg.channel.guild.id, {
         $inc: {
           health: -damage
         }
       });
-      await MessageUtil.notify(member, `${StringUtil.boldify(msg.author.tag)} tried to kill you, \
-but nigga you *AH, HA, HA, HA, STAYIN' ALIVE*. -${damage} health. Current Health: \
-${dbUser.health - damage}`, 'stab');
+      await MessageUtil.notify(member, StringUtil.format(
+        messages.commands.stab.userDM,
+        StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+        damage,
+        dbUser.health - damage
+      ), 'stab');
 
-      return msg.createReply(`just stabbed that nigga in the heart, you just dealt ${damage} \
-damage to ${StringUtil.boldify(member.user.tag)}.`);
+      return msg.createReply(StringUtil.format(
+        messages.commands.stab.reply,
+        damage,
+        StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
+      ));
     }
 
-    return msg.createReply('this nigga actually did some acrobatics shit and bounced out of the \
-way before you stabbed him.');
+    return msg.createReply(messages.commands.stab.failed);
+  }
+
+  async loot(shooter, shotMember, msg) {
+    const dbUser = await shotMember.dbUser();
+    const { db } = msg._client;
+
+    itemService.takeInventory(shooter.id, dbUser, msg.channel.guild.id, db);
+    await db.userRepo.modifyCashExact(msg.dbGuild, shooter, dbUser.bounty + dbUser.cash);
+
+    const amount = await this.takeWealth(msg, await shotMember.dbGang());
+
+    await db.userRepo.updateUser(shotMember.id, shotMember.guild.id, {
+      $set: {
+        cash: 0,
+        bounty: 0,
+        health: 100,
+        inventory: {}
+      }
+    });
+
+    return dbUser.bounty + dbUser.cash + amount;
   }
 
   async revive(msg, member) {
     await msg.createReply(StringUtil.format(
-      REVIVAL.REPLY, StringUtil.boldify(member.user.tag)
+      messages.commmands.shoot.revived,
+      StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
     ));
-    await member.tryDM(StringUtil.format(REVIVAL.DM, StringUtil.boldify(msg.author.tag)), {
-      guild: msg.guild
-    });
+    await member.tryDM(StringUtil.format(
+      messages.commands.stab.revivedDM,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
+    ), { guild: msg.channel.guild });
 
     const update = {
       $pull: {
@@ -119,7 +146,7 @@ way before you stabbed him.');
       }
     };
 
-    return msg.client.db.userRepo.updateUser(member.id, msg.guild.id, update);
+    return msg._client.db.userRepo.updateUser(member.id, msg.channel.guild.id, update);
   }
 
   async takeWealth(msg, gang) {
@@ -127,7 +154,7 @@ way before you stabbed him.');
 
     if (gang && NumberUtil.value(gang.wealth) > MINIMUM_AMOUNT) {
       taken = NumberUtil.round(gang.wealth * CASH_FOR_KILL, DECIMAL_ROUND_AMOUNT);
-      await msg.client.db.userRepo.modifyCashExact(msg.dbGuild, msg.member, taken);
+      await msg._client.db.userRepo.modifyCashExact(msg.dbGuild, msg.member, taken);
 
       const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
       const update = {
@@ -136,7 +163,7 @@ way before you stabbed him.');
         }
       };
 
-      await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+      await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
     }
 
     return taken;

@@ -1,14 +1,12 @@
 const { Command, Argument } = require('patron.js');
-const {
-  MESSAGES: { GANG }
-} = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
-class Gang extends Command {
+class FindGang extends Command {
   constructor() {
     super({
-      names: ['gang', 'findgang'],
+      names: ['findgang', 'gang'],
       groupName: 'gangs',
       description: 'Finds a gang.',
       args: [
@@ -31,22 +29,25 @@ class Gang extends Command {
       gang = msg.dbGang;
 
       if (!gang) {
-        return msg.createErrorReply(StringUtil.format(GANG.NOT_IN_GANG, 'you\'re'));
+        return msg.createErrorReply(StringUtil.format(messages.commands.findGang, 'you\'re'));
       }
     }
 
     const { client } = msg;
-    const leader = client.users.get(gang.leaderId).tag;
+    const { username, discriminator } = client.users.get(gang.leaderId);
+    const leader = `${username}#${discriminator}`;
     let members = '';
     let elders = '';
 
     for (let i = 0; i < gang.members.length; i++) {
       const member = gang.members[i];
+      const user = client.users.get(member.id);
+      const tag = `${user.username}#${user.discriminator}`;
 
       if (member.status === 'elder') {
-        elders += `${client.users.get(member.id).tag}${i === gang.members.length - 1 ? '' : ', '}`;
+        elders += `${tag}${i === gang.members.length - 1 ? '' : ', '}`;
       } else {
-        members += `${client.users.get(member.id).tag}${i === gang.members.length - 1 ? '' : ', '}`;
+        members += `${tag}${i === gang.members.length - 1 ? '' : ', '}`;
       }
     }
 
@@ -63,8 +64,8 @@ class Gang extends Command {
 
     reply += `\n**Wealth:** ${NumberUtil.format(gang.wealth)}`;
 
-    return msg.channel.createMessage(reply, { footer: { text: `Index: ${gang.index}` } });
+    return msg.channel.sendMessage(reply, { footer: { text: `Index: ${gang.index}` } });
   }
 }
 
-module.exports = new Gang();
+module.exports = new FindGang();

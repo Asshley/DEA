@@ -5,6 +5,8 @@ const {
   RESTRICTIONS: { COMMANDS: { CLEAR: { MAXIMUM_MESSAGES, MINIMUM_MESSAGES } } }
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 const DELAY = 3e3;
 
 class Clear extends Command {
@@ -26,6 +28,13 @@ class Clear extends Command {
           preconditions: ['minimum', 'maximum']
         }),
         new Argument({
+          name: 'user',
+          key: 'user',
+          type: 'user',
+          example: '"Ass eater 5000"',
+          defaultValue: ''
+        }),
+        new Argument({
           name: 'reason',
           key: 'reason',
           type: 'string',
@@ -38,22 +47,22 @@ class Clear extends Command {
   }
 
   async run(msg, args) {
-    const messages = await msg.channel.messages.fetch({ limit: args.quantity });
+    const filter = args.user ? m => m.author.id === args.user.id : null;
+    const deleted = await msg.channel.purge(args.quantity, filter);
+    const reply = await msg.createReply(StringUtil.format(
+      messages.commands.clear, deleted
+    ));
 
-    await msg.channel.bulkDelete(messages);
-
-    const reply = await msg.createReply(`You have successfully deleted ${args.quantity} messages.`);
-
-    ModerationService.tryModLog({
+    await ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Clear',
       color: CLEAR_COLOR,
       reason: args.reason,
       moderator: msg.author,
       user: null,
       extraInfoType: 'Quantity',
-      extraInfo: `${args.quantity}\n**Channel:** ${msg.channel.name} (${msg.channel})`
+      extraInfo: `${deleted}\n**Channel:** ${msg.channel.name} (${msg.channel.mention})`
     });
 
     return reply.delete(DELAY);

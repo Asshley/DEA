@@ -1,6 +1,8 @@
 const { Command, Argument } = require('patron.js');
 const { NOTIFICATIONS } = require('../../utility/Constants.js');
 const Util = require('../../utility/Util.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class DisableNotifications extends Command {
   constructor() {
@@ -25,12 +27,15 @@ class DisableNotifications extends Command {
   async run(msg, args) {
     const values = args.notifications.map(x => x.toLowerCase());
     const add = values.filter(x => !msg.dbUser.notifications.includes(x));
+    const list = Util.list(add);
 
     if (!add.length) {
-      return msg.createErrorReply(`you've already disabled ${Util.list(add)}.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.disableNotifications.alreadyDisabled, list
+      ));
     }
 
-    await msg.client.db.userRepo.updateUser(msg.author.id, msg.guild.id, {
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
       $push: {
         notifications: {
           $each: add
@@ -38,10 +43,7 @@ class DisableNotifications extends Command {
       }
     });
 
-    const list = Util.list(add);
-
-    return msg.createReply(`you've successfully disabled the following DM notifications:
-${list}.`);
+    return msg.createReply(StringUtil.format(messages.commands.disableNotifications.success, list));
   }
 }
 

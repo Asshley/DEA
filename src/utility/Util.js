@@ -1,7 +1,4 @@
 const { MultiMutex, Mutex } = require('patron.js');
-const {
-  REGEXES: { CAMEL_CASE }
-} = require('../utility/Constants.js');
 
 class Util {
   static pluralize(string, amount) {
@@ -18,6 +15,10 @@ class Util {
     }
 
     return format;
+  }
+
+  static delay(ms) {
+    return new Promise(r => setTimeout(r, ms));
   }
 
   static list(array, ending = 'and', fn = null) {
@@ -39,15 +40,6 @@ class Util {
     }
 
     return string;
-  }
-
-  static toCamelCase(input) {
-    const s = input
-      .match(CAMEL_CASE)
-      .map(x => x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase())
-      .join('');
-
-    return s.slice(0, 1).toLowerCase() + s.slice(1);
   }
 }
 Util.MULTI_MUTEX = new MultiMutex();

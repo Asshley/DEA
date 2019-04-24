@@ -2,10 +2,11 @@ const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { GANG: { MEMBERS: MAX_MEMBERS } }
 } = require('../../utility/Constants.js');
+const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
-const MAX_NUMBER = 2147e6;
+const messages = require('../../data/messages.json');
 
 class JoinGang extends Command {
   constructor() {
@@ -28,56 +29,63 @@ class JoinGang extends Command {
 
   async run(msg, args) {
     if (args.gang.members.length >= MAX_MEMBERS) {
-      return msg.createErrorReply('sorry, this gang is full.');
+      return msg.createErrorReply(messages.commands.joinGang.maxMembers);
     }
 
-    const leader = msg.guild.members.get(args.gang.leaderId);
-
-    if (!leader.user.dmChannel) {
-      await leader.createDM();
-    }
-
-    const key = Random.nextInt(0, MAX_NUMBER).toString();
-    const dm = await leader.tryDM(`${StringUtil.boldify(msg.author.tag)} is trying to join your \
-gang, reply with "${key}" within the next 5 minutes to accept this.`, { guild: msg.guild });
+    const leader = msg.channel.guild.members.get(args.gang.leaderId);
+    const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString();
+    const dm = await leader.tryDM(StringUtil.format(
+      messages.commands.joinGang.invite,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      key
+    ), { guild: msg.channel.guild });
 
     if (!dm) {
-      return msg.createErrorReply(`I am unable to inform ${StringUtil.boldify(leader.user.tag)} \
-of your join request.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.joinGang.cantDM,
+        StringUtil.boldify(`${leader.user.username}#${leader.user.discriminator}`)
+      ));
     }
 
-    await msg.createReply('the leader of this gang has successfully been \
-informed of your join request.');
+    await msg.createReply(messages.commands.joinGang.DM);
 
     const res = await this.verify(msg, leader, key);
 
     if (res) {
-      await leader.tryDM(`You've successfully let ${StringUtil.boldify(msg.author.tag)} \
-join your gang.`, { guild: msg.guild });
+      await leader.tryDM(StringUtil.format(
+        messages.commands.joinGang.successfulDM,
+        StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
+      ), { guild: msg.channel.guild });
 
-      return msg.author.tryDM(`You've successfully joined the gang \
-${StringUtil.boldify(args.gang.name)}.`, { guild: msg.guild });
+      return msg.author.tryDM(StringUtil.format(
+        messages.commands.joinGang.successfulMemberDM, StringUtil.boldify(args.gang.name)
+      ), { guild: msg.channel.guild });
     }
 
-    return msg.author.tryDM(`${StringUtil.boldify(leader.user.tag)} didn't respond \
-to your join request.`, { guild: msg.guild });
+    return msg.author.tryDM(StringUtil.format(
+      messages.commands.joinGang.failure,
+      StringUtil.boldify(`${leader.user.username}#${leader.user.discriminator}`)
+    ), { guild: msg.channel.guild });
   }
 
   async verify(msg, leader, key) {
     const fn = m => m.author.id === leader.id && m.content.includes(key);
-    const result = await leader.user.dmChannel.awaitMessages(fn, {
-      time: 300000, max: 1
+    const result = await awaitMessages(await leader.user.getDMChannel(), {
+      time: 300000, max: 1, filter: fn
     });
 
-    if (result.size >= 1) {
+    if (result.length >= 1) {
       const gang = await msg.member.dbGang();
 
       if (gang) {
-        await leader.tryDM(`${StringUtil.boldify(msg.author.tag)} has \
-already joined a gang.`, { guild: msg.guild });
+        await leader.tryDM(StringUtil.format(
+          messages.commands.joinGang.joinedGang,
+          StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
+        ), { guild: msg.channel.guild });
 
-        return msg.author.tryDM(`you're unable to join ${StringUtil.boldify(gang.name)}\
- since you're already in a gang.`, { guild: msg.guild });
+        return msg.author.tryDM(StringUtil.format(
+          messages.commands.joinGang.joinedGangDM, gang.name
+        ), { guild: msg.channel.guild });
       }
 
       const leaderGang = await leader.dbGang();
@@ -93,7 +101,7 @@ already joined a gang.`, { guild: msg.guild });
         }
       };
 
-      await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+      await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
       return true;
     }
@@ -102,14 +110,14 @@ already joined a gang.`, { guild: msg.guild });
   }
 
   async syncCooldowns(msg, gang) {
-    const { cooldowns: cds } = msg.client.registry.commands.find(x => x.names.includes('raid'));
+    const { cooldowns: cds } = msg._client.registry.commands.find(x => x.names.includes('raid'));
 
-    await Util.MULTI_MUTEX.sync(msg.guild.id, async () => {
+    await Util.MULTI_MUTEX.sync(msg.channel.guild.id, async () => {
       const gangMembers = gang.members.concat(gang.leaderId);
       const cooldowns = gangMembers
-        .filter(x => cds.users[`${x.id || x}-${msg.guild.id}`]
-          && cds.users[`${x.id || x}-${msg.guild.id}`].resets - Date.now() > 0)
-        .map(x => cds.users[`${x.id || x}-${msg.guild.id}`].resets);
+        .filter(x => cds.users[`${x.id || x}-${msg.channel.guild.id}`]
+          && cds.users[`${x.id || x}-${msg.channel.guild.id}`].resets - Date.now() > 0)
+        .map(x => cds.users[`${x.id || x}-${msg.channel.guild.id}`].resets);
 
       if (!cooldowns.length) {
         return;
@@ -117,7 +125,7 @@ already joined a gang.`, { guild: msg.guild });
 
       const highest = Math.max(...cooldowns);
 
-      cds.users[`${msg.author.id}-${msg.guild.id}`] = {
+      cds.users[`${msg.author.id}-${msg.channel.guild.id}`] = {
         resets: highest,
         used: 1
       };

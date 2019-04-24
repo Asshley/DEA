@@ -2,7 +2,7 @@ const MAX_POSSIBLE = 100;
 
 class Random {
   static nextInt(min, max) {
-    return ~~(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 
   static nextFloat(min, max) {

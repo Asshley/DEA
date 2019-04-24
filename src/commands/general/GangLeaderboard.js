@@ -4,18 +4,19 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
-class GangLB extends Command {
+class GangLeaderboard extends Command {
   constructor() {
     super({
-      names: ['ganglb', 'gangs'],
+      names: ['gangleaderboard', 'ganglb', 'gangs'],
       groupName: 'general',
       description: 'Richest Gangs.'
     });
   }
 
   async run(msg) {
-    const guilds = await msg.client.db.guildRepo.findMany({ guildId: msg.guild.id });
+    const guilds = await msg._client.db.guildRepo.findMany({ guildId: msg.channel.guild.id });
     let message = '';
 
     for (let i = 0; i < guilds.length; i++) {
@@ -30,17 +31,22 @@ class GangLB extends Command {
 
         const gang = gangs[m];
 
-        message += `${m + 1}. ${StringUtil.boldify(gang.name)} (${gang.index}): \
-${NumberUtil.format(gang.wealth)}\n`;
+        message += StringUtil.format(
+          messages.commands.gangLeaderboard.message,
+          m + 1,
+          StringUtil.boldify(gang.name),
+          gang.index,
+          NumberUtil.format(gang.wealth)
+        );
       }
     }
 
     if (StringUtil.isNullOrWhiteSpace(message)) {
-      return msg.createErrorReply('there are no gangs.');
+      return msg.createErrorReply(messages.commands.gangLeaderboard.none);
     }
 
-    return msg.channel.createMessage(message, { title: 'The Wealthiest Gangs' });
+    return msg.channel.sendMessage(message, { title: 'The Wealthiest Gangs' });
   }
 }
 
-module.exports = new GangLB();
+module.exports = new GangLeaderboard();

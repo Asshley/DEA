@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class SetRegenHealth extends Command {
   constructor() {
@@ -21,11 +23,15 @@ class SetRegenHealth extends Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, { $set: { regenHealth: args.amount } });
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
+      $set: {
+        regenHealth: args.amount
+      }
+    });
 
-    return msg.createReply(
-      `you've successfully set the server's regen amount to ${args.amount} per hour.`
-    );
+    return msg.createReply(StringUtil.format(
+      messages.commands.setRegenHealth, args.amount
+    ));
   }
 }
 

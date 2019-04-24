@@ -6,6 +6,8 @@ const {
 } = require('../utility/Constants.js');
 const Random = require('../utility/Random.js');
 const NumberUtil = require('../utility/NumberUtil.js');
+const StringUtil = require('../utility/StringUtil.js');
+const messages = require('../data/messages.json');
 
 class Gambling extends Command {
   constructor(names, description, odds, payoutMultiplier, preconditions = []) {
@@ -30,30 +32,39 @@ class Gambling extends Command {
   }
 
   async run(msg, args) {
-    if (!msg.dbGuild.channels.gamble.length) {
-      return msg.createErrorReply('there are no gambling channels set.');
-    } else if (!msg.dbGuild.channels.gamble.includes(msg.channel.id)) {
+    const gamblingChannels = msg.dbGuild.channels.gamble;
+
+    if (gamblingChannels.length && !msg.dbGuild.channels.gamble.includes(msg.channel.id)) {
       const channels = msg.dbGuild.channels.gamble
         .slice(0, GAMBLE_CHANNELS_SHOWN).map(x => `<#${x}>`).join(', ');
 
-      return msg.createErrorReply(`you may only gamble in one of the designated gambling channels. \
-Here are some of them: ${channels}.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.gambling, channels
+      ));
     }
 
     const roll = Random.roll();
 
     if (roll >= this.odds) {
       const winnings = args.bet * this.payoutMultiplier;
-      const newDbUser = await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, winnings);
+      const res = await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, winnings);
 
-      return msg.createReply(`you rolled: ${roll.toFixed(ROUND)}. \
-Congrats, you won ${NumberUtil.toUSD(winnings)}. Balance: ${NumberUtil.format(newDbUser.cash)}.`);
+      return msg.createReply(StringUtil.format(
+        messages.commands.gambling.successful,
+        roll.toFixed(ROUND),
+        NumberUtil.toUSD(winnings),
+        NumberUtil.format(res.cash)
+      ));
     }
 
-    const newDbUser = await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.bet);
+    const res = await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.bet);
 
-    return msg.createReply(`you rolled: ${roll.toFixed(ROUND)}. Unfortunately, you lost ${NumberUtil
-      .toUSD(args.bet)}. Balance: ${NumberUtil.format(newDbUser.cash)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.gambling.failed,
+      roll.toFixed(ROUND),
+      NumberUtil.toUSD(args.bet),
+      NumberUtil.format(res.cash)
+    ));
   }
 }
 

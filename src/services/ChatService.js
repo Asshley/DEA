@@ -1,44 +1,40 @@
 const {
   COOLDOWNS: { REDUCED_MESSAGE_CASH, MESSAGE_CASH },
   RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
-  MESSAGES: { LOTTERY: LOTTERY_MESSAGES },
   MISCELLANEA: { CASH_PER_MESSAGE },
   INVESTMENTS,
   ODDS
 } = require('../utility/Constants.js');
-const { Collection } = require('discord.js');
 const Random = require('../utility/Random.js');
 const StringUtil = require('../utility/StringUtil.js');
 const NumberUtil = require('../utility/NumberUtil.js');
+const messages = require('../data/messages.json');
 
 class ChatService {
   constructor() {
-    this.messages = new Collection();
+    this.messages = {};
   }
 
   async applyCash(msg) {
-    const lastMessage = this.messages.get(msg.author.id);
+    const lastMessage = this.messages[msg.author.id];
     const perks = this.getInvestmentPerks(msg.dbUser, msg.dbGuild);
     const cdOver = !lastMessage || Date.now() - lastMessage > perks.cooldown;
     const longEnough = msg.content.length >= MINIMUM_MESSAGE_LENGTH;
 
     if (cdOver && longEnough) {
-      this.messages.set(msg.author.id, Date.now());
+      this.messages[msg.author.id] = Date.now();
 
       if (ODDS.LOTTERY >= Random.roll()) {
         const winnings = Random.nextFloat(LOTTERY.MINIMUM_CASH, LOTTERY.MAXIMUM_CASH);
 
-        await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, winnings);
+        await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, winnings);
 
-        const response = StringUtil.format(
-          Random.arrayElement(LOTTERY_MESSAGES),
-          NumberUtil.toUSD(winnings)
-        );
-
-        return msg.tryCreateReply(response);
+        return msg.tryCreateReply(StringUtil.format(
+          Random.arrayElement(messages.lottery), NumberUtil.toUSD(winnings)
+        ));
       }
 
-      return msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, perks.cashPerMessage);
+      return msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, perks.cashPerMessage);
     }
   }
 

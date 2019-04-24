@@ -4,6 +4,7 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Cooldowns extends Command {
   constructor() {
@@ -25,13 +26,13 @@ class Cooldowns extends Command {
   }
 
   run(msg, args) {
-    const commands = msg.client.registry.commands.filter(command => command.hasCooldown);
+    const commands = msg._client.registry.commands.filter(command => command.hasCooldown);
     let reply = '';
 
     for (let i = 0; i < commands.length; i++) {
       const { cooldowns } = commands[i];
       const { users } = cooldowns;
-      const cooldown = users[`${args.member.id}-${msg.guild.id}`];
+      const cooldown = users[`${args.member.id}-${msg.channel.guild.id}`];
 
       if (cooldown) {
         const remaining = cooldown.resets - Date.now();
@@ -47,12 +48,16 @@ ${StringUtil.pad(`${seconds}`, PAD_AMOUNT)}\n`;
       }
     }
 
+    const tag = `${args.member.user.username}#${args.member.user.discriminator}`;
+
     if (StringUtil.isNullOrWhiteSpace(reply)) {
-      return msg.createReply(`all of ${args.member.id === msg.author.id ? 'your' : `${StringUtil
-        .boldify(args.member.user.tag)}'s`} commands are ready for use.`);
+      return msg.createReply(StringUtil.format(
+        messages.commands.cooldowns,
+        args.member.id === msg.author.id ? 'your' : `${StringUtil.boldify(tag)}'s`
+      ));
     }
 
-    return msg.channel.createMessage(reply, { title: `${args.member.user.tag}'s Cooldowns` });
+    return msg.channel.sendMessage(reply, { title: `${tag}'s Cooldowns` });
   }
 }
 

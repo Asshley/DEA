@@ -6,11 +6,13 @@ class Hierarchy extends ArgumentPrecondition {
   }
 
   async run(command, msg, argument, args, value) {
-    if (value.position < msg.guild.me.roles.highest.position) {
+    const clientMember = msg.channel.guild.members.get(msg._client.user.id);
+
+    if (value.position < clientMember.highestRole.position) {
       return PreconditionResult.fromSuccess();
     }
 
-    return PreconditionResult.fromError(command, `${msg.client.user.username} must be higher \
+    return PreconditionResult.fromError(command, `${msg._client.user.username} must be higher \
 in hierarchy than ${value}.`);
   }
 }

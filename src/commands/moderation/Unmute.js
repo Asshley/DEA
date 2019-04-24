@@ -4,6 +4,8 @@ const {
   COLORS: { UNMUTE: { UNMUTE_COLOR } }
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Unmute extends Command {
   constructor() {
@@ -33,29 +35,34 @@ class Unmute extends Command {
 
   async run(msg, args) {
     if (!msg.dbGuild.roles.muted) {
-      return msg.createErrorReply(`you must set a muted role with the \`${PREFIX}setmute @Role\` \
-command before you can unmute users.`);
-    } else if (!args.member.roles.has(msg.dbGuild.roles.muted)) {
-      return msg.createErrorReply('this user is not muted.');
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.unmute.noMutedRole, PREFIX
+      ));
+    } else if (!args.member.roles.includes(msg.dbGuild.roles.muted)) {
+      return msg.createErrorReply(messages.commands.unmute.notMuted);
     }
 
-    const role = msg.guild.roles.get(msg.dbGuild.roles.muted);
+    const role = msg.channel.guild.roles.get(msg.dbGuild.roles.muted);
 
     if (!role) {
-      return msg.createErrorReply(`the set muted role has been deleted. Please set a new one with \
-the \`${PREFIX}setmute Role\` command.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.unmute.deleteRole, PREFIX
+      ));
     }
 
-    await args.member.roles.remove(role);
-    await msg.client.db.muteRepo.deleteMute(args.member.id, msg.guild.id);
-    await msg.createReply(`you have successfully unmuted ${args.member.user.tag}.`);
+    await args.member.removeRole(role.id);
+    await msg._client.db.muteRepo.deleteMute(args.member.id, msg.channel.guild.id);
+    await msg.createReply(StringUtil.format(
+      messages.commands.unmute.success,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`)
+    ));
     await ModerationService.tryInformUser(
-      msg.guild, msg.author, 'unmuted', args.member.user, args.reason
+      msg.channel.guild, msg.author, 'unmuted', args.member.user, args.reason
     );
 
     return ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
-      guild: msg.guild,
+      guild: msg.channel.guild,
       action: 'Unmute',
       color: UNMUTE_COLOR,
       reason: args.reason,

@@ -1,9 +1,9 @@
 const { ArgumentPrecondition, PreconditionResult } = require('patron.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 
-class ArgRaidAmount extends ArgumentPrecondition {
+class ArgumentRaidAmount extends ArgumentPrecondition {
   constructor() {
-    super({ name: 'argraidamount' });
+    super({ name: 'argumentraidamount' });
   }
 
   async run(command, msg, argument, args, value) {
@@ -15,4 +15,4 @@ class ArgRaidAmount extends ArgumentPrecondition {
   }
 }
 
-module.exports = new ArgRaidAmount();
+module.exports = new ArgumentRaidAmount();

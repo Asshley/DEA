@@ -1,6 +1,12 @@
 const { Command, Argument, Context } = require('patron.js');
-const { MESSAGES: { HELP: HELP_MESSAGE }, PREFIX } = require('../../utility/Constants.js');
+const {
+  BOT_LINK,
+  SERVER_LINK,
+  CHANNEL_TYPES,
+  PREFIX
+} = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Help extends Command {
   constructor() {
@@ -11,8 +17,7 @@ class Help extends Command {
         'command',
         'cmd',
         'cmds',
-        'support',
-        'docs'
+        'support'
       ],
       groupName: 'system',
       description: 'All command information.',
@@ -31,27 +36,36 @@ class Help extends Command {
 
   async run(msg, args) {
     if (StringUtil.isNullOrWhiteSpace(args.command)) {
-      await msg.author.DM(StringUtil.format(HELP_MESSAGE, msg.client.user.username));
+      await msg.author.DM(StringUtil.format(
+        messages.commands.help.message,
+        msg._client.user.username,
+        BOT_LINK,
+        PREFIX,
+        msg._client.user.username,
+        SERVER_LINK
+      ));
 
-      if (msg.channel.type !== 'dm') {
-        return msg.createReply('you have been DMed with all the command information!');
+      if (msg.channel.type !== CHANNEL_TYPES.DM) {
+        return msg.createReply(messages.commands.help.dm);
       }
     } else {
       const input = args
         .command.startsWith(PREFIX) ? args.command.slice(PREFIX.length) : args.command;
       const lowerInput = input.toLowerCase();
-      const command = msg.client.registry.commands.find(x => x.names.includes(lowerInput));
+      const command = msg._client.registry.commands.find(x => x.names.includes(lowerInput));
 
       if (!command) {
-        return msg.createErrorReply('this command does not exist.');
+        return msg.createErrorReply(messages.commands.help.invalidCommand);
       }
 
-      const format = `**Description:** ${command.description}
-**Usage:** \`${PREFIX}${command.getUsage()}\`\n**Example:** \`${PREFIX}${command.getExample()}\``;
-
-      return msg.channel.createMessage(format, {
-        title: StringUtil.upperFirstChar(command.names[0])
-      });
+      return msg.channel.sendMessage(StringUtil.format(
+        messages.commands.help.usage,
+        command.description,
+        PREFIX,
+        command.getUsage(),
+        PREFIX,
+        command.getExample()
+      ), { title: StringUtil.upperFirstChar(command.names[0]) });
     }
   }
 }

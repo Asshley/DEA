@@ -10,7 +10,7 @@ class Interval {
   }
 
   tick() {
-    this.client.setInterval(this.cb, this.time);
+    setInterval(this.cb, this.time);
   }
 }
 

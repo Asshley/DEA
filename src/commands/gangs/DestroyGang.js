@@ -1,7 +1,5 @@
 const { Command } = require('patron.js');
-const {
-  MESSAGES: { GANG }
-} = require('../../utility/Constants.js');
+const messages = require('../../data/messages.json');
 
 class DestroyGang extends Command {
   constructor() {
@@ -14,17 +12,15 @@ class DestroyGang extends Command {
   }
 
   async run(msg) {
-    const gang = msg.dbGang;
-
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $pull: {
         gangs: {
-          name: gang.name
+          name: msg.dbGang.name
         }
       }
     });
 
-    return msg.createReply(GANG.OWNER_DESTROYED_GANG);
+    return msg.createReply(messages.commands.destroyGang);
   }
 }
 

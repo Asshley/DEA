@@ -1,6 +1,7 @@
 const { Command, Argument } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
+const messages = require('../../data/messages.json');
 
 class ModifyGangWealth extends Command {
   constructor() {
@@ -48,7 +49,7 @@ class ModifyGangWealth extends Command {
       gang = msg.dbGang;
 
       if (!gang) {
-        return msg.createErrorReply('you are not in a gang.');
+        return msg.createErrorReply(messages.commands.modifyGangVault.notInGang);
       }
     }
 
@@ -60,12 +61,16 @@ class ModifyGangWealth extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
     const plural = Util.pluralize(args.item.names[0], args.amount);
 
-    return msg.createReply(`you have successfully added ${args.amount} ${plural} to \
-${gang.leaderId === msg.author.id ? 'your gang' : gang.name}'s vault.`);
+    return msg.createReply(StringUtil.format(
+      messages.commadns.modifyGangVault.success,
+      args.amount,
+      plural,
+      gang.leaderId === msg.author.id ? 'your gang' : gang.name
+    ));
   }
 }
 

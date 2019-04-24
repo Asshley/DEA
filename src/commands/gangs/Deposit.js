@@ -1,12 +1,12 @@
 const { Command, Argument } = require('patron.js');
 const {
   RESTRICTIONS: { TRANSFER },
-  MISCELLANEA: { TRANSACTION_FEE, DECIMAL_ROUND_AMOUNT, TO_PERCENT_AMOUNT },
-  MESSAGES: { GANG }
+  MISCELLANEA: { TRANSACTION_FEE, DECIMAL_ROUND_AMOUNT, TO_PERCENT_AMOUNT }
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
+const messages = require('../../data/messages.json');
 
 class Deposit extends Command {
   constructor() {
@@ -35,33 +35,28 @@ class Deposit extends Command {
     const deposited = NumberUtil.round(received, DECIMAL_ROUND_AMOUNT) * TO_PERCENT_AMOUNT;
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
 
-    await msg.client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.transfer);
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, {
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, -args.transfer);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $inc: {
         [`gangs.${gangIndex}.wealth`]: deposited
       }
     });
 
-    const leader = msg.guild.members.get(gang.leaderId);
+    const leader = msg.channel.guild.members.get(gang.leaderId);
 
-    await MessageUtil.notify(
-      leader,
-      StringUtil.format(
-        GANG.DEPOSIT_DM, StringUtil.boldify(msg.author.tag), NumberUtil.toUSD(received)
-      ),
-      'deposit'
-    );
+    await MessageUtil.notify(leader, StringUtil.format(
+      messages.commands.deposit.dm,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      NumberUtil.toUSD(received)
+    ), 'deposit');
 
-    return msg.createReply(
-      StringUtil.format(
-        GANG.DEPOSIT_REPLY, NumberUtil.toUSD(received), NumberUtil.toUSD(transactionFee)
-      ),
-      {
-        footer: {
-          text: `Wealth: ${NumberUtil.format(gang.wealth + deposited)}`
-        }
+    return msg.createReply(StringUtil.format(
+      messages.commands.deposit.reply, NumberUtil.toUSD(received), NumberUtil.toUSD(transactionFee)
+    ), {
+      footer: {
+        text: `Wealth: ${NumberUtil.format(gang.wealth + deposited)}`
       }
-    );
+    });
   }
 }
 

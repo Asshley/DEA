@@ -1,4 +1,6 @@
 const { Command, Argument, ArgumentDefault } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class ResetUser extends Command {
   constructor() {
@@ -20,10 +22,20 @@ class ResetUser extends Command {
   }
 
   async run(msg, args) {
-    await msg.client.db.userRepo.deleteUser(args.member.id, msg.guild.id);
+    await msg._client.db.userRepo.updateUser(args.member.id, msg.guild.id, {
+      $set: {
+        cash: 0,
+        bounty: 0,
+        health: 100,
+        inventory: {}
+      }
+    });
 
-    return msg.createReply(`you have successfully reset all of \
-${args.member.id === msg.author.id ? 'your' : `${args.member.user.tag}'s`} data.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.resetUser,
+      args.member.id === msg.author.id ? 'your' : `${StringUtil
+        .boldify(`${args.member.user.username}#${args.member.user.discriminator}`)}'s`
+    ));
   }
 }
 

@@ -2,6 +2,7 @@ const { Command } = require('patron.js');
 const items = require('../../data/items.json');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
+const messages = require('../../data/messages.json');
 
 class Store extends Command {
   constructor() {
@@ -17,12 +18,14 @@ class Store extends Command {
     let reply = '';
 
     for (let i = 0; i < crates.length; i++) {
-      const crate = crates[i];
+      const { names, price } = crates[i];
 
-      reply += `**${StringUtil.capitialize(crate.names[0])}:** ${NumberUtil.toUSD(crate.price)}\n`;
+      reply += StringUtil.format(
+        messages.commands.store, StringUtil.capitialize(names[0]), NumberUtil.toUSD(price)
+      );
     }
 
-    return msg.channel.createMessage(reply, { title: 'Purchasable Items' });
+    return msg.channel.sendMessage(reply, { title: 'Purchasable Items' });
   }
 }
 

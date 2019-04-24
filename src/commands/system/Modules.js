@@ -1,5 +1,6 @@
 const { Command, Argument, Context } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class Modules extends Command {
   constructor() {
@@ -33,17 +34,17 @@ class Modules extends Command {
         }
       }
 
-      return msg.channel.createMessage(message, { title: 'These are the current modules in DEA:' });
+      return msg.channel.sendMessage(message, { title: 'These are the current modules in DEA:' });
     }
 
     const lowerInput = args.module.toLowerCase();
-    const group = msg.client.registry.groups.find(x => x.name === lowerInput);
+    const group = msg._client.registry.groups.find(x => x.name === lowerInput);
 
     if (!group) {
-      return msg.createErrorReply('this module does not exist.');
+      return msg.createErrorReply(messages.commands.modules.invalid);
     }
 
-    let message = `**Description**: ${group.description}\n**Commands:** `;
+    let message = StringUtil.format(messages.commands.modules.message, group.description);
     const { commands } = group;
 
     for (let i = 0; i < commands.length; i++) {
@@ -54,7 +55,7 @@ class Modules extends Command {
       }
     }
 
-    return msg.channel.createMessage(message, { title: StringUtil.upperFirstChar(group.name) });
+    return msg.channel.sendMessage(message, { title: StringUtil.upperFirstChar(group.name) });
   }
 }
 

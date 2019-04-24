@@ -1,8 +1,6 @@
 const { Command, Argument } = require('patron.js');
-const {
-  MESSAGES: { GANG }
-} = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class DemoteMember extends Command {
   constructor() {
@@ -25,24 +23,25 @@ class DemoteMember extends Command {
 
   async run(msg, args) {
     const gang = msg.dbGang;
+    const memberIndex = gang.members.findIndex(x => x.id === args.member.id);
 
-    if (!gang.members.some(v => v.status === 'elder' && v.id === args.member.id)) {
-      return msg.createErrorReply(GANG.INVALID_DEMOTE);
+    if (gang.members[memberIndex].status !== 'elder') {
+      return msg.createErrorReply(messages.commands.demoteMember.failed);
     }
 
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
-    const memberIndex = gang.members.findIndex(x => x.id === args.member.id);
     const update = {
       $set: {
         [`gangs.${gangIndex}.members.${memberIndex}.status`]: 'member'
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(
-      StringUtil.format(GANG.DEMOTE, StringUtil.boldify(args.member.user.tag))
-    );
+    return msg.createReply(StringUtil.format(
+      messages.commands.demoteMember.successful,
+      StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`)
+    ));
   }
 }
 

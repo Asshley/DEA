@@ -8,6 +8,7 @@ const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const Random = require('../../utility/Random.js');
+const messages = require('../../data/messages.json');
 
 class Rape extends Command {
   constructor() {
@@ -36,25 +37,31 @@ class Rape extends Command {
     if (roll < RAPE_ODDS) {
       const cost = msg.dbUser.cash * AMOUNT;
 
-      await msg.client.db.userRepo.modifyCashExact(msg.dbGuild, msg.member, -cost);
+      await msg._client.db.userRepo.modifyCashExact(msg.dbGuild, msg.member, -cost);
 
-      return msg.createReply(`MAYDAY MY NIGGA! **MAYDAY!** \
-${StringUtil.boldify(args.member.user.tag)} counter-raped you, \
-forcing you to spend ${NumberUtil.format(cost)} on rectal repairs.`);
+      return msg.createReply(StringUtil.format(
+        messages.commands.rape.failed,
+        StringUtil.boldify(`${args.member.user.username}#${args.member.user.discriminator}`),
+        NumberUtil.format(cost)
+      ));
     }
 
     const dbUser = await args.member.dbUser();
     const cost = dbUser.cash * AMOUNT;
     const costStr = NumberUtil.format(cost);
 
-    await msg.client.db.userRepo.modifyCashExact(msg.dbGuild, args.member, -cost);
-    await MessageUtil.notify(args.member,
-      `Listen here bucko, ${StringUtil.boldify(msg.author.tag)} just raped your fucking asshole
-and forced you to spend ${costStr} on rectal repairs.`, 'rape');
+    await msg._client.db.userRepo.modifyCashExact(msg.dbGuild, args.member, -cost);
+    await MessageUtil.notify(args.member, StringUtil.format(
+      messages.commands.rape.dm,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.dimscriminator}`),
+      costStr
+    ), 'rape');
 
-    return msg.createReply(`you raped his **GODDAMN ASSHOLE** :joy:! \
-${StringUtil.boldify(args.member.user.tag)} needed to spend ${costStr} \
-just to get his anus working again!`);
+    return msg.createReply(StringUtil.format(
+      messages.command.rape.successful,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.dimscriminator}`),
+      costStr
+    ));
   }
 }
 

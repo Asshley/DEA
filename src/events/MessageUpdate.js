@@ -1,21 +1,21 @@
+const { PREFIX, CLIENT_EVENTS } = require('../utility/Constants.js');
 const Event = require('../structures/Event.js');
-const { PREFIX } = require('../utility/Constants.js');
-const handler = require('../singletons/handler.js');
+const handler = require('../services/handler.js');
 
-class MessageUpdateEvent extends Event {
-  async run(oldMessage, newMessage) {
-    if (oldMessage.content === newMessage.content) {
+class MessageUpdate extends Event {
+  async run(newMessage, oldMessage) {
+    if (!oldMessage || oldMessage.content === newMessage.content) {
       return;
     }
 
     const command = await handler.parseCommand(oldMessage, PREFIX.length);
 
-    if (!command.success && !oldMessage.editedCommand) {
+    if (!command.success && !newMessage.editedCommand) {
       newMessage.editedCommand = true;
-      this.emitter.emit('message', newMessage);
+      this.emitter.emit('messageCreate', newMessage);
     }
   }
 }
-MessageUpdateEvent.eventName = 'messageUpdate';
+MessageUpdate.EVENT_NAME = CLIENT_EVENTS.MESSAGE_UPDATE;
 
-module.exports = MessageUpdateEvent;
+module.exports = MessageUpdate;

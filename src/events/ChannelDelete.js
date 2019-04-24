@@ -1,6 +1,7 @@
+const { CLIENT_EVENTS } = require('../utility/Constants.js');
 const Event = require('../structures/Event.js');
 
-class ChannelDeleteEvent extends Event {
+class ChannelDelete extends Event {
   async run(channel) {
     const { guild } = channel;
 
@@ -14,16 +15,17 @@ class ChannelDeleteEvent extends Event {
         [x]: channel.id
       }
     });
+    const { client } = channel.guild.shard;
 
     if (dbGuild.channels.gamble.includes(channel.id)) {
-      await channel.client.db.guildRepo.updateGuild(channel.guild.id, update('channels.gamble'));
+      await client.db.guildRepo.updateGuild(channel.guild.id, update('channels.gamble'));
     }
 
     if (dbGuild.channels.ignore.includes(channel.id)) {
-      await channel.client.db.guildRepo.updateGuild(channel.guild.id, update('channels.ignore'));
+      await client.db.guildRepo.updateGuild(channel.guild.id, update('channels.ignore'));
     }
   }
 }
-ChannelDeleteEvent.eventName = 'channelDelete';
+ChannelDelete.EVENT_NAME = CLIENT_EVENTS.CHANNEL_DELETE;
 
-module.exports = ChannelDeleteEvent;
+module.exports = ChannelDelete;

@@ -1,4 +1,6 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
 class SetMultiplier extends Command {
   constructor() {
@@ -10,7 +12,7 @@ class SetMultiplier extends Command {
         new Argument({
           name: 'amount',
           key: 'amount',
-          type: 'int',
+          type: 'amount',
           example: '50'
         })
       ]
@@ -24,9 +26,11 @@ class SetMultiplier extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully set the cash multiplier to ${args.amount}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.setMultipler, args.amount
+    ));
   }
 }
 

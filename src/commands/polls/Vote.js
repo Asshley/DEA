@@ -5,6 +5,7 @@ const {
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const ModerationService = require('../../services/ModerationService.js');
+const messages = require('../../data/messages.json');
 
 class Vote extends Command {
   constructor() {
@@ -35,12 +36,13 @@ class Vote extends Command {
     const { dbGuild } = msg;
 
     if (args.poll.elderOnly && Date.now() - msg.member.joinedAt < TIME_REQUIRED) {
-      return msg.createErrorReply(`you may not vote on this poll until you've been \
-in this server for ${days} days.`);
+      return msg.createErrorReply(StringUtil.format(
+        messages.commands.vote.requirement, days
+      ));
     } else if (args.poll.modOnly && ModerationService.getPermLevel(dbGuild, msg.member) < 1) {
-      return msg.createErrorReply('you may only vote on this poll if you\'re a moderator.');
+      return msg.createErrorReply(messages.commands.vote.modOnly);
     } else if (args.poll.choices[args.choice].voters.includes(msg.author.id)) {
-      return msg.createErrorReply('you may not vote on the same choice twice.');
+      return msg.createErrorReply(messages.commands.vote.sameChoice);
     }
 
     const keys = Object.keys(args.poll.choices);
@@ -64,10 +66,11 @@ in this server for ${days} days.`);
     update.$push = {
       [voted]: msg.author.id
     };
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you've successfully voted \`${args.choice}\` on poll: \
-${StringUtil.boldify(args.poll.name)}.`);
+    return msg.createReply(StringUtil.format(
+      messages.commands.vote.success, args.choice, args.poll.name
+    ));
   }
 }
 

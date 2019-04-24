@@ -1,9 +1,11 @@
 const { Command, Argument } = require('patron.js');
+const StringUtil = require('../../utility/StringUtil.js');
+const messages = require('../../data/messages.json');
 
-class RemoveChannel extends Command {
+class UnignoreChannel extends Command {
   constructor() {
     super({
-      names: ['removechannel', 'removeignoredchannel', 'removechan'],
+      names: ['unignorechannel', 'removechannel', 'removeignoredchannel', 'removechan'],
       groupName: 'administration',
       description: 'Removes a channel where the bot will not reward cash per message.',
       args: [
@@ -22,7 +24,7 @@ class RemoveChannel extends Command {
     const { channels } = msg.dbGuild;
 
     if (!channels.ignore.includes(args.channel.id)) {
-      return msg.createErrorReply('this channel isn\'t an ignored channel.');
+      return msg.createErrorReply(messages.commands.ignoreChannel.notIgnored);
     }
 
     const update = {
@@ -31,10 +33,12 @@ class RemoveChannel extends Command {
       }
     };
 
-    await msg.client.db.guildRepo.updateGuild(msg.guild.id, update);
+    await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
-    return msg.createReply(`you have successfully removed ${args.channel} as an ignored channel.`);
+    return msg.createReply(
+      StringUtil.format(messages.commands.UnignoreChannel.successful, args.channel.mention)
+    );
   }
 }
 
-module.exports = new RemoveChannel();
+module.exports = new UnignoreChannel();
