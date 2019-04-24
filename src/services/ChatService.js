@@ -36,6 +36,10 @@ class ChatService {
         ));
       }
 
+      setTimeout(() => {
+        delete this.messages[msg.author.id];
+      }, perks.cooldown + MESSAGE_CASH);
+
       return msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, amount);
     }
   }
@@ -53,10 +57,8 @@ class ChatService {
 
     cashPerMessage *= dbGuild.multiplier;
 
-    const cooldown = dbUser.investments.includes('line') ? REDUCED_MESSAGE_CASH : MESSAGE_CASH;
-
     return {
-      cooldown,
+      cooldown: dbUser.investments.includes('line') ? REDUCED_MESSAGE_CASH : MESSAGE_CASH,
       cashPerMessage
     };
   }
