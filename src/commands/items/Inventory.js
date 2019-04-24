@@ -43,7 +43,7 @@ class Inventory extends Command {
     if (StringUtil.isNullOrWhiteSpace(reply)) {
       return msg.channel.createErrorMessage(StringUtil.format(
         messages.commands.inventory.none,
-        args.member.id === msg.author.id ? 'you have' : `${StringUtil.boldify(tag)} has`,
+        args.member.id === msg.author.id ? 'You have' : `${StringUtil.boldify(tag)} has`,
         args.member.id === msg.author.id ? 'your' : 'their'
       ));
     }
