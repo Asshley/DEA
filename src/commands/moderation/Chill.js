@@ -4,7 +4,10 @@ const {
   RESTRICTIONS: { COMMANDS: { CHILL } },
   COLORS: { CHILL: CHILL_COLOR }
 } = require('../../utility/Constants.js');
-const { Constants: { Permissions } } = require('eris');
+const {
+  Permission,
+  Constants: { Permissions }
+} = require('eris');
 const ModerationService = require('../../services/ModerationService.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
@@ -67,12 +70,27 @@ class Chill extends Command {
     await msg.createReply(StringUtil.format(messages.commands.chill.chilled, time));
     await Util.delay(args.time * TO_SECONDS);
 
-    if (!msg.channel.permissionOverwrites.get(msg.channel.guild.id).has('sendMessages')) {
+    if (!this.getCumulativePermissions(msg.channel).has('sendMessages')) {
       await msg.createReply(messages.commands.chill.thawed);
       await msg.channel.editPermission(
         perms.id, allow & ~Permissions.sendMessages, deny & ~Permissions.sendMessages, perms.type
       );
     }
+  }
+
+  getCumulativePermissions(channel) {
+    let everyone = channel.guild.roles.get(channel.guild.id).permissions.allow;
+
+    if ((everyone & Permissions.administrator) > 0) {
+      return new Permission(Permissions.all);
+    }
+
+    const channelPerms = channel.permissionOverwrites.get(channel.guild.id);
+
+    everyone &= channelPerms ? ~channelPerms.deny : 0;
+    everyone |= channelPerms ? channelPerms.allow : 0;
+
+    return new Permission(everyone);
   }
 
   async getOverwrite(channel, id) {

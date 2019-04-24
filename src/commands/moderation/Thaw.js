@@ -2,7 +2,10 @@ const { Command, Argument } = require('patron.js');
 const {
   COLORS: { CHILL: CHILL_COLOR }
 } = require('../../utility/Constants.js');
-const { Constants: { Permissions } } = require('eris');
+const {
+  Permission,
+  Constants: { Permissions }
+} = require('eris');
 const ModerationService = require('../../services/ModerationService.js');
 const messages = require('../../data/messages.json');
 
@@ -28,9 +31,8 @@ class Thaw extends Command {
 
   async run(msg, args) {
     const perms = msg.channel.permissionOverwrites.get(msg.channel.guild.id);
-    const guildPerms = msg.channel.guild.roles.get(msg.channel.guild.id).permissions;
 
-    if ((!perms && guildPerms.has('sendMessages')) || perms.has('sendMessages')) {
+    if (this.getCumulativePermissions(msg.channel).has('sendMessages')) {
       return msg.createErrorReply(messages.commands.thaw.alreadyThawed);
     }
 
@@ -62,6 +64,21 @@ class Thaw extends Command {
     }
 
     return overwrite;
+  }
+
+  getCumulativePermissions(channel) {
+    let everyone = channel.guild.roles.get(channel.guild.id).permissions.allow;
+
+    if ((everyone & Permissions.administrator) > 0) {
+      return new Permission(Permissions.all);
+    }
+
+    const channelPerms = channel.permissionOverwrites.get(channel.guild.id);
+
+    everyone &= channelPerms ? ~channelPerms.deny : 0;
+    everyone |= channelPerms ? channelPerms.allow : 0;
+
+    return new Permission(everyone);
   }
 }
 
