@@ -36,6 +36,7 @@ class JoinGang extends Command {
     const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString();
     const dm = await leader.tryDM(StringUtil.format(
       messages.commands.joinGang.invite,
+      args.gang.name,
       StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
       key
     ), { guild: msg.channel.guild });
