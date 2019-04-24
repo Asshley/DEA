@@ -25,8 +25,7 @@ class RemoveBlacklist extends Command {
     await msg._client.db.blacklistRepo.deleteBlacklist(args.user.id);
 
     return msg.createReply(StringUtil.format(
-      messages.commands.removeBlacklist,
-      `${args.user.username}#${args.user.discriminator}`
+      messages.commands.removeBlacklist, `${args.user.username}#${args.user.discriminator}`
     ));
   }
 }
