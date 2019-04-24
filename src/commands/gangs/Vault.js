@@ -46,7 +46,9 @@ class Vault extends Command {
 
     if (StringUtil.isNullOrWhiteSpace(description)) {
       return msg.channel.createErrorMessage(StringUtil.format(
-        messages.commands.vault.empty, gang.name
+        messages.commands.vault.empty,
+        gang.leaderId === msg.author.id ? 'Your gang' : `\`${gang.name}\``,
+        gang.leaderId === msg.author.id ? 'it\'s' : 'their'
       ));
     }
 

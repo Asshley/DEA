@@ -204,7 +204,7 @@
     },
     "vault": {
       "authorNotInGang": "you're not in a gang.",
-      "empty": "`{0}` has nothing in their vault."
+      "empty": "{0} has nothing in {1} vault."
     },
     "withdraw": {
       "DM": "{0} has withdrawn {1} from your gang.",
@@ -292,7 +292,7 @@
       "lost": "Nigga you just about had that deer but then he did that hoof kick thing and fucked up your buddy Chuck, so you had to go bust a nut all over him and the GODDAMN deer got away."
     },
     "inventory": {
-      "none": "{0} nothing in their inventory.",
+      "none": "{0} nothing in {1} inventory.",
       "message": "{0}: {1}\n"
     },
     "openAll": {
