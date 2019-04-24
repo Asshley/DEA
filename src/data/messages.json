@@ -199,7 +199,7 @@
     "transferLeadership": {
       "notInGang": "this user isn't in your gang.",
       "alreadyLeader": "you already own this gang.",
-      "DM": "You have been transfered leadership of gang `{0}`.",
+      "DM": "You have been transfered leadership of the gang `{0}`.",
       "reply": "you have successfully transfered your gang's leadership to {0}."
     },
     "vault": {
