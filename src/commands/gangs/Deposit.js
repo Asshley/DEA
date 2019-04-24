@@ -51,12 +51,11 @@ class Deposit extends Command {
     ), 'deposit');
 
     return msg.createReply(StringUtil.format(
-      messages.commands.deposit.reply, NumberUtil.toUSD(received), NumberUtil.toUSD(transactionFee)
-    ), {
-      footer: {
-        text: `Wealth: ${NumberUtil.format(gang.wealth + deposited)}`
-      }
-    });
+      messages.commands.deposit.reply,
+      NumberUtil.toUSD(transactionFee),
+      NumberUtil.toUSD(received),
+      NumberUtil.format(gang.wealth + deposited)
+    ));
   }
 }
 

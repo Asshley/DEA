@@ -123,7 +123,7 @@
       "successful": "you have successfully demoted {0} from an elder in your gang."
     },
     "deposit": {
-      "reply": "you have successfully deposited {0} to your gang. Transaction fee: {1}.",
+      "reply": "After the deposit fee of {0}, you have successfully deposited {1} to your gang. Wealth: {2}.",
       "DM": "{0} has deposited {1} to your gang"
     },
     "destroyGang": "you have successfully destroyed your gang.",
