@@ -14,7 +14,9 @@ class Ban extends Command {
         'hammer',
         'nuke',
         'snap',
-        'clap'
+        'clap',
+        'meme',
+        'pound'
       ],
       groupName: 'moderation',
       description: 'Swing the ban hammer on any member.',
