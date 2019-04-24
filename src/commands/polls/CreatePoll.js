@@ -106,7 +106,7 @@ class CreatePoll extends Command {
     });
 
     return msg.createReply(StringUtil.format(
-      messages.commands.createPoll.success, StringUtil.boldify(args.name)
+      messages.commands.createPoll.success, args.name
     ));
   }
 }
