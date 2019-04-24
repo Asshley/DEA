@@ -36,7 +36,7 @@ class Hunt extends Command {
 
     if (broken) {
       return msg.createErrorReply(StringUtil.format(
-        Random.arrayElement(messages.commands.hunt.broken), StringUtil.boldify(args.item.names[0])
+        Random.arrayElement(messages.commands.hunt.broken), args.item.names[0]
       ));
     }
 

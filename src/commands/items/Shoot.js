@@ -49,7 +49,7 @@ class Shoot extends Command {
 
     if (broken) {
       return msg.createErrorReply(StringUtil.format(
-        Random.arrayElement(messages.commands.shoot.broken), StringUtil.boldify(args.item.names[0])
+        Random.arrayElement(messages.commands.shoot.broken), args.item.names[0]
       ));
     }
 

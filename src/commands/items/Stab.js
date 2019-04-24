@@ -49,7 +49,7 @@ class Stab extends Command {
 
     if (broken) {
       return msg.createErrorReply(StringUtil.format(
-        Random.arrayElement(messages.commands.stab.broken), StringUtil.boldify(args.item.names[0])
+        Random.arrayElement(messages.commands.stab.broken), args.item.names[0]
       ));
     }
 

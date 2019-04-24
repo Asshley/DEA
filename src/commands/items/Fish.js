@@ -36,7 +36,7 @@ class Fish extends Command {
 
     if (broken) {
       return msg.createErrorReply(StringUtil.format(
-        Random.arrayElement(messages.commands.fish.broken), StringUtil.boldify(args.item.names[0])
+        Random.arrayElement(messages.commands.fish.broken), args.item.names[0]
       ));
     }
 
