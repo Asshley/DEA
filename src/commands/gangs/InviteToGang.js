@@ -130,7 +130,8 @@ class InviteToGang extends Command {
   }
 
   async syncCooldowns(member, gang) {
-    const { cooldowns: cds } = member.client.registry.commands.find(x => x.names.includes('raid'));
+    const { cooldowns: cds } = member.guild.shard.client.registry.commands
+      .find(x => x.names.includes('raid'));
 
     await Util.MULTI_MUTEX.sync(member.guild.id, async () => {
       const gangMembers = gang.members.concat(gang.leaderId);
