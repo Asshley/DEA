@@ -33,7 +33,7 @@ class Jump extends Command {
       return msg.createReply(message);
     }
 
-    return msg.createErrorReply(messages.commands.jump);
+    return msg.createErrorReply(messages.commands.jump.failed);
   }
 }
 
