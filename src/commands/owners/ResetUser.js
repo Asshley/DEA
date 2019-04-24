@@ -22,7 +22,7 @@ class ResetUser extends Command {
   }
 
   async run(msg, args) {
-    await msg._client.db.userRepo.updateUser(args.member.id, msg.guild.id, {
+    await msg._client.db.userRepo.updateUser(args.member.id, msg.channel.guild.id, {
       $set: {
         cash: 0,
         bounty: 0,
