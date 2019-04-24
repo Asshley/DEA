@@ -16,7 +16,7 @@ class Questions extends Command {
   }
 
   async run(msg) {
-    const keys = Object.keys(msg.dbGuild.trivia).questions;
+    const keys = Object.keys(msg.dbGuild.trivia.questions);
 
     if (!keys.length) {
       return msg.createErrorReply(messages.commands.questions.none);
