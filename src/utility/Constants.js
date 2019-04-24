@@ -58,6 +58,7 @@ module.exports.SERVER_LINK = 'https://discord.gg/nQvecMF';
 
 module.exports.CLIENT_OPTIONS = {
   compress: true,
+  restMode: true,
   messageLimit: 10,
   disabledEvents: {
     CHANNEL_UPDATE: true,
