@@ -22,11 +22,14 @@ class ChatService {
     const longEnough = msg.content.length >= MINIMUM_MESSAGE_LENGTH;
 
     if (cdOver && longEnough) {
+      let amount = perks.cashPerMessage;
+
       this.messages[msg.author.id] = Date.now();
 
       if (ODDS.LOTTERY >= Random.roll()) {
         const winnings = Random.nextFloat(LOTTERY.MINIMUM_CASH, LOTTERY.MAXIMUM_CASH);
 
+        amount += winnings;
         await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, winnings);
 
         return msg.tryCreateReply(StringUtil.format(
@@ -34,7 +37,7 @@ class ChatService {
         ));
       }
 
-      return msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, perks.cashPerMessage);
+      return msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, amount);
     }
   }
 
