@@ -228,7 +228,7 @@
       "inactive": "there is no active pot in this server.",
       "notHost": "only the creator of the pot may draw the winner.",
       "minimumMembers": "there needs to be at least {0} members in order to draw a winner.",
-      "winner": "Congratulations {0}. After a fee of {1}%, you won {2} with {3}% chance of winning the pot!"
+      "winner": "Congratulations {0}! After a fee of {1}%, you won {2} with {3}% chance of winning the pot!"
     },
     "enableNotifications": {
       "alreadyEnabled": "there are no new notifications to enable.",
@@ -494,7 +494,7 @@
 
 
   "intervals": {
-    "autoDrawPot": "Congratulations {0}. After a fee of {1}%, you have automatically won {2} with {3}% chance of winning the pot!",
+    "autoDrawPot": "Congratulations {0}! After a fee of {1}%, you have automatically won {2} with {3}% chance of winning the pot.",
     "autoRemovePoll": "{0}Final Poll Results Of {1} Poll.",
     "autoTrivia": {
       "winner": "Congratulations {0} for winning {1} in trivia!",
