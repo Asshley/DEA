@@ -140,7 +140,7 @@
       "maxMembers": "your gang has the maximum amount of members in it.",
       "inGang": "{0} is already in a gang.",
       "needPerms": "you cannot invite anyone to your gang since you're not a leader nor elder.",
-      "invited": "{0} is trying to invite you to his gang {1}, reply with \"{2}\" within 5 minutes to accept this.",
+      "invited": "{0} is trying to invite you to their gang `{1}`, reply with \"{2}\" within 5 minutes to accept this.",
       "cantDM": "I am unable to inform {0} of your join request.",
       "DM": "this user has successfully been informed of your join request.",
       "joinedGang": "{0} has already joined a gang.",
@@ -257,7 +257,7 @@
       "none": "there are no rank roles yet.",
       "message": "{0}: {1}\n"
     },
-    "transfer": "you have successfully transfered {0} to {1}. Transaction fee: {2}. Balance: {3)}.",
+    "transfer": "you have successfully transfered {0} to {1}. Transaction fee: {2}. Balance: {3}.",
     "vaultLeaderboard": {
       "none": "there is nobody on the vault leaderboard.",
       "message": "{0}. {1}: ${2}\n"
