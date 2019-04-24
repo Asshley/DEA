@@ -6,7 +6,7 @@
     },
     "addRank": {
       "existing": "this rank role is already set.",
-      "successful": "you have successfully added the rank role {0} with a cash required amount of {0}."
+      "successful": "you have successfully added the rank role {0} with a cash required amount of {1}."
     },
     "ignoreChannel": {
       "existing": "this channel is already an ignored channel.",
