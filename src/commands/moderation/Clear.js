@@ -48,11 +48,14 @@ class Clear extends Command {
   }
 
   async run(msg, args) {
+    await msg.delete();
+
     const filter = args.user ? m => m.author.id === args.user.id : null;
     const deleted = await msg.channel.purge(args.quantity, filter);
     const reply = await msg.createReply(StringUtil.format(
       messages.commands.clear, deleted
     ));
+    const user = args.user ? ` sent by ${args.user.username}#${args.user.discriminator}` : '';
 
     await ModerationService.tryModLog({
       dbGuild: msg.dbGuild,
@@ -63,7 +66,7 @@ class Clear extends Command {
       moderator: msg.author,
       user: null,
       extraInfoType: 'Quantity',
-      extraInfo: `${deleted}\n**Channel:** ${msg.channel.name} (${msg.channel.mention})`
+      extraInfo: `${deleted}${user}\n**Channel:** ${msg.channel.name} (${msg.channel.mention})`
     });
     await Util.delay(DELAY);
 
