@@ -45,7 +45,8 @@ class LeaveGang extends Command {
   }
 
   async syncCooldowns(member) {
-    const { cooldowns: cds } = member.client.registry.commands.find(x => x.names.includes('raid'));
+    const { cooldowns: cds } = member.guild.shard.client.registry.commands
+      .find(x => x.names.includes('raid'));
 
     await Util.MULTI_MUTEX.sync(member.guild.id, async () => {
       const exists = cds.users[`${member.id}-${member.guild.id}`];
