@@ -1,11 +1,12 @@
+const { CLIENT_EVENTS } = require('../utility/Constants.js');
 const Event = require('../structures/Event.js');
 const Logger = require('../utility/Logger.js');
 
-class WarnEvent extends Event {
+class Warn extends Event {
   run(warning) {
     Logger.log(warning, 'WARNING');
   }
 }
-WarnEvent.EVENT_NAME = 'warn';
+Warn.EVENT_NAME = CLIENT_EVENTS.WARN;
 
-module.exports = WarnEvent;
+module.exports = Warn;
