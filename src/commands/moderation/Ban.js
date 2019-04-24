@@ -41,7 +41,7 @@ class Ban extends Command {
   }
 
   async run(msg, args) {
-    const member = msg.guild.members.get(args.user.id);
+    const member = msg.channel.guild.members.get(args.user.id);
 
     if (member && this.constructor.canBan(member)) {
       const userPerm = ModerationService.getPermLevel(msg.dbGuild, member);
