@@ -261,7 +261,7 @@ module.exports.RESTRICTIONS = {
       MINIMUM_TIME: 5
     },
     CLEAR: {
-      MAXIMUM_MESSAGES: 1000,
+      MAXIMUM_MESSAGES: 500,
       MINIMUM_MESSAGES: 2
     },
     WITHDRAW: {
