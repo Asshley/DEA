@@ -30,7 +30,6 @@ class ChatService {
         const winnings = Random.nextFloat(LOTTERY.MINIMUM_CASH, LOTTERY.MAXIMUM_CASH);
 
         amount += winnings;
-        await msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, winnings);
 
         return msg.tryCreateReply(StringUtil.format(
           Random.arrayElement(messages.lottery), NumberUtil.toUSD(winnings)
