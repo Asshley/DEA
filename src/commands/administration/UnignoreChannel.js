@@ -24,7 +24,7 @@ class UnignoreChannel extends Command {
     const { channels } = msg.dbGuild;
 
     if (!channels.ignore.includes(args.channel.id)) {
-      return msg.createErrorReply(messages.commands.ignoreChannel.notIgnored);
+      return msg.createErrorReply(messages.commands.unignoreChannel.notIgnored);
     }
 
     const update = {
@@ -36,7 +36,7 @@ class UnignoreChannel extends Command {
     await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
     return msg.createReply(
-      StringUtil.format(messages.commands.UnignoreChannel.successful, args.channel.mention)
+      StringUtil.format(messages.commands.unignoreChannel.successful, args.channel.mention)
     );
   }
 }
