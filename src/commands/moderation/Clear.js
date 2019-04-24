@@ -6,6 +6,7 @@ const {
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const Util = require('../../utility/Util.js');
 const messages = require('../../data/messages.json');
 const DELAY = 3e3;
 
@@ -64,8 +65,9 @@ class Clear extends Command {
       extraInfoType: 'Quantity',
       extraInfo: `${deleted}\n**Channel:** ${msg.channel.name} (${msg.channel.mention})`
     });
+    await Util.delay(DELAY);
 
-    return reply.delete(DELAY);
+    return reply.delete();
   }
 }
 
