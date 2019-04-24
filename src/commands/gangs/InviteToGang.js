@@ -51,8 +51,6 @@ class InviteToGang extends Command {
 
     const res = await this.verify(msg, args.member, key);
 
-    console.log(res);
-
     if (res) {
       await msg.author.tryDM(StringUtil.format(
         messages.commands.inviteToGang.successfulDM,
@@ -93,8 +91,6 @@ class InviteToGang extends Command {
   }
 
   async verify(msg, member, key) {
-    console.log(msg, member, key);
-
     const fn = m => m.author.id === member.id && m.content.includes(key);
     const result = await awaitMessages(await member.user.getDMChannel(), {
       time: 300000, max: 1, filter: fn

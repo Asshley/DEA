@@ -13,7 +13,8 @@ class Minimum extends ArgumentPrecondition {
     }
 
     return PreconditionResult.fromError(
-      command, `the minimum ${argument.name} is ${min}.`
+      command,
+      `the minimum ${argument.name} ${options.exclusive ? 'must be greater than' : 'is'} ${min}.`
     );
   }
 }
