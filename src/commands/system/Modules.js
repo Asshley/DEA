@@ -23,7 +23,7 @@ class Modules extends Command {
 
   async run(msg, args) {
     if (StringUtil.isNullOrWhiteSpace(args.module)) {
-      const { client: { registry: { groups } } } = msg;
+      const { _client: { registry: { groups } } } = msg;
       let message = '';
 
       for (let i = 0; i < groups.length; i++) {
