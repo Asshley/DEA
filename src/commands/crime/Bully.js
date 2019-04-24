@@ -36,7 +36,7 @@ class Bully extends Command {
   }
 
   async run(msg, args) {
-    await args.member.setNickname(args.nickname);
+    await args.member.edit({ nick: args.nickname });
 
     return msg.createReply(StringUtil.format(
       messages.commands.bully,
