@@ -89,8 +89,8 @@
       "failed": "you rolled: {0}. Unfortunately, you lost {1}. Balance: {2}."
     },
     "dice": {
-      "successful": "{0} won you {1]. Balance: {2}.",
-      "failed": "{0} lost you {1]. Balance: {2}."
+      "successful": "{0} won you {1}. Balance: {2}.",
+      "failed": "{0} lost you {1}. Balance: {2}."
     },
     "double": {
       "needsCash": "you need at least {0} for me to work my magic.",
