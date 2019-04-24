@@ -21,8 +21,6 @@ class ChatService {
     const cdOver = !lastMessage || Date.now() - lastMessage > perks.cooldown;
     const longEnough = msg.content.length >= MINIMUM_MESSAGE_LENGTH;
 
-    console.log(this.messages[msg.author.id], cdOver, longEnough);
-
     if (cdOver && longEnough) {
       let amount = perks.cashPerMessage;
 

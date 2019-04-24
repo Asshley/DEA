@@ -31,7 +31,7 @@ class MessageCreate extends Event {
 
     MessageCollector.collect(msg);
 
-    const { guild, dbGuild } = msg;
+    const { channel: { guild }, dbGuild } = msg;
     const giveCash = guild && !dbGuild.channels.ignore.includes(msg.channel.id);
 
     if (!msg.content.startsWith(PREFIX)) {
