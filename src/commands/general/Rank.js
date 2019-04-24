@@ -44,7 +44,7 @@ ${Util.list(invested, 'and', StringUtil.upperFirstChar)}` : ''
     const users = (await db.userRepo.findMany({ guildId: dbUser.guildId }))
       .sort((a, b) => b.cash - a.cash);
     const bounty = dbUser.bounty ? `\n**Bounty:** ${NumberUtil.format(dbUser.bounty)}` : '';
-    const userRank = rank ? `\n**Rank:** ${rank}` : '';
+    const userRank = rank ? `\n**Rank:** ${rank.mention}` : '';
 
     return StringUtil.format(
       messages.commands.rank,
