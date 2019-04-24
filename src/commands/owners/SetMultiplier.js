@@ -29,7 +29,7 @@ class SetMultiplier extends Command {
     await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
     return msg.createReply(StringUtil.format(
-      messages.commands.setMultipler, args.amount
+      messages.commands.setMultiplier, args.amount
     ));
   }
 }
