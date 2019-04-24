@@ -16,7 +16,8 @@ class ChatService {
   }
 
   async applyCash(msg) {
-    const lastMessage = this.messages[msg.author.id];
+    const key = `${msg.author.id}-${msg.channel.guild.id}`;
+    const lastMessage = this.messages[key];
     const perks = this.getInvestmentPerks(msg.dbUser, msg.dbGuild);
     const cdOver = !lastMessage || Date.now() - lastMessage > perks.cooldown;
     const longEnough = msg.content.length >= MINIMUM_MESSAGE_LENGTH;
@@ -24,7 +25,7 @@ class ChatService {
     if (cdOver && longEnough) {
       let amount = perks.cashPerMessage;
 
-      this.messages[msg.author.id] = Date.now();
+      this.messages[key] = Date.now();
 
       if (ODDS.LOTTERY >= Random.roll()) {
         const winnings = Random.nextFloat(LOTTERY.MINIMUM_CASH, LOTTERY.MAXIMUM_CASH);
@@ -37,7 +38,7 @@ class ChatService {
       }
 
       setTimeout(() => {
-        delete this.messages[msg.author.id];
+        delete this.messages[key];
       }, perks.cooldown + MESSAGE_CASH);
 
       return msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, amount);
