@@ -1,7 +1,8 @@
 {
   "name": "dea",
   "version": "1.0.19",
-  "description": "The most inflated bot on Discord.",
+  "private": true,
+  "description": "The cleanest bot on Discord.",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
