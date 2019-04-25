@@ -1,6 +1,6 @@
 const { Command, Argument, Context } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class RemoveBlacklist extends Command {
   constructor() {

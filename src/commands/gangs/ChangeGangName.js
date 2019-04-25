@@ -5,7 +5,7 @@ const {
   RESTRICTIONS: { COMMANDS: { GANG: { NAME_CHANGE_COST } } }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class ChangeGangName extends Command {
   constructor() {

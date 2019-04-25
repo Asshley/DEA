@@ -9,7 +9,7 @@ const StringUtil = require('../utility/StringUtil.js');
 const Interval = require('../structures/Interval.js');
 const Random = require('../utility/Random.js');
 const Util = require('../utility/Util.js');
-const messages = require('../data/messages.json');
+const messages = require('../../data/messages.json');
 
 class AutoTrivia extends Interval {
   constructor(client) {

@@ -8,7 +8,7 @@ const {
 const Random = require('../utility/Random.js');
 const StringUtil = require('../utility/StringUtil.js');
 const NumberUtil = require('../utility/NumberUtil.js');
-const messages = require('../data/messages.json');
+const messages = require('../../data/messages.json');
 
 class ChatService {
   constructor() {

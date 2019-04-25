@@ -6,7 +6,7 @@ const {
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Pot = require('../../structures/Pot.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class DrawWinner extends Command {
   constructor() {

@@ -6,7 +6,7 @@ const {
   MISCELLANEA: { DAYS_TO_MS }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 const Poll = require('../../structures/Poll.js');
 
 class CreatePoll extends Command {

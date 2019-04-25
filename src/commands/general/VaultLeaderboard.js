@@ -3,7 +3,7 @@ const {
   RESTRICTIONS: { LEADERBOARD_CAP }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class VaultLeaderboard extends Command {
   constructor() {

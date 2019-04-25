@@ -6,7 +6,7 @@ const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class InviteToGang extends Command {
   constructor() {

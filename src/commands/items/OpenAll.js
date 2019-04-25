@@ -6,8 +6,8 @@ const {
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const itemService = require('../../services/ItemService.js');
-const items = require('../../data/items.json');
-const messages = require('../../data/messages.json');
+const items = require('../../../data/items.json');
+const messages = require('../../../data/messages.json');
 const DELAY = 5e3;
 
 class OpenAll extends Command {

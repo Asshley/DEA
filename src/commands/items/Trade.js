@@ -3,7 +3,7 @@ const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Trade extends Command {
   constructor() {

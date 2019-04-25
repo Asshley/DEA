@@ -1,5 +1,5 @@
 const { Command } = require('patron.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class DestroyGang extends Command {
   constructor() {

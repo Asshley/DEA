@@ -5,7 +5,7 @@ const {
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const Util = require('../../utility/Util.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class AddToVault extends Command {
   constructor() {

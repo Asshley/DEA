@@ -3,7 +3,7 @@ const {
   MAX_AMOUNTS: { TRIVIA: MAX_TRIVIA }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class AddTriviaQuestion extends Command {
   constructor() {

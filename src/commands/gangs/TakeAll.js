@@ -1,6 +1,6 @@
 const { Command } = require('patron.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class TakeAll extends Command {
   constructor() {

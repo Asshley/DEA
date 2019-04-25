@@ -7,7 +7,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Trivia extends Command {
   constructor() {

@@ -7,7 +7,7 @@ const {
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 const DELAY = 3e3;
 
 class Clear extends Command {

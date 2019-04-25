@@ -1,8 +1,8 @@
 const { Command } = require('patron.js');
-const items = require('../../data/items.json');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
-const messages = require('../../data/messages.json');
+const items = require('../../../data/items.json');
+const messages = require('../../../data/messages.json');
 
 class Store extends Command {
   constructor() {

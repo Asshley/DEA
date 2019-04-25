@@ -11,7 +11,7 @@ const {
 const ModerationService = require('../../services/ModerationService.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 const TO_SECONDS = 1e3;
 
 class Chill extends Command {

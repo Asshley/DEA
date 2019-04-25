@@ -7,7 +7,7 @@ const {
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Random = require('../../utility/Random.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Double extends Command {
   constructor() {

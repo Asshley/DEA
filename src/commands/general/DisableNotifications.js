@@ -2,7 +2,7 @@ const { Command, Argument } = require('patron.js');
 const { NOTIFICATIONS } = require('../../utility/Constants.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class DisableNotifications extends Command {
   constructor() {

@@ -11,8 +11,8 @@ const itemService = require('../../services/ItemService.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
-const items = require('../../data/items.json');
-const messages = require('../../data/messages.json');
+const items = require('../../../data/items.json');
+const messages = require('../../../data/messages.json');
 
 class Stab extends Command {
   constructor() {

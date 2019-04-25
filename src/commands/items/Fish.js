@@ -5,8 +5,8 @@ const {
 const itemService = require('../../services/ItemService.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const items = require('../../data/items.json');
-const messages = require('../../data/messages.json');
+const items = require('../../../data/items.json');
+const messages = require('../../../data/messages.json');
 
 class Fish extends Command {
   constructor() {

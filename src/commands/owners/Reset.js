@@ -1,7 +1,7 @@
 const { Command } = require('patron.js');
 const { awaitMessages } = require('../../utility/MessageCollector.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Reset extends Command {
   constructor() {

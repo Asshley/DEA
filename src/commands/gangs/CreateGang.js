@@ -6,7 +6,7 @@ const {
 } = require('../../utility/Constants.js');
 const Gang = require('../../structures/Gang.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class CreateGang extends Command {
   constructor() {

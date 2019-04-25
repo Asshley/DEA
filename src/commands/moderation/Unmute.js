@@ -5,7 +5,7 @@ const {
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Unmute extends Command {
   constructor() {

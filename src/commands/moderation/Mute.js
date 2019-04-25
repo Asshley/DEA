@@ -7,7 +7,7 @@ const NumberUtil = require('../../utility/NumberUtil.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const ModerationService = require('../../services/ModerationService.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Mute extends Command {
   constructor() {

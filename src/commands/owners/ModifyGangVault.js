@@ -1,7 +1,7 @@
 const { Command, Argument } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class ModifyGangWealth extends Command {
   constructor() {

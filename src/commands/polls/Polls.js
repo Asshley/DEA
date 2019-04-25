@@ -4,7 +4,7 @@ const Util = require('../../utility/Util.js');
 const MAX_LENGTH = 20;
 const MAX_MESSAGES = 5;
 const DELAY = 2e3;
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Polls extends Command {
   constructor() {

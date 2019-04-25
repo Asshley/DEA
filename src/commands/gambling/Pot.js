@@ -7,7 +7,7 @@ const PAD_AMOUNT = 2;
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const _Pot = require('../../structures/Pot.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Pot extends Command {
   constructor() {

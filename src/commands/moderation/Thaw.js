@@ -7,7 +7,7 @@ const {
   Constants: { Permissions }
 } = require('eris');
 const ModerationService = require('../../services/ModerationService.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Thaw extends Command {
   constructor() {

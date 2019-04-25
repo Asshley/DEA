@@ -1,7 +1,7 @@
 const { Command, Argument, ArgumentDefault } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Inventory extends Command {
   constructor() {

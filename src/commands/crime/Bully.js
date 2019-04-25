@@ -4,7 +4,7 @@ const {
   COOLDOWNS: { BULLY: BULLY_COOLDOWN }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const messages = require('../../data/messages.json');
+const messages = require('../../../data/messages.json');
 
 class Bully extends Command {
   constructor() {
