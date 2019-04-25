@@ -15,7 +15,9 @@ class CashPercent extends ArgumentPrecondition {
     const rounded = NumberUtil.round(cashValue * options.percent, DECIMAL_ROUND_AMOUNT);
 
     if (argument.typeReader.inputtedAll) {
-      args[`${argument.name}-all`] = rounded;
+      const authorCash = NumberUtil.value(msg.dbUser.cash);
+
+      args[`${argument.name}-all`] = authorCash < rounded ? authorCash : rounded;
 
       return PreconditionResult.fromSuccess();
     } else if (rounded >= value) {
