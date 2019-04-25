@@ -1,7 +1,7 @@
 const Interval = require('../structures/Interval.js');
 const StringUtil = require('../utility/StringUtil.js');
 const messages = require('../../data/messages.json');
-const cooldowns = require('../../../data/cooldowns.json');
+const cooldowns = require('../../data/cooldowns.json');
 
 class AutoRemovePoll extends Interval {
   constructor(client) {

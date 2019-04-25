@@ -2,7 +2,7 @@ const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH }
 } = require('../utility/Constants.js');
 const Interval = require('../structures/Interval.js');
-const cooldowns = require('../../../data/cooldowns.json');
+const cooldowns = require('../../data/cooldowns.json');
 
 class AutoRegenerateHealth extends Interval {
   constructor(client) {
