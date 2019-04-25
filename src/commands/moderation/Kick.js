@@ -1,7 +1,5 @@
 const { Command, Argument } = require('patron.js');
-const {
-  COLORS: { KICK: KICK_COLOR }
-} = require('../../utility/Constants.js');
+const { colors } = require('../../../data/config.json');
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
@@ -45,10 +43,9 @@ class Kick extends Command {
     ));
 
     return ModerationService.tryModLog({
-      dbGuild: msg.dbGuild,
       guild: msg.channel.guild,
       action: 'Kick',
-      color: KICK_COLOR,
+      color: colors.kick,
       reason: args.reason,
       moderator: msg.author,
       user: args.member.user

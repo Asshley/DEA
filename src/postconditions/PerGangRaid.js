@@ -1,7 +1,7 @@
 const { Postcondition } = require('patron.js');
-const { PREFIX } = require('../utility/Constants.js');
 const { MULTI_MUTEX } = require('../utility/Util.js');
 const handler = require('../services/handler.js');
+const config = require('../../data/config.json');
 
 class PerGangRaid extends Postcondition {
   constructor() {
@@ -11,7 +11,9 @@ class PerGangRaid extends Postcondition {
   async run(msg, result) {
     if (result.success !== false) {
       const { dbGang: gang } = msg;
-      const { command: { cooldowns: { users } } } = await handler.parseCommand(msg, PREFIX.length);
+      const {
+        command: { cooldowns: { users } }
+      } = await handler.parseCommand(msg, config.prefix.length);
       const gangMembers = gang.members
         .concat(gang.leaderId)
         .filter(x => x.id || x !== msg.author.id);

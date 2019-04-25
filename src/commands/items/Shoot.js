@@ -1,8 +1,8 @@
 const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH },
-  INVESTMENTS: { SNOWCAP },
   INVESTMENT_NAMES,
+  INVESTMENTS,
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT, GANG: { CASH_FOR_KILL } },
   RESTRICTIONS: { COMMANDS: { GANG: { MINIMUM_AMOUNT } } }
 } = require('../../utility/Constants.js');
@@ -149,7 +149,7 @@ class Shoot extends Command {
         investments: INVESTMENT_NAMES.SNOWCAP
       },
       $set: {
-        revivable: SNOWCAP.TIME,
+        revivable: INVESTMENTS.SNOWCAP.TIME,
         health: MAX_HEALTH
       }
     };

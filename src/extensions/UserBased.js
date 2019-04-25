@@ -1,7 +1,5 @@
 const Eris = require('eris');
-const {
-  COLORS: { ERROR: ERROR_COLOR }
-} = require('../utility/Constants.js');
+const { colors } = require('../../data/config.json');
 const MessageUtil = require('../utility/MessageUtil.js');
 const registry = require('../services/registry.js');
 
@@ -35,7 +33,7 @@ class UserBased {
       return MessageUtil.sendFieldsMessage(await getChannel(this), fields, inline, color);
     };
     structure.prototype.DMError = function(description, options = {}) {
-      options.color = ERROR_COLOR;
+      options.color = colors.error;
 
       return this.DM(description, options);
     };

@@ -1,7 +1,5 @@
 const { Command, Argument, Context } = require('patron.js');
-const {
-  COLORS: { ERROR: ERROR_COLOR }
-} = require('../../utility/Constants.js');
+const { colors } = require('../../../data/config.json');
 const ERR_LENGTH = 900;
 const util = require('util');
 
@@ -55,7 +53,7 @@ class Eval extends Command {
             .slice(0, ERR_LENGTH)}\`\`\``
         ],
         false,
-        ERROR_COLOR
+        colors.error
       );
     }
   }

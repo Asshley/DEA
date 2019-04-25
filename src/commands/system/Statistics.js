@@ -1,12 +1,12 @@
 const { Command, Context } = require('patron.js');
 const {
   CHANNEL_TYPES,
-  AUTHORS,
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT }
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
+const config = require('../../../data/config.json');
 const TO_MB = 1048576;
 
 class Statistics extends Command {
@@ -25,7 +25,7 @@ class Statistics extends Command {
 
     await msg.author.DMFields([
       'Authors',
-      AUTHORS.join('\n'),
+      config.authors.join('\n'),
       'Framework',
       'patron.js',
       'Memory',

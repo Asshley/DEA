@@ -2,13 +2,13 @@ const { Command, Context } = require('patron.js');
 const {
   RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
   MISCELLANEA: { CASH_PER_MESSAGE },
-  PREFIX,
   CHANNEL_TYPES
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const messages = require('../../../data/messages.json');
 const cooldowns = require('../../../data/cooldowns.json');
+const config = require('../../../data/config.json');
 
 class Info extends Command {
   constructor() {
@@ -28,12 +28,12 @@ class Info extends Command {
       MINIMUM_MESSAGE_LENGTH,
       NumberUtil.toUSD(CASH_PER_MESSAGE),
       LOTTERY.MAXIMUM_CASH,
-      PREFIX,
-      PREFIX,
-      PREFIX,
+      config.prefix,
+      config.prefix,
+      config.prefix,
       msg._client.user.username,
       msg._client.user.username,
-      PREFIX
+      config.prefix
     ));
 
     if (msg.channel.type !== CHANNEL_TYPES.DM) {

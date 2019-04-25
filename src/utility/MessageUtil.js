@@ -1,13 +1,13 @@
 const {
-  COLORS: { DEFAULTS },
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT: EVEN_VALUE }
 } = require('./Constants.js');
 const Random = require('./Random.js');
+const { colors } = require('../../data/config.json');
 
 class MessageUtil {
   static sendFieldsMessage(channel, fields, inline = true, color = null) {
     const embed = {
-      color: color ? color : Random.arrayElement(DEFAULTS),
+      color: color ? color : Random.arrayElement(colors.defaults),
       fields: []
     };
 
@@ -24,7 +24,7 @@ class MessageUtil {
 
   static sendMessage(channel, description, options = {}) {
     const embed = {
-      color: options.color ? options.color : Random.arrayElement(DEFAULTS),
+      color: options.color ? options.color : Random.arrayElement(colors.defaults),
       description
     };
 

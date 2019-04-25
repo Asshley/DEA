@@ -1,13 +1,13 @@
 const { TypeReader, TypeReaderResult } = require('patron.js');
-const Poll = require('../structures/Poll.js');
+const _Poll = require('../structures/Poll.js');
 
-class PollTypeReader extends TypeReader {
+class Poll extends TypeReader {
   constructor() {
     super({ type: 'poll' });
   }
 
   async read(command, message, argument, args, input) {
-    const poll = Poll.findPoll(message.dbGuild, input);
+    const poll = _Poll.findPoll(message.dbGuild, input);
 
     if (poll) {
       return TypeReaderResult.fromSuccess(poll);
@@ -17,4 +17,4 @@ class PollTypeReader extends TypeReader {
   }
 }
 
-module.exports = new PollTypeReader();
+module.exports = new Poll();

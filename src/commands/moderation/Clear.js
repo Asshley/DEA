@@ -1,6 +1,5 @@
 const { Command, Argument } = require('patron.js');
 const {
-  COLORS: { CLEAR: CLEAR_COLOR },
   RESTRICTIONS: { COMMANDS: { CLEAR: { MAXIMUM_MESSAGES, MINIMUM_MESSAGES } } }
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
@@ -8,6 +7,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
 const messages = require('../../../data/messages.json');
 const cooldowns = require('../../../data/cooldowns.json');
+const { colors } = require('../../../data/config.json');
 const DELAY = 3e3;
 
 class Clear extends Command {
@@ -58,10 +58,9 @@ class Clear extends Command {
     const user = args.user ? ` sent by ${args.user.username}#${args.user.discriminator}` : '';
 
     await ModerationService.tryModLog({
-      dbGuild: msg.dbGuild,
       guild: msg.channel.guild,
       action: 'Clear',
-      color: CLEAR_COLOR,
+      color: colors.clear,
       reason: args.reason,
       moderator: msg.author,
       user: null,

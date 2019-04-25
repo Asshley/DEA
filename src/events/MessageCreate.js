@@ -1,5 +1,5 @@
 const { CommandError, Context } = require('patron.js');
-const { PREFIX, CLIENT_EVENTS } = require('../utility/Constants.js');
+const { CLIENT_EVENTS } = require('../utility/Constants.js');
 const ERROR_CODES = {
   MINIMUM: 500,
   MAXIMUM: 600,
@@ -13,6 +13,7 @@ const NumberUtil = require('../utility/NumberUtil.js');
 const StringUtil = require('../utility/StringUtil.js');
 const chatService = require('../services/ChatService.js');
 const handler = require('../services/handler.js');
+const config = require('../../data/config.json');
 const contexts = {
   [Context.Guild]: 'server',
   [Context.DM]: 'DMs'
@@ -34,17 +35,17 @@ class MessageCreate extends Event {
     const { channel: { guild }, dbGuild } = msg;
     const giveCash = guild && !dbGuild.channels.ignore.includes(msg.channel.id);
 
-    if (!msg.content.startsWith(PREFIX)) {
+    if (!msg.content.startsWith(config.prefix)) {
       return giveCash ? chatService.applyCash(msg) : null;
     }
 
-    const command = await handler.parseCommand(msg, PREFIX.length);
+    const command = await handler.parseCommand(msg, config.prefix.length);
 
     if (!command.success) {
       return;
     }
 
-    const result = await handler.run(msg, PREFIX.length);
+    const result = await handler.run(msg, config.prefix.length);
 
     msg.lastCommand = command.commandName;
 
@@ -102,8 +103,8 @@ ${msg.cleanContent} | Reason: ${result.errorReason}`, 'DEBUG');
       message = `this command can't be used in \
 ${contexts[result.context] === 'server' ? 'a ' : ''}${contexts[result.context]}`;
     } else if (result.commandError === CommandError.InvalidArgCount) {
-      message = `you are incorrectly using this command.\n**Usage:** \`${PREFIX}\
-${result.command.getUsage()}\`\n**Example:** \`${PREFIX}${result.command.getExample()}\``;
+      message = `you are incorrectly using this command.\n**Usage:** \`${config.prefix}\
+${result.command.getUsage()}\`\n**Example:** \`${config.prefix}${result.command.getExample()}\``;
     } else {
       message = result.errorReason;
     }

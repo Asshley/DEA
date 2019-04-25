@@ -5,7 +5,7 @@ const NUMERIC_VALUES = {
   BILLION: 1e9
 };
 
-class AmountTypeReader extends TypeReader {
+class Amount extends TypeReader {
   constructor() {
     super({ type: 'amount' });
   }
@@ -32,4 +32,4 @@ class AmountTypeReader extends TypeReader {
   }
 }
 
-module.exports = new AmountTypeReader();
+module.exports = new Amount();

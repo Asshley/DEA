@@ -1,6 +1,6 @@
 const { TypeReader, TypeReaderResult } = require('patron.js');
 
-class ChoiceTypeReader extends TypeReader {
+class Choice extends TypeReader {
   constructor() {
     super({ type: 'choice' });
   }
@@ -17,4 +17,4 @@ class ChoiceTypeReader extends TypeReader {
   }
 }
 
-module.exports = new ChoiceTypeReader();
+module.exports = new Choice();

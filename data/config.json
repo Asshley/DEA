@@ -1,0 +1,40 @@
+{
+  "colors": {
+    "ban": 15338496,
+    "clear": 7679,
+    "defaults": [
+      16721562,
+      65280,
+      59432,
+      588031,
+      15869695,
+      16718990,
+      6881058,
+      16760337,
+      2708735,
+      9839853,
+      11070720
+    ],
+    "chill": 16735249,
+    "error": 16711680,
+    "kick": 15225119,
+    "mute": 16740878,
+    "unban": 1310489,
+    "unmute": 7204190,
+    "unchill": 6023477
+  },
+
+  "botOwners": [
+    "289976550726828042",
+    "310859567649128449",
+    "226736342745219072",
+    "266743271898742785",
+    "566694492590047234"
+  ],
+
+  "prefix": "$",
+  "activity": "{0}help",
+  "authors": ["Ash"],
+  "botLink": "https://discordapp.com/oauth2/authorize?client_id=502598213790990336&scope=bot&permissions=8",
+  "serverLink": "https://discord.gg/nQvecMF"
+}

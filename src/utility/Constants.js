@@ -1,30 +1,3 @@
-module.exports.COLORS = {
-  BAN: 0xEA0C00,
-  CLEAR: 0x001DFF,
-  /* eslint-disable no-magic-numbers */
-  DEFAULTS: [
-    0xFF269A,
-    0x00FF00,
-    0x00E828,
-    0x08F8FF,
-    0xF226FF,
-    0xFF1C8E,
-    0x68FF22,
-    0xFFBE11,
-    0x2954FF,
-    0x9624ED,
-    0xA8ED00
-  ],
-  /* eslint-enable no-magic-numbers */
-  CHILL: 0xFF5C11,
-  ERROR: 0xFF0000,
-  KICK: 0xE8511F,
-  MUTE: 0xFF720E,
-  UNBAN: 0x13FF19,
-  UNMUTE: 0x6DED5E,
-  UNCHILL: 0x5BE935
-};
-
 module.exports.CHANNEL_TYPES = {
   TEXT: 0,
   DM: 1,
@@ -59,11 +32,6 @@ module.exports.INVESTMENT_NAMES = {
   SNOWCAP: 'snowcap'
 };
 
-module.exports.BOT_LINK = 'https://discordapp.com/\
-oauth2/authorize?client_id=502598213790990336&scope=bot&permissions=8';
-
-module.exports.SERVER_LINK = 'https://discord.gg/nQvecMF';
-
 module.exports.CLIENT_OPTIONS = {
   compress: true,
   restMode: true,
@@ -93,20 +61,6 @@ module.exports.NOTIFICATIONS = [
   'Rape'
 ];
 
-module.exports.PREFIX = '$';
-
-module.exports.ACTIVITY = `${module.exports.PREFIX}help`;
-
-module.exports.AUTHORS = ['Ash'];
-
-module.exports.BOT_OWNERS = [
-  '289976550726828042',
-  '310859567649128449',
-  '226736342745219072',
-  '266743271898742785',
-  '566694492590047234'
-];
-
 module.exports.REGEXES = {
   MARKDOWN: /(\*|~|`|_)+/g,
   CAPITALIZE: /\w\S*/g,
@@ -134,8 +88,8 @@ module.exports.INVESTMENTS = {
   CONVOY: {
     COST: 25e3,
     DESCRIPTION: 'A fleet of ships will help distribute your drugs even faster, \
-reducing all of your cooldowns by 25%.',
-    COOLDOWN_REDUCTION: 0.25
+reducing all of your cooldowns by 50%.',
+    COOLDOWN_REDUCTION: 0.5
   },
   SNOWCAP: {
     COST: 5e4,

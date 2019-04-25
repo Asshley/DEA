@@ -1,4 +1,4 @@
-const { COLORS } = require('../utility/Constants.js');
+const { colors } = require('../../data/config.json');
 const ModerationService = require('../services/ModerationService.js');
 const Interval = require('../structures/Interval.js');
 const cooldowns = require('../../data/cooldowns.json');
@@ -42,10 +42,9 @@ class AutoUnmute extends Interval {
 
       await member.removeRole(role.id);
       await ModerationService.tryModLog({
-        dbGuild,
         guild,
         action: 'Automatic Unmute',
-        color: COLORS.UNMUTE,
+        color: colors.unmute,
         reason: '',
         moderator: null,
         user: member.user

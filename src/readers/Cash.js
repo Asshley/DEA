@@ -2,10 +2,10 @@ const { TypeReader, TypeReaderResult } = require('patron.js');
 const NumberUtil = require('../utility/NumberUtil.js');
 const HALF_DIVISOR = 2;
 
-class CashTypeReader extends TypeReader {
+class Cash extends TypeReader {
   constructor() {
     super({ type: 'cash' });
-    this.inputtedAll = null;
+    this.inputtedAll = false;
   }
 
   async read(command, message, argument, args, input) {
@@ -33,4 +33,4 @@ class CashTypeReader extends TypeReader {
   }
 }
 
-module.exports = new CashTypeReader();
+module.exports = new Cash();

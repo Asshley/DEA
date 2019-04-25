@@ -1,7 +1,5 @@
 const { Command, CommandResult, Argument } = require('patron.js');
-const {
-  COLORS: { BAN: BAN_COLOR }
-} = require('../../utility/Constants.js');
+const { colors } = require('../../../data/config.json');
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
@@ -65,10 +63,9 @@ class Ban extends Command {
     ));
 
     return ModerationService.tryModLog({
-      dbGuild: msg.dbGuild,
       guild: msg.channel.guild,
       action: 'Ban',
-      color: BAN_COLOR,
+      color: colors.ban,
       reason: args.reason,
       moderator: msg.author,
       user: args.user

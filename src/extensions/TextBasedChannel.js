@@ -1,7 +1,5 @@
 const Eris = require('eris');
-const {
-  COLORS: { ERROR }
-} = require('../utility/Constants.js');
+const { colors } = require('../../data/config.json');
 const MessageUtil = require('../utility/MessageUtil.js');
 
 class TextBasedChannel {
@@ -10,7 +8,7 @@ class TextBasedChannel {
       return MessageUtil.sendMessage(this, description, options);
     };
     structure.prototype.createErrorMessage = function(description, options = {}) {
-      options.color = ERROR;
+      options.color = colors.error;
 
       return this.sendMessage(description, options);
     };
@@ -39,7 +37,7 @@ class TextBasedChannel {
       }
     };
     structure.prototype.tryCreateErrorMessage = function(description, options = {}) {
-      options.color = ERROR;
+      options.color = colors.error;
 
       return this.trySendMessage(description, options);
     };

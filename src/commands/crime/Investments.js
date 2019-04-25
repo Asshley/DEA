@@ -1,7 +1,5 @@
 const { Command, Argument } = require('patron.js');
-const {
-  INVESTMENTS
-} = require('../../utility/Constants.js');
+const { INVESTMENTS } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');

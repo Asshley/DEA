@@ -1,13 +1,13 @@
 const { Command, Argument } = require('patron.js');
 const {
-  COLORS: { MUTE: MUTE_COLOR },
-  DEFAULTS: { MUTE: DEFAULT_MUTE }, PREFIX
+  DEFAULTS: { MUTE: DEFAULT_MUTE }
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const ModerationService = require('../../services/ModerationService.js');
 const messages = require('../../../data/messages.json');
+const config = require('../../../data/config.json');
 
 class Mute extends Command {
   constructor() {
@@ -55,7 +55,7 @@ class Mute extends Command {
 
     if (!msg.dbGuild.roles.muted) {
       return msg.createErrorReply(StringUtil.format(
-        messages.commands.mute.noMutedRole, PREFIX
+        messages.commands.mute.noMutedRole, config.prefix
       ));
     } else if (args.member.roles.includes(msg.dbGuild.roles.muted)) {
       return msg.createErrorReply(messages.commands.mute.alreadyMuted);
@@ -63,7 +63,7 @@ class Mute extends Command {
 
     if (!role) {
       return msg.createErrorReply(StringUtil.format(
-        messages.commands.mute.deletedRole, PREFIX
+        messages.commands.mute.deletedRole, config.prefix
       ));
     }
 
@@ -81,10 +81,9 @@ class Mute extends Command {
     );
 
     return ModerationService.tryModLog({
-      dbGuild: msg.dbGuild,
       guild: msg.channel.guild,
       action: 'Mute',
-      color: MUTE_COLOR,
+      color: config.colors.mute,
       reason: args.reason,
       moderator: msg.author,
       user: args.member.user,

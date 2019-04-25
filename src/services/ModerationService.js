@@ -1,5 +1,5 @@
-const { BOT_LINK } = require('../utility/Constants.js');
 const StringUtil = require('../utility/StringUtil.js');
+const config = require('../../data/config.json');
 
 class ModerationService {
   static getPermLevel(dbGuild, member) {
@@ -27,33 +27,36 @@ reason: ${reason}.`}`, { guild });
   }
 
   static async tryModLog(data) {
-    if (!data.dbGuild.channels.modLog) {
+    const dbGuild = await data.guild.dbGuild();
+
+    if (!dbGuild.channels.modLog) {
       return false;
     }
 
-    const channel = data.guild.channels.get(data.dbGuild.channels.modLog);
+    const channel = data.guild.channels.get(dbGuild.channels.modLog);
 
     if (!channel) {
-      return false;
+      return null;
     }
 
-    const { description, options } = this._formatModLog(data, data.dbGuild);
-    const update = {
+    const { description, options } = this._formatModLog(
+      Object.assign(data, { caseNumber: dbGuild.caseNumber })
+    );
+
+    await data.guild.shard.client.db.guildRepo.upsertGuild(data.guild.id, {
       $inc: {
         caseNumber: 1
       }
-    };
-
-    await data.guild.shard.client.db.guildRepo.upsertGuild(data.guild.id, update);
+    });
 
     return channel.trySendMessage(description, options);
   }
 
-  static _formatModLog(data, dbGuild) {
+  static _formatModLog(data) {
     const options = {
       color: data.color,
       footer: {
-        text: `Case #${dbGuild.caseNumber}`,
+        text: `Case #${data.caseNumber}`,
         icon: 'http://i.imgur.com/BQZJAqT.png'
       },
       timestamp: true
@@ -63,7 +66,7 @@ reason: ${reason}.`}`, { guild });
       options.author = {
         name: `${data.moderator.username}#${data.moderator.discriminator}`,
         icon: data.moderator.avatarURL,
-        URL: BOT_LINK
+        URL: config.botLink
       };
     }
 
@@ -75,7 +78,7 @@ reason: ${reason}.`}`, { guild });
 
     if (data.user) {
       description += `**User:** ${data.user.username}#${data.user.discriminator} \
-(${data.user.id})\n`;
+  (${data.user.id})\n`;
     }
 
     if (!StringUtil.isNullOrWhiteSpace(data.reason)) {

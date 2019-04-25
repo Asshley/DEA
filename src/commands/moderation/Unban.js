@@ -1,7 +1,5 @@
 const { Command, Argument } = require('patron.js');
-const {
-  COLORS: { UNBAN: UNBAN_COLOR }
-} = require('../../utility/Constants.js');
+const { colors } = require('../../../data/config.json');
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
@@ -39,10 +37,9 @@ class Unban extends Command {
       StringUtil.boldify(`${args.user.username}#${args.user.discriminator}`)
     ));
     await ModerationService.tryModLog({
-      dbGuild: msg.dbGuild,
       guild: msg.channel.guild,
       action: 'Unban',
-      color: UNBAN_COLOR,
+      color: colors.unban,
       reason: args.reason,
       moderator: msg.author,
       user: args.user

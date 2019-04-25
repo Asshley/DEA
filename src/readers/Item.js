@@ -1,7 +1,7 @@
 const { TypeReader, TypeReaderResult } = require('patron.js');
 const items = require('../../data/items.json');
 
-class ItemTypeReader extends TypeReader {
+class Item extends TypeReader {
   constructor() {
     super({ type: 'item' });
   }
@@ -17,4 +17,4 @@ class ItemTypeReader extends TypeReader {
   }
 }
 
-module.exports = new ItemTypeReader();
+module.exports = new Item();

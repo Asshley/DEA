@@ -1,7 +1,5 @@
 const { Command, Argument } = require('patron.js');
-const {
-  COLORS: { CHILL: CHILL_COLOR }
-} = require('../../utility/Constants.js');
+const { colors } = require('../../../data/config.json');
 const {
   Permission,
   Constants: { Permissions }
@@ -44,10 +42,9 @@ class Thaw extends Command {
     await msg.createReply(messages.commands.thaw.success);
 
     return ModerationService.tryModLog({
-      dbGuild: msg.dbGuild,
       guild: msg.channel.guild,
       action: 'Thaw',
-      color: CHILL_COLOR,
+      color: colors.chill,
       reason: args.reason,
       moderator: msg.author,
       user: null,
