@@ -1,12 +1,10 @@
 const { Command, Argument } = require('patron.js');
-const {
-  COOLDOWNS: { HUNT: HUNT_COOLDOWN }
-} = require('../../utility/Constants.js');
 const itemService = require('../../services/ItemService.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const items = require('../../../data/items.json');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Hunt extends Command {
   constructor() {
@@ -15,7 +13,7 @@ class Hunt extends Command {
       groupName: 'items',
       description: 'Go hunting using items.',
       postconditions: ['reducedcooldown'],
-      cooldown: HUNT_COOLDOWN,
+      cooldown: cooldowns.commands.hunt,
       args: [
         new Argument({
           name: 'item',

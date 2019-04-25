@@ -1,7 +1,6 @@
 const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH },
-  COOLDOWNS: { SHOOT: SHOOT_COOLDOWN },
   INVESTMENTS: { SNOWCAP },
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT, GANG: { CASH_FOR_KILL } },
   RESTRICTIONS: { COMMANDS: { GANG: { MINIMUM_AMOUNT } } }
@@ -13,6 +12,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const items = require('../../../data/items.json');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Shoot extends Command {
   constructor() {
@@ -21,7 +21,7 @@ class Shoot extends Command {
       groupName: 'items',
       description: 'Shoot a user with specified gun.',
       postconditions: ['reducedcooldown'],
-      cooldown: SHOOT_COOLDOWN,
+      cooldown: cooldowns.commands.shoot,
       args: [
         new Argument({
           name: 'member',

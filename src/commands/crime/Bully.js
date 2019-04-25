@@ -1,10 +1,10 @@
 const { Command, Argument } = require('patron.js');
 const {
-  MAX_AMOUNTS: { BULLY: MAX_BULLY_LENGTH },
-  COOLDOWNS: { BULLY: BULLY_COOLDOWN }
+  MAX_AMOUNTS: { BULLY: MAX_BULLY_LENGTH }
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Bully extends Command {
   constructor() {
@@ -13,7 +13,7 @@ class Bully extends Command {
       groupName: 'crime',
       description: 'Bully any user by changing their nickname.',
       postconditions: ['reducedcooldown'],
-      cooldown: BULLY_COOLDOWN,
+      cooldown: cooldowns.commands.bully,
       args: [
         new Argument({
           name: 'member',

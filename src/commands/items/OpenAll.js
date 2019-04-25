@@ -1,6 +1,5 @@
 const { Command, Argument } = require('patron.js');
 const {
-  COOLDOWNS: { OPEN_CRATE: OPEN_CRATE_COOLDOWN },
   MAX_AMOUNTS: { OPEN_ALL: MAX_OPENABLE }
 } = require('../../utility/Constants.js');
 const Util = require('../../utility/Util.js');
@@ -8,6 +7,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const itemService = require('../../services/ItemService.js');
 const items = require('../../../data/items.json');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 const DELAY = 5e3;
 
 class OpenAll extends Command {
@@ -17,7 +17,7 @@ class OpenAll extends Command {
       groupName: 'items',
       description: 'Open all of a kind of crate.',
       postconditions: ['reducedcooldown'],
-      cooldown: OPEN_CRATE_COOLDOWN,
+      cooldown: cooldowns.commands.openCrate,
       args: [
         new Argument({
           name: 'item',

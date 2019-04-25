@@ -1,5 +1,4 @@
 const {
-  COOLDOWNS: { REDUCED_MESSAGE_CASH, MESSAGE_CASH },
   RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
   MISCELLANEA: { CASH_PER_MESSAGE },
   INVESTMENTS,
@@ -9,6 +8,7 @@ const Random = require('../utility/Random.js');
 const StringUtil = require('../utility/StringUtil.js');
 const NumberUtil = require('../utility/NumberUtil.js');
 const messages = require('../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class ChatService {
   constructor() {
@@ -39,17 +39,18 @@ class ChatService {
 
       setTimeout(() => {
         delete this.messages[key];
-      }, perks.cooldown + MESSAGE_CASH);
+      }, perks.cooldown + cooldowns.miscellanea.messageCash);
 
       return msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, amount);
     }
   }
 
   getInvestmentPerks(dbUser, dbGuild) {
+    const { investments } = dbUser;
     let cashPerMessage = CASH_PER_MESSAGE;
 
-    if (dbUser.investments.includes('pound')) {
-      if (dbUser.investments.includes('kilo')) {
+    if (investments.includes('pound')) {
+      if (investments.includes('kilo')) {
         cashPerMessage *= INVESTMENTS.KILO.CASH_MULTIPLIER;
       } else {
         cashPerMessage *= INVESTMENTS.POUND.CASH_MULTIPLIER;
@@ -58,8 +59,11 @@ class ChatService {
 
     cashPerMessage *= dbGuild.multiplier;
 
+    const cooldown = investments.includes('line') ? cooldowns
+      .miscellanea.reducedMessageCash : cooldowns.miscellanea.messageCash;
+
     return {
-      cooldown: dbUser.investments.includes('line') ? REDUCED_MESSAGE_CASH : MESSAGE_CASH,
+      cooldown,
       cashPerMessage
     };
   }

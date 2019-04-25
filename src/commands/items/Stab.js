@@ -1,7 +1,6 @@
 const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH },
-  COOLDOWNS: { STAB: STAB_COOLDOWN },
   INVESTMENTS: { SNOWCAP },
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT, GANG: { CASH_FOR_KILL } },
   RESTRICTIONS: { COMMANDS: { GANG: { MINIMUM_AMOUNT } } }
@@ -13,6 +12,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const items = require('../../../data/items.json');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Stab extends Command {
   constructor() {
@@ -21,7 +21,7 @@ class Stab extends Command {
       groupName: 'items',
       description: 'Stab a user with specified knife.',
       postconditions: ['reducedcooldown'],
-      cooldown: STAB_COOLDOWN,
+      cooldown: cooldowns.commands.stab,
       args: [
         new Argument({
           name: 'member',

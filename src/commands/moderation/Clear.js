@@ -1,13 +1,13 @@
 const { Command, Argument } = require('patron.js');
 const {
   COLORS: { CLEAR: CLEAR_COLOR },
-  COOLDOWNS: { CLEAR: CLEAR_COOLDOWN },
   RESTRICTIONS: { COMMANDS: { CLEAR: { MAXIMUM_MESSAGES, MINIMUM_MESSAGES } } }
 } = require('../../utility/Constants.js');
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 const DELAY = 3e3;
 
 class Clear extends Command {
@@ -17,7 +17,7 @@ class Clear extends Command {
       groupName: 'moderation',
       description: `Clear up to ${MAXIMUM_MESSAGES} messages in any text channel.`,
       postconditions: ['reducedcooldown'],
-      cooldown: CLEAR_COOLDOWN,
+      cooldown: cooldowns.commands.clear,
       botPermissions: ['MANAGE_MESSAGES'],
       args: [
         new Argument({

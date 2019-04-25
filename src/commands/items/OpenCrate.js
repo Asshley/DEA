@@ -1,11 +1,9 @@
 const { Command, Argument } = require('patron.js');
-const {
-  COOLDOWNS: { OPEN_CRATE: OPEN_CRATE_COOLDOWN }
-} = require('../../utility/Constants.js');
 const itemService = require('../../services/ItemService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const items = require('../../../data/items.json');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class OpenCrate extends Command {
   constructor() {
@@ -14,7 +12,7 @@ class OpenCrate extends Command {
       groupName: 'items',
       description: 'Open a crate.',
       postconditions: ['reducedcooldown'],
-      cooldown: OPEN_CRATE_COOLDOWN,
+      cooldown: cooldowns.commands.openCrate,
       args: [
         new Argument({
           name: 'item',

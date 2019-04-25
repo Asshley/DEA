@@ -1,6 +1,5 @@
 const { Command, Argument } = require('patron.js');
 const {
-  COOLDOWNS: { ROB: ROB_COOLDOWN },
   ODDS: { ROB: ROB_ODDS },
   RESTRICTIONS: { COMMANDS: { ROB: { MINIMUM_CASH, MAXIMUM_CASH } } }
 } = require('../../utility/Constants.js');
@@ -8,6 +7,7 @@ const Random = require('../../utility/Random.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Rob extends Command {
   constructor() {
@@ -16,7 +16,7 @@ class Rob extends Command {
       groupName: 'crime',
       description: 'Use your cash to rob a user.',
       postconditions: ['reducedcooldown'],
-      cooldown: ROB_COOLDOWN,
+      cooldown: cooldowns.commands.rob,
       args: [
         new Argument({
           name: 'member',

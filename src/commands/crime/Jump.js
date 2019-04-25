@@ -1,6 +1,5 @@
 const { Command } = require('patron.js');
 const {
-  COOLDOWNS: { JUMP: JUMP_COOLDOWN },
   RESTRICTIONS: { COMMANDS: { JUMP } },
   ODDS: { JUMP: JUMP_ODDS }
 } = require('../../utility/Constants.js');
@@ -8,6 +7,7 @@ const Random = require('../../utility/Random.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Jump extends Command {
   constructor() {
@@ -16,7 +16,7 @@ class Jump extends Command {
       groupName: 'crime',
       description: 'Jump some trash for cash on the street.',
       postconditions: ['reducedcooldown'],
-      cooldown: JUMP_COOLDOWN
+      cooldown: cooldowns.commands.jump
     });
   }
 

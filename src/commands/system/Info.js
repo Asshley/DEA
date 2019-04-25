@@ -1,7 +1,6 @@
 const { Command, Context } = require('patron.js');
 const {
   RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
-  COOLDOWNS: { MESSAGE_CASH },
   MISCELLANEA: { CASH_PER_MESSAGE },
   PREFIX,
   CHANNEL_TYPES
@@ -9,6 +8,7 @@ const {
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Info extends Command {
   constructor() {
@@ -24,7 +24,7 @@ class Info extends Command {
     await msg.author.DM(StringUtil.format(
       messages.commands.info.message,
       msg._client.user.username,
-      NumberUtil.msToTime(MESSAGE_CASH).seconds,
+      NumberUtil.msToTime(cooldowns.miscellanea.messageCash).seconds,
       MINIMUM_MESSAGE_LENGTH,
       NumberUtil.toUSD(CASH_PER_MESSAGE),
       LOTTERY.MAXIMUM_CASH,

@@ -1,0 +1,34 @@
+{
+  "commands": {
+    "stab": 14400000,
+    "shoot": 14400000,
+    "fish": 900000,
+    "hunt": 900000,
+    "openCrate": 30000,
+    "bully": 60000,
+    "raid": 28800000,
+    "withdraw": 14400000,
+    "takeFromVault": 60000,
+    "collect": 86400000,
+    "rob": 28800000,
+    "kill": 86400000,
+    "clear": 1000,
+    "jump": 14400000,
+    "steal": 21600000,
+    "scam": 7200000,
+    "rape": 14400000
+  },
+
+  "intervals": {
+    "autoUnmute": 60000,
+    "autoRemovePoll": 1800000,
+    "autoTrivia": 300000,
+    "autoRegenerateHealth": 3600000,
+    "autoDrawPot": 60000
+  },
+
+  "miscellanea": {
+    "reducedMessageCash": 25000,
+    "messageCash": 30000
+  }
+}

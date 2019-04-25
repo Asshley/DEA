@@ -108,33 +108,6 @@ module.exports.REGEXES = {
   TRIVIA: /[^A-Za-z0-9?()*/\s']/
 };
 
-module.exports.COOLDOWNS = {
-  STAB: 144e5,
-  SHOOT: 144e5,
-  FISH: 9e5,
-  HUNT: 9e5,
-  OPEN_CRATE: 3e4,
-  BULLY: 6e4,
-  RAID: 288e5,
-  WITHDRAW: 144e5,
-  TAKE_FROM_VAULT: 6e4,
-  COLLECT: 864e5,
-  ROB: 288e5,
-  KILL: 864e5,
-  CLEAR: 1e3,
-  JUMP: 144e5,
-  STEAL: 216e5,
-  SCAM: 72e5,
-  RAPE: 144e5,
-  AUTO_UNMUTE: 6e4,
-  AUTO_REMOVE_POLL: 18e5,
-  AUTO_TRIVIA: 3e5,
-  AUTO_REGENERATE: 36e5,
-  AUTO_DRAW_POT: 6e4,
-  MESSAGE_CASH: 3e4,
-  REDUCED_MESSAGE_CASH: 25e3
-};
-
 module.exports.INVESTMENTS = {
   LINE: {
     COST: 1e3,

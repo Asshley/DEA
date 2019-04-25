@@ -1,7 +1,6 @@
 const {
   RESTRICTIONS: { TRIVIA },
-  MISCELLANEA: { MAX_TRIVIA_ANSWERS },
-  COOLDOWNS
+  MISCELLANEA: { MAX_TRIVIA_ANSWERS }
 } = require('../utility/Constants.js');
 const { awaitMessages } = require('../utility/MessageCollector.js');
 const NumberUtil = require('../utility/NumberUtil.js');
@@ -10,10 +9,11 @@ const Interval = require('../structures/Interval.js');
 const Random = require('../utility/Random.js');
 const Util = require('../utility/Util.js');
 const messages = require('../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class AutoTrivia extends Interval {
   constructor(client) {
-    super(client, COOLDOWNS.AUTO_TRIVIA);
+    super(client, cooldowns.intervals.autoTrivia);
     this.inactives = {};
   }
 

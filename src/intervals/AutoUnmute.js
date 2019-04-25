@@ -1,10 +1,11 @@
-const { COLORS, COOLDOWNS } = require('../utility/Constants.js');
+const { COLORS } = require('../utility/Constants.js');
 const ModerationService = require('../services/ModerationService.js');
 const Interval = require('../structures/Interval.js');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class AutoUnmute extends Interval {
   constructor(client) {
-    super(client, COOLDOWNS.AUTO_UNMUTE);
+    super(client, cooldowns.intervals.autoUnmute);
   }
 
   async onTick() {

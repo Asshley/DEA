@@ -1,6 +1,5 @@
 const { Command, Argument } = require('patron.js');
 const {
-  COOLDOWNS: { WITHDRAW: WITHDRAW_COOLDOWN },
   RESTRICTIONS: { COMMANDS: { GANG: { MINIMUM_AMOUNT } } },
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT, TO_PERCENT_AMOUNT }
 } = require('../../utility/Constants.js');
@@ -8,6 +7,7 @@ const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Withdraw extends Command {
   constructor() {
@@ -16,7 +16,7 @@ class Withdraw extends Command {
       groupName: 'gangs',
       description: 'Withdraw money from your gang.',
       postconditions: ['reducedcooldown'],
-      cooldown: WITHDRAW_COOLDOWN,
+      cooldown: cooldowns.commands.withdraw,
       preconditions: ['ingang'],
       args: [
         new Argument({

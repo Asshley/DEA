@@ -1,13 +1,13 @@
 const { Command } = require('patron.js');
 const {
   ODDS: { SCAM: SCAM_ODDS },
-  RESTRICTIONS: { COMMANDS: { SCAM } },
-  COOLDOWNS: { SCAM: SCAM_COOLDOWN }
+  RESTRICTIONS: { COMMANDS: { SCAM } }
 } = require('../../utility/Constants.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Scam extends Command {
   constructor() {
@@ -16,7 +16,7 @@ class Scam extends Command {
       groupName: 'crime',
       description: 'Scam some noobs on the streets.',
       postconditions: ['reducedcooldown'],
-      cooldown: SCAM_COOLDOWN
+      cooldown: cooldowns.commands.scam
     });
   }
 

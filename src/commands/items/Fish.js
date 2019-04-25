@@ -1,12 +1,10 @@
 const { Command, Argument } = require('patron.js');
-const {
-  COOLDOWNS: { FISH: FISH_COOLDOWN }
-} = require('../../utility/Constants.js');
 const itemService = require('../../services/ItemService.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const items = require('../../../data/items.json');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Fish extends Command {
   constructor() {
@@ -15,7 +13,7 @@ class Fish extends Command {
       groupName: 'items',
       description: 'Go fishing using items.',
       postconditions: ['reducedcooldown'],
-      cooldown: FISH_COOLDOWN,
+      cooldown: cooldowns.commands.fish,
       args: [
         new Argument({
           name: 'item',

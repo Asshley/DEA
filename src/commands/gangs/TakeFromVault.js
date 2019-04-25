@@ -1,11 +1,9 @@
 const { Command, Argument } = require('patron.js');
-const {
-  COOLDOWNS: { TAKE_FROM_VAULT: VAULT_COOLDOWN }
-} = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class TakeFromVault extends Command {
   constructor() {
@@ -21,7 +19,7 @@ class TakeFromVault extends Command {
       groupName: 'gangs',
       description: 'Take an item from a gang\'s vault.',
       postconditions: ['reducedcooldown'],
-      cooldown: VAULT_COOLDOWN,
+      cooldown: cooldowns.commands.takeFromVault,
       preconditions: ['ingang'],
       args: [
         new Argument({

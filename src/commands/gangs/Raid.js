@@ -1,7 +1,6 @@
 const { Command, Argument } = require('patron.js');
 const {
   ODDS: { RAID: RAID_ODDS },
-  COOLDOWNS: { RAID: RAID_COOLDOWN },
   RESTRICTIONS: { COMMANDS: { GANG: { MINIMUM_AMOUNT } } },
   MAX_AMOUNTS: { GANG: { MEMBERS: MAX_MEMBERS } },
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT: ROUND, TO_PERCENT_AMOUNT }
@@ -12,6 +11,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const DOUBLE = 2;
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Raid extends Command {
   constructor() {
@@ -20,7 +20,7 @@ class Raid extends Command {
       groupName: 'gangs',
       description: 'Raid another gang\'s money.',
       postconditions: ['reducedcooldown', 'pergangraid'],
-      cooldown: RAID_COOLDOWN,
+      cooldown: cooldowns.commands.raid,
       preconditions: ['ingang'],
       args: [
         new Argument({

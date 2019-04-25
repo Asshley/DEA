@@ -1,6 +1,5 @@
 const { Command, Argument } = require('patron.js');
 const {
-  COOLDOWNS: { RAPE: RAPE_COOLDOWN },
   ODDS: { RAPE: RAPE_ODDS },
   RESTRICTIONS: { COMMANDS: { RAPE: { CASH_REQUIRED, AMOUNT } } }
 } = require('../../utility/Constants.js');
@@ -9,6 +8,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const MessageUtil = require('../../utility/MessageUtil.js');
 const Random = require('../../utility/Random.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class Rape extends Command {
   constructor() {
@@ -16,7 +16,7 @@ class Rape extends Command {
       names: ['rape'],
       groupName: 'crime',
       description: 'Rape any user.',
-      cooldown: RAPE_COOLDOWN,
+      cooldown: cooldowns.commands.rape,
       postconditions: ['reducedcooldown'],
       args: [
         new Argument({

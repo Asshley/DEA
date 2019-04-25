@@ -1,11 +1,12 @@
 const {
-  COOLDOWNS, MAX_AMOUNTS: { HEALTH: MAX_HEALTH }
+  MAX_AMOUNTS: { HEALTH: MAX_HEALTH }
 } = require('../utility/Constants.js');
 const Interval = require('../structures/Interval.js');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class AutoRegenerateHealth extends Interval {
   constructor(client) {
-    super(client, COOLDOWNS.AUTO_REGENERATE);
+    super(client, cooldowns.intervals.autoRegenerateHealth);
   }
 
   async onTick() {
