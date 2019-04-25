@@ -51,6 +51,14 @@ module.exports.CLIENT_EVENTS = {
   WARN: 'warn'
 };
 
+module.exports.INVESTMENT_NAMES = {
+  LINE: 'line',
+  POUND: 'pound',
+  KILO: 'kilo',
+  CONVOY: 'convoy',
+  SNOWCAP: 'snowcap'
+};
+
 module.exports.BOT_LINK = 'https://discordapp.com/\
 oauth2/authorize?client_id=502598213790990336&scope=bot&permissions=8';
 
@@ -106,14 +114,6 @@ module.exports.REGEXES = {
   GANG_NAME: /[^A-Za-z0-9 ]|[ ]{2,}/,
   NOT_INDEX: /\b.*[a-zA-Z]+.*\b/,
   TRIVIA: /[^A-Za-z0-9?()*/\s']/
-};
-
-module.exports.INVESTMENT_NAMES = {
-  LINE: 'line',
-  POUND: 'pound',
-  KILO: 'kilo',
-  CONVOY: 'convoy',
-  SNOWCAP: 'snowcap'
 };
 
 module.exports.INVESTMENTS = {

@@ -17,8 +17,9 @@ class ModAbuse extends Postcondition {
 
   run(msg, result) {
     if (msg.dbGuild.autoModeration && result.success !== false) {
-      return MULTI_MUTEX.sync(msg.channel.guild.id, async () => {
-        const key = `${msg.author.id}-${msg.channel.guild.id}`;
+      const key = `${msg.author.id}-${msg.channel.guild.id}`;
+
+      return MULTI_MUTEX.sync(key, async () => {
         const value = this.history[key];
 
         if (!value) {
@@ -27,7 +28,7 @@ class ModAbuse extends Postcondition {
           return;
         }
 
-        if (Date.now() - value[0] >= HOUR) {
+        if (Date.now() - value[value.length - 1] >= HOUR) {
           value.length = 0;
         }
 
