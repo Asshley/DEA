@@ -31,7 +31,7 @@ class FindUserGang extends Command {
       ));
     }
 
-    const { client } = msg;
+    const { _client: client } = msg;
     const { username, discriminator } = client.users.get(gang.leaderId);
     const leader = `${username}#${discriminator}`;
     let members = '';
