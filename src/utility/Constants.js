@@ -108,6 +108,14 @@ module.exports.REGEXES = {
   TRIVIA: /[^A-Za-z0-9?()*/\s']/
 };
 
+module.exports.INVESTMENT_NAMES = {
+  LINE: 'line',
+  POUND: 'pound',
+  KILO: 'kilo',
+  CONVOY: 'convoy',
+  SNOWCAP: 'snowcap'
+};
+
 module.exports.INVESTMENTS = {
   LINE: {
     COST: 1e3,

@@ -1,5 +1,5 @@
 const { ArgumentPrecondition, PreconditionResult } = require('patron.js');
-const { INVESTMENTS } = require('../../utility/Constants.js');
+const { INVESTMENTS, INVESTMENT_NAMES } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 
@@ -35,7 +35,7 @@ ${StringUtil.upperFirstChar(investment.toLowerCase())}.`);
 
     const investmentObject = INVESTMENTS[investment];
 
-    if (investment === 'snowcap' && dbUser.revivable && dbUser.revivable - Date.now() > 0) {
+    if (investment === INVESTMENT_NAMES.SNOWCAP && dbUser.revivable - Date.now() > 0) {
       return PreconditionResult.fromError(command, `you need to wait \
 ${NumberUtil.msToTime(investmentObject.TIME).days} days before purchasing this investment again.`);
     }

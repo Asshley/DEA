@@ -2,6 +2,7 @@ const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH },
   INVESTMENTS: { SNOWCAP },
+  INVESTMENT_NAMES,
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT, GANG: { CASH_FOR_KILL } },
   RESTRICTIONS: { COMMANDS: { GANG: { MINIMUM_AMOUNT } } }
 } = require('../../utility/Constants.js');
@@ -65,7 +66,7 @@ class Stab extends Command {
       const damage = await itemService.reduceDamage(dbUser, item.damage, items);
 
       if (dbUser.health - damage <= 0) {
-        if (dbUser.investments.includes('snowcap')) {
+        if (dbUser.investments.includes(INVESTMENT_NAMES.SNOWCAP)) {
           return this.revive(msg, member);
         }
 
@@ -138,7 +139,7 @@ class Stab extends Command {
 
     const update = {
       $pull: {
-        investments: 'snowcap'
+        investments: INVESTMENT_NAMES.SNOWCAP
       },
       $set: {
         revivable: SNOWCAP.TIME,

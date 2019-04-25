@@ -2,6 +2,7 @@ const {
   RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
   MISCELLANEA: { CASH_PER_MESSAGE },
   INVESTMENTS,
+  INVESTMENT_NAMES,
   ODDS
 } = require('../utility/Constants.js');
 const Random = require('../utility/Random.js');
@@ -49,8 +50,8 @@ class ChatService {
     const { investments } = dbUser;
     let cashPerMessage = CASH_PER_MESSAGE;
 
-    if (investments.includes('pound')) {
-      if (investments.includes('kilo')) {
+    if (investments.includes(INVESTMENT_NAMES.POUND)) {
+      if (investments.includes(INVESTMENT_NAMES.KILO)) {
         cashPerMessage *= INVESTMENTS.KILO.CASH_MULTIPLIER;
       } else {
         cashPerMessage *= INVESTMENTS.POUND.CASH_MULTIPLIER;
@@ -59,7 +60,7 @@ class ChatService {
 
     cashPerMessage *= dbGuild.multiplier;
 
-    const cooldown = investments.includes('line') ? cooldowns
+    const cooldown = investments.includes(INVESTMENT_NAMES.LINE) ? cooldowns
       .miscellanea.reducedMessageCash : cooldowns.miscellanea.messageCash;
 
     return {
