@@ -1,4 +1,4 @@
-const { Command, Argument } = require('patron.js');
+const { Command, CommandResult, Argument } = require('patron.js');
 const {
   COLORS: { BAN: BAN_COLOR }
 } = require('../../utility/Constants.js');
@@ -21,12 +21,14 @@ class Ban extends Command {
       groupName: 'moderation',
       description: 'Swing the ban hammer on any member.',
       botPermissions: ['BAN_MEMBERS'],
+      postconditions: ['modabuse'],
       args: [
         new Argument({
           name: 'user',
           key: 'user',
           type: 'user',
-          example: '"Chimney Up My Ass#0007"'
+          example: '"Chimney Up My Ass#0007"',
+          preconditions: ['bannable']
         }),
         new Argument({
           name: 'reason',
@@ -43,12 +45,12 @@ class Ban extends Command {
   async run(msg, args) {
     const member = msg.channel.guild.members.get(args.user.id);
 
-    if (member && this.constructor.canBan(member)) {
+    if (member) {
       const userPerm = ModerationService.getPermLevel(msg.dbGuild, member);
       const authorPerm = ModerationService.getPermLevel(msg.dbGuild, msg.member);
 
       if (userPerm >= authorPerm) {
-        return msg.createErrorReply(messages.commands.ban.permLevel);
+        return CommandResult.fromError(messages.commands.ban.permLevel);
       }
 
       await ModerationService.tryInformUser(
@@ -71,14 +73,6 @@ class Ban extends Command {
       moderator: msg.author,
       user: args.user
     });
-  }
-
-  static canBan(member) {
-    const clientMember = member.guild.members.get(member.guild.shard.client.user.id);
-
-    return member.id !== clientMember.id
-      && member.id !== member.guild.ownerID
-      && clientMember.highestRole.position > member.highestRole.position;
   }
 }
 

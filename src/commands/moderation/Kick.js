@@ -13,13 +13,14 @@ class Kick extends Command {
       groupName: 'moderation',
       description: 'Kick any member.',
       botPermissions: ['KICK_MEMBERS'],
+      postconditions: ['modabuse'],
       args: [
         new Argument({
           name: 'member',
           key: 'member',
           type: 'member',
           example: '"Slutty Margret#2222"',
-          preconditions: ['nomoderator']
+          preconditions: ['nomoderator', 'kickable']
         }),
         new Argument({
           name: 'reason',
@@ -34,12 +35,9 @@ class Kick extends Command {
   }
 
   async run(msg, args) {
-    if (this.constructor.canKick(args.member)) {
-      await ModerationService.tryInformUser(
-        msg.channel.guild, msg.author, 'kicked', args.member.user, args.reason
-      );
-    }
-
+    await ModerationService.tryInformUser(
+      msg.channel.guild, msg.author, 'kicked', args.member.user, args.reason
+    );
     await args.member.kick();
     await msg.createReply(StringUtil.format(
       messages.commands.kick,
@@ -55,14 +53,6 @@ class Kick extends Command {
       moderator: msg.author,
       user: args.member.user
     });
-  }
-
-  static canKick(member) {
-    const clientMember = member.guild.members.get(member.guild.shard.client.user.id);
-
-    return member.id !== clientMember.id
-      && member.id !== member.guild.ownerID
-      && clientMember.highestRole.position > member.highestRole.position;
   }
 }
 
