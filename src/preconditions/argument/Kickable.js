@@ -6,7 +6,7 @@ class Kickable extends ArgumentPrecondition {
   }
 
   async run(command, msg, argument, args, value) {
-    const clientMember = msg.guild.members.get(msg._client.user.id);
+    const clientMember = msg.channel.guild.members.get(msg._client.user.id);
 
     if (value.id !== clientMember.id && value.id !== value.guild.ownerID
       && clientMember.highestRole.position > value.highestRole.position) {

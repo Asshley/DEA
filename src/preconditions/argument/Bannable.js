@@ -12,7 +12,7 @@ class Bannable extends ArgumentPrecondition {
       return PreconditionResult.fromSuccess();
     }
 
-    const clientMember = msg.guild.members.get(msg._client.user.id);
+    const clientMember = msg.channel.guild.members.get(msg._client.user.id);
 
     if (member.id !== clientMember.id && member.id !== member.guild.ownerID
       && clientMember.highestRole.position > member.highestRole.position) {
