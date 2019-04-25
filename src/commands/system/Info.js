@@ -37,7 +37,9 @@ class Info extends Command {
     ));
 
     if (msg.channel.type !== CHANNEL_TYPES.DM) {
-      return msg.createReply(messages.commands.info.dm);
+      return msg.createReply(StringUtil.format(
+        messages.commands.info.dm, msg._client.user.username
+      ));
     }
   }
 }
