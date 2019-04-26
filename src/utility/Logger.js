@@ -1,10 +1,9 @@
-const DateUtil = require('./DateUtil.js');
 const util = require('util');
 
 class Logger {
   static log(message, level) {
     const newDate = new Date();
-    const formattedMessage = `${DateUtil.UTCTime(newDate)} [${level}] ${message}`;
+    const formattedMessage = `${newDate.toLocaleString()} [${level}] ${message}`;
 
     /* eslint-disable no-console */
     console.log(formattedMessage);
@@ -12,11 +11,7 @@ class Logger {
   }
 
   static handleError(err) {
-    const options = {
-      depth: null
-    };
-
-    return this.log(util.inspect(err, options), 'ERROR');
+    return this.log(util.inspect(err, { depth: null }), 'ERROR');
   }
 }
 
