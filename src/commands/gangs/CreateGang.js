@@ -4,7 +4,7 @@ const {
   REGEXES: { GANG_NAME: NAME_REGEX },
   RESTRICTIONS: { COMMANDS: { GANG: { CREATION_COST } } }
 } = require('../../utility/Constants.js');
-const Gang = require('../../structures/Gang.js');
+const GangUtil = require('../../utility/GangUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
 
@@ -38,14 +38,10 @@ class CreateGang extends Command {
       return msg.createErrorReply(messages.commands.createGang.taken);
     }
 
-    const index = Gang.getEmptyIndex(msg.dbGuild);
-    const gang = new Gang({
-      index,
+    const gang = GangUtil.from({
+      index: GangUtil.getEmptyIndex(msg.dbGuild),
       leaderId: msg.author.id,
-      name: args.name,
-      wealth: 0,
-      vault: {},
-      members: []
+      name: args.name
     });
     const update = {
       $push: {

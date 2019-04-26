@@ -1,5 +1,5 @@
 const { TypeReader, TypeReaderResult } = require('patron.js');
-const _Gang = require('../structures/Gang.js');
+const GangUtil = require('../utility/GangUtil.js');
 
 class Gang extends TypeReader {
   constructor() {
@@ -7,7 +7,7 @@ class Gang extends TypeReader {
   }
 
   async read(command, message, argument, args, input) {
-    const gang = _Gang.findGang(message.dbGuild, input);
+    const gang = GangUtil.find(message.dbGuild, input);
 
     if (gang) {
       return TypeReaderResult.fromSuccess(gang);
