@@ -42,13 +42,11 @@ class MessageCollector extends EventEmitter {
     for (let i = 0; i < this._collectors.length; i++) {
       const collector = this._collectors[i];
 
-      if (collector._finished) {
-        this._collectors.splice(i, 1);
-        i--;
-        continue;
-      }
-
       collector.collect(msg);
+
+      if (collector._finished) {
+        this._collectors.splice(i--, 1);
+      }
     }
   }
 }
