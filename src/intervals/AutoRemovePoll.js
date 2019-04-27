@@ -34,7 +34,7 @@ class AutoRemovePoll extends Interval {
 
         await this.client.db.guildRepo.updateGuild(guild.id, { $pull: { polls: polls[j] } });
 
-        const creator = guild.members.get(polls[i].author);
+        const creator = guild.members.get(polls[j].author);
 
         if (!creator) {
           continue;
