@@ -26,7 +26,7 @@ class GangUtil {
   }
 
   static from(data) {
-    return new this.constructor(data);
+    return new this(data);
   }
 }
 GangUtil.INDICES = Array.from({ length: MAX_GANGS }, (_, i) => i + 1);

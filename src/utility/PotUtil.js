@@ -6,7 +6,7 @@ const {
 const NumberUtil = require('./NumberUtil.js');
 const Random = require('./Random.js');
 
-class Pot {
+class PotUtil {
   constructor(data) {
     this.owner = data.owner;
     this.channel = data.channel;
@@ -78,8 +78,8 @@ class Pot {
   }
 
   static from(data) {
-    return new this.constructor(data);
+    return new this(data);
   }
 }
 
-module.exports = Pot;
+module.exports = PotUtil;
