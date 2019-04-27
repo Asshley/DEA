@@ -33,7 +33,7 @@ class AutoTrivia extends Interval {
         continue;
       }
 
-      return Util.MUTEX.sync(async () => {
+      await Util.MUTEX.sync(async () => {
         const [question, answer] = Random.arrayElement(entries);
         const prize = Random.nextFloat(TRIVIA.MINIMUM_CASH, TRIVIA.MAXIMUM_CASH);
 
