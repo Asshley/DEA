@@ -14,7 +14,7 @@
     "dotenv": "^7.0.0",
     "eris": "abalabahaha/eris#dev",
     "mongodb": "^3.2.3",
-    "patron.js": "github:LJNeon/patron.js"
+    "patron.js": "github:Asshley/patron.js"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
