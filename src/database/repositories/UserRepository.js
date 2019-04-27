@@ -4,7 +4,7 @@ const {
 const NumberUtil = require('../../utility/NumberUtil.js');
 const BaseRepository = require('./BaseRepository.js');
 const UserQuery = require('../queries/UserQuery.js');
-const User = require('../models/User.js');
+const User = require('../models/UserModel.js');
 const RankService = require('../../services/RankService.js');
 
 class UserRepository extends BaseRepository {

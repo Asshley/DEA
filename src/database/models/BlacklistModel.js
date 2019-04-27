@@ -1,7 +1,7 @@
-class Blacklist {
+class BlacklistModel {
   constructor(userId) {
     this.userId = userId;
   }
 }
 
-module.exports = Blacklist;
+module.exports = BlacklistModel;

@@ -1,6 +1,6 @@
 const BaseRepository = require('./BaseRepository.js');
 const MuteQuery = require('../queries/MuteQuery.js');
-const Mute = require('../models/Mute.js');
+const Mute = require('../models/MuteModel.js');
 
 class MuteRepository extends BaseRepository {
   anyMute(userId, guildId) {

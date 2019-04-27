@@ -1,4 +1,4 @@
-class Mute {
+class MuteModel {
   constructor(userId, guildId, muteLength) {
     this.userId = userId;
     this.guildId = guildId;
@@ -7,4 +7,4 @@ class Mute {
   }
 }
 
-module.exports = Mute;
+module.exports = MuteModel;

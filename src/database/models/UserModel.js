@@ -1,4 +1,4 @@
-class User {
+class UserModel {
   constructor(userId, guildId) {
     this.userId = userId;
     this.guildId = guildId;
@@ -12,4 +12,4 @@ class User {
   }
 }
 
-module.exports = User;
+module.exports = UserModel;

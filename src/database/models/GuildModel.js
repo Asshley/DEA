@@ -1,4 +1,4 @@
-class Guild {
+class GuildModel {
   constructor(guildId) {
     this.guildId = guildId;
     this.regenHealth = 5;
@@ -24,4 +24,4 @@ class Guild {
   }
 }
 
-module.exports = Guild;
+module.exports = GuildModel;

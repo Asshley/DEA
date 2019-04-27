@@ -1,6 +1,6 @@
 const BaseRepository = require('./BaseRepository.js');
 const GuildQuery = require('../queries/GuildQuery.js');
-const Guild = require('../models/Guild.js');
+const Guild = require('../models/GuildModel.js');
 
 class GuildRepository extends BaseRepository {
   anyGuild(guildId) {

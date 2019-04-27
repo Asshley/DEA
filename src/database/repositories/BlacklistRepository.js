@@ -1,6 +1,6 @@
 const BaseRepository = require('./BaseRepository.js');
 const BlacklistQuery = require('../queries/BlacklistQuery.js');
-const Blacklist = require('../models/Blacklist.js');
+const Blacklist = require('../models/BlacklistModel.js');
 
 class BlacklistRepository extends BaseRepository {
   anyBlacklist(userId) {
