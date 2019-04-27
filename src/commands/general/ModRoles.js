@@ -31,7 +31,7 @@ class ModRoles extends Command {
     }
 
     return msg.channel.sendMessage(StringUtil.format(
-      messages.commands.modRoles.mesage,
+      messages.commands.modRoles.message,
       description,
       MODERATOR,
       ADMINISTRATOR,
