@@ -45,7 +45,7 @@ class CreateGang extends Command {
     });
     const update = {
       $push: {
-        gangs: gang.data
+        gangs: gang
       }
     };
 

@@ -5,7 +5,7 @@ const {
 class GangUtil {
   constructor(data) {
     this.index = data.index;
-    this.leader = data.leader;
+    this.leaderId = data.leaderId;
     this.name = data.name;
     this.wealth = data.wealth || 0;
     this.vault = {};
