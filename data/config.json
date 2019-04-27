@@ -1,6 +1,7 @@
 {
   "colors": {
     "ban": 15338496,
+    "blacklist": 0,
     "clear": 7679,
     "defaults": [
       16721562,

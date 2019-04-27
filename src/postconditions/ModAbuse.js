@@ -46,7 +46,7 @@ ${last - first <= MINUTE && value.length >= MINUTE_AMOUNT ? '5 minutes.' : 'an h
           await ModerationService.tryModLog({
             guild: msg.channel.guild,
             action: 'Auto Blacklist',
-            color: msg._client.config.colors.ban,
+            color: msg._client.config.colors.blacklist,
             reason,
             moderator: msg._client.user,
             user: msg.author
