@@ -32,6 +32,15 @@ module.exports.INVESTMENT_NAMES = {
   SNOWCAP: 'snowcap'
 };
 
+module.exports.ITEM_TYPES = {
+  GUN: 'gun',
+  KNIFE: 'knife',
+  ARMOUR: 'armour',
+  BULLET: 'bullet',
+  FISH: 'fish',
+  MEAT: 'meat'
+};
+
 module.exports.CLIENT_OPTIONS = {
   compress: true,
   restMode: true,

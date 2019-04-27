@@ -1,17 +1,18 @@
 const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH },
-  MISCELLANEA: { DECIMAL_ROUND_AMOUNT }
+  MISCELLANEA: { DECIMAL_ROUND_AMOUNT },
+  ITEM_TYPES
 } = require('../utility/Constants.js');
 const Random = require('../utility/Random.js');
 const NumberUtil = require('../utility/NumberUtil.js');
 
 class ItemService {
   constructor() {
-    this._weapons = null;
-    this._ammunation = null;
-    this._fish = null;
-    this._meat = null;
-    this._armour = null;
+    this.weapons = null;
+    this.ammunation = null;
+    this.fish = null;
+    this.meat = null;
+    this.armour = null;
   }
 
   getOdds(prop) {
@@ -19,59 +20,61 @@ class ItemService {
   }
 
   getWeapons(items) {
-    if (!this._weapons) {
-      this._weapons = items
-        .filter(x => ['gun', 'knife', 'armour'].includes(x.type) && x.crate_odds)
+    if (!this.weapons) {
+      const types = [ITEM_TYPES.GUN, ITEM_TYPES.KNIFE, ITEM_TYPES.ARMOUR];
+
+      this.weapons = items
+        .filter(x => types.includes(x.type) && x.crate_odds)
         .sort((a, b) => a.crate_odds - b.crate_odds);
     }
 
-    return this._weapons;
+    return this.weapons;
   }
 
   getAmmunation(items) {
-    if (!this._ammunation) {
-      this._ammunation = items
-        .filter(x => x.type === 'bullet' && x.crate_odds)
+    if (!this.ammunation) {
+      this.ammunation = items
+        .filter(x => x.type === ITEM_TYPES.BULLET && x.crate_odds)
         .sort((a, b) => a.crate_odds - b.crate_odds);
     }
 
-    return this._ammunation;
+    return this.ammunation;
   }
 
   getFish(items) {
-    if (!this._fish) {
-      this._fish = items
-        .filter(x => x.type === 'fish' && x.acquire_odds)
+    if (!this.fish) {
+      this.fish = items
+        .filter(x => x.type === ITEM_TYPES.FISH && x.acquire_odds)
         .sort((a, b) => a.acquire_odds - b.acquire_odds);
     }
 
-    return this._fish;
+    return this.fish;
   }
 
   getMeat(items) {
-    if (!this._meat) {
-      this._meat = items
-        .filter(x => x.type === 'meat' && x.acquire_odds)
+    if (!this.meat) {
+      this.meat = items
+        .filter(x => x.type === ITEM_TYPES.MEAT && x.acquire_odds)
         .sort((a, b) => a.acquire_odds - b.acquire_odds);
     }
 
-    return this._meat;
+    return this.meat;
   }
 
   getArmour(items) {
-    if (!this._armour) {
-      this._armour = items.filter(x => x.type === 'armour');
+    if (!this.armour) {
+      this.armour = items.filter(x => x.type === ITEM_TYPES.ARMOUR);
     }
 
-    return this._armour;
+    return this.armour;
   }
 
   openCrate(crate, items) {
     const roll = Random.roll();
     const weapons = this.getWeapons(items);
     const ammunation = this.getAmmunation(items);
-    const weaponOdds = this.getOdds('_weapons');
-    const ammoOdds = this.getOdds('_ammunation');
+    const weaponOdds = this.getOdds('weapons');
+    const ammoOdds = this.getOdds('ammunation');
     const group = roll <= crate.item_odds ? weapons : ammunation;
     const rollItem = Random.nextInt(1, roll <= crate.item_odds ? weaponOdds : ammoOdds);
     let cumulative = 0;
@@ -94,11 +97,7 @@ class ItemService {
       const item = this.openCrate(crate, items);
       const [name] = item.names;
 
-      if (!Object.prototype.hasOwnProperty.call(itemsWon, name)) {
-        itemsWon[name] = 0;
-      }
-
-      itemsWon[name]++;
+      itemsWon[name] = itemsWon[name] ? itemsWon[name] + 1 : 1;
     }
 
     return itemsWon;
@@ -107,7 +106,7 @@ class ItemService {
   fish(weapon, items) {
     const roll = Random.roll();
     const food = this.getFish(items);
-    const foodOdds = this.getOdds('_fish');
+    const foodOdds = this.getOdds('fish');
     const rollOdds = Random.nextInt(1, foodOdds);
     let cumulative = 0;
 
@@ -127,7 +126,7 @@ class ItemService {
   hunt(weapon, items) {
     const roll = Random.roll();
     const food = this.getMeat(items);
-    const foodOdds = this.getOdds('_meat');
+    const foodOdds = this.getOdds('meat');
     const rollOdds = Random.nextInt(1, foodOdds);
     let cumulative = 0;
 
@@ -149,7 +148,7 @@ class ItemService {
     let reduce = damage;
 
     for (let i = 0; i < armours.length; i++) {
-      if (dbUser.inventory[armours[i].names[0]] && dbUser.inventory[armours[i].names[0]] > 0) {
+      if (dbUser.inventory[armours[i].names[0]] > 0) {
         reduce *= (MAX_HEALTH - armours[i].damage_reduction) / MAX_HEALTH;
       }
     }
