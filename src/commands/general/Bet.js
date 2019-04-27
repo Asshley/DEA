@@ -5,14 +5,13 @@ const {
     COMMANDS: { BET: { MAX_NUMBERS, MAX_VALUE, MIN_NUMBERS, MIN_VALUE } }
   }
 } = require('../../utility/Constants.js');
-const { MULTI_MUTEX } = require('../../utility/Util.js');
+const { awaitMessages } = require('../../utility/MessageCollector.js');
+const Util = require('../../utility/Util.js');
 const DELAY = 3000;
 const OPERATIONS = ['*', '+', '-'];
-const { awaitMessages } = require('../../utility/MessageCollector.js');
 const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
-const Util = require('../../utility/Util.js');
 const messages = require('../../../data/messages.json');
 
 class Bet extends Command {
@@ -50,7 +49,7 @@ class Bet extends Command {
     }
 
     const mutexKey = `${msg.channel.id}-${msg.author.id}-bet`;
-    const verified = await MULTI_MUTEX
+    const verified = await Util.MULTI_MUTEX
       .sync(mutexKey, () => this.verify(msg, msg.member, args.member));
 
     if (verified !== this.constructor.Response.Success) {

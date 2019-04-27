@@ -1,5 +1,5 @@
 const { Postcondition } = require('patron.js');
-const { MULTI_MUTEX } = require('../utility/Util.js');
+const Util = require('../utility/Util.js');
 const ModerationService = require('../services/ModerationService.js');
 const MINUTE = 3e5;
 const MINUTE_AMOUNT = 5;
@@ -18,7 +18,7 @@ class ModAbuse extends Postcondition {
     if (run && result.success !== false) {
       const key = `${msg.author.id}-${msg.channel.guild.id}`;
 
-      return MULTI_MUTEX.sync(key, async () => {
+      return Util.MULTI_MUTEX.sync(key, async () => {
         const value = this.history[key];
 
         if (!value) {

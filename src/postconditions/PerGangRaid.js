@@ -1,5 +1,5 @@
 const { Postcondition } = require('patron.js');
-const { MULTI_MUTEX } = require('../utility/Util.js');
+const Util = require('../utility/Util.js');
 const handler = require('../services/handler.js');
 
 class PerGangRaid extends Postcondition {
@@ -18,7 +18,7 @@ class PerGangRaid extends Postcondition {
         .filter(x => x.id || x !== msg.author.id);
 
       for (let i = 0; i < gangMembers.length; i++) {
-        await MULTI_MUTEX.sync(msg.channel.guild.id, async () => this.updateCooldown({
+        await Util.MULTI_MUTEX.sync(msg.channel.guild.id, async () => this.updateCooldown({
           msg,
           users,
           member: gangMembers[i].id || gangMembers[i]
