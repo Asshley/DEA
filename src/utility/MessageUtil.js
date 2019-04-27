@@ -34,7 +34,7 @@ class MessageUtil {
 
     if (options.author) {
       embed.author = {
-        name: options.author.name, icon_url: options.author.icon, url: options.author.URL
+        name: options.author.name, icon_url: options.author.icon, url: options.author.url
       };
     }
 
