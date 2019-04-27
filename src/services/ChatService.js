@@ -1,6 +1,5 @@
 const {
   RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
-  MISCELLANEA: { CASH_PER_MESSAGE },
   INVESTMENTS,
   INVESTMENT_NAMES,
   ODDS
@@ -19,14 +18,22 @@ class ChatService {
   async applyCash(msg) {
     const key = `${msg.author.id}-${msg.channel.guild.id}`;
     const lastMessage = this.messages[key];
-    const perks = this.getInvestmentPerks(msg.dbUser, msg.dbGuild);
-    const cdOver = !lastMessage || Date.now() - lastMessage > perks.cooldown;
+    const cooldown = msg.dbUser.investments.includes(INVESTMENT_NAMES.LINE) ? cooldowns
+      .miscellanea.reducedMessageCash : cooldowns.miscellanea.messageCash;
+    const cdOver = !lastMessage || Date.now() - lastMessage.time > cooldown;
     const longEnough = msg.content.length >= MINIMUM_MESSAGE_LENGTH;
 
     if (cdOver && longEnough) {
-      let amount = perks.cashPerMessage;
+      const baseCPM = lastMessage ? lastMessage.cpm : msg._client.config.baseCPM;
+      const { cpm, inc } = this.constructor
+        .getCPM(msg.dbUser, baseCPM, msg._client.config.rateIncrement);
+      let amount = cpm;
 
-      this.messages[key] = Date.now();
+      this.messages[key] = {
+        time: Date.now(),
+        cpm,
+        inc
+      };
 
       if (ODDS.LOTTERY >= Random.roll()) {
         const winnings = Random.nextFloat(LOTTERY.MINIMUM_CASH, LOTTERY.MAXIMUM_CASH);
@@ -42,26 +49,21 @@ class ChatService {
     }
   }
 
-  getInvestmentPerks(dbUser, dbGuild) {
+  static getCPM(dbUser, cpm, inc) {
     const { investments } = dbUser;
-    let cashPerMessage = CASH_PER_MESSAGE;
+    let newInc = inc;
 
     if (investments.includes(INVESTMENT_NAMES.POUND)) {
       if (investments.includes(INVESTMENT_NAMES.KILO)) {
-        cashPerMessage *= INVESTMENTS.KILO.CASH_MULTIPLIER;
+        newInc *= INVESTMENTS.KILO.CASH_MULTIPLIER;
       } else {
-        cashPerMessage *= INVESTMENTS.POUND.CASH_MULTIPLIER;
+        newInc *= INVESTMENTS.POUND.CASH_MULTIPLIER;
       }
     }
 
-    cashPerMessage *= dbGuild.multiplier;
-
-    const cooldown = investments.includes(INVESTMENT_NAMES.LINE) ? cooldowns
-      .miscellanea.reducedMessageCash : cooldowns.miscellanea.messageCash;
-
     return {
-      cooldown,
-      cashPerMessage
+      cpm: cpm + newInc,
+      inc: newInc
     };
   }
 }

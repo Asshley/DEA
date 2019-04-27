@@ -98,13 +98,12 @@ class Pot extends Command {
 
       return `${tag}: ${amount} (${odds}%)`;
     }).join('\n');
-    const currentTime = Date.now();
     let timeLeft = '';
 
     if (pot.expired) {
       timeLeft = ' | Drawing soon!';
     } else if (pot.readyAt) {
-      const msLeft = currentTime - pot.readyAt;
+      const msLeft = Date.now() - pot.readyAt;
       const { minutes, seconds } = NumberUtil.msToTime(POT_EXPIRES - msLeft);
 
       timeLeft = ` | ${StringUtil.pad(minutes, PAD_AMOUNT)}:${StringUtil.pad(seconds, PAD_AMOUNT)}`;

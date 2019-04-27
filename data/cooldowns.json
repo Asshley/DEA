@@ -24,7 +24,8 @@
     "autoRemovePoll": 1800000,
     "autoTrivia": 300000,
     "autoRegenerateHealth": 3600000,
-    "autoDrawPot": 60000
+    "autoDrawPot": 60000,
+    "autoResetRate": 3600000
   },
 
   "miscellanea": {

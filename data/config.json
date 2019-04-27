@@ -33,6 +33,9 @@
     "566694492590047234"
   ],
 
+  "baseCPM": 25,
+  "rateIncrement": 1,
+
   "prefix": "$",
   "activity": "{0}help",
   "authors": ["Ash"],

@@ -27,7 +27,8 @@ class ResetUser extends Command {
         cash: 0,
         bounty: 0,
         health: 100,
-        inventory: {}
+        inventory: {},
+        investments: []
       }
     });
 
