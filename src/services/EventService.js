@@ -1,12 +1,9 @@
-const path = require('path');
-const patron = require('patron.js');
-
 class EventService {
-  static async initiate(client) {
-    const Events = await patron.RequireAll(path.join(__dirname, '../events'));
+  static initiate(client, modules) {
+    for (let i = 0; i < modules.length; i++) {
+      const Event = modules[i];
 
-    for (let i = 0; i < Events.length; i++) {
-      new Events[i](client).listen();
+      new Event(client).listen();
     }
   }
 }

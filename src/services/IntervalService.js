@@ -1,12 +1,9 @@
-const Patron = require('patron.js');
-const path = require('path');
-
 class IntervalService {
-  static async initiate(client) {
-    const Intervals = await Patron.RequireAll(path.join(__dirname, '../intervals'));
+  static initiate(client, modules) {
+    for (let i = 0; i < modules.length; i++) {
+      const Interval = modules[i];
 
-    for (let i = 0; i < Intervals.length; i++) {
-      new Intervals[i](client).tick();
+      new Interval(client).tick();
     }
   }
 }

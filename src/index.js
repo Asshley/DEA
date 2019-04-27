@@ -19,10 +19,12 @@ class Main {
       db,
       registry
     });
+    const events = await Patron.RequireAll(path.join(__dirname, 'events'));
+    const intervals = await Patron.RequireAll(path.join(__dirname, 'intervals'));
 
     await client.db.connect(process.env.MONGO_DB_URL);
-    await EventService.initiate(client);
-    await IntervalService.initiate(client);
+    EventService.initiate(client, events);
+    IntervalService.initiate(client, intervals);
 
     return client.connect();
   }
