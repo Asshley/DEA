@@ -66,7 +66,7 @@ reason: ${reason}.`}`, { guild });
       options.author = {
         name: `${data.moderator.username}#${data.moderator.discriminator}`,
         icon: data.moderator.avatarURL,
-        URL: config.botLink
+        url: config.botLink
       };
     }
 
