@@ -52,7 +52,7 @@ ${last - first <= MINUTE && value.length >= MINUTE_AMOUNT ? '5 minutes.' : 'an h
             moderator: msg._client.user,
             user: msg.author
           });
-          delete this.history[key];
+          this.history[key] = null;
         }
       });
     }

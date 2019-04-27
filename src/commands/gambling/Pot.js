@@ -102,7 +102,7 @@ class Pot extends Command {
     let timeLeft = '';
 
     if (pot.expired) {
-      timeLeft = ' | Expiring soon!';
+      timeLeft = ' | Drawing soon!';
     } else if (pot.readyAt) {
       const msLeft = currentTime - pot.readyAt;
       const { minutes, seconds } = NumberUtil.msToTime(POT_EXPIRES - msLeft);

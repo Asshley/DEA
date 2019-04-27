@@ -48,7 +48,7 @@ class AutoDrawPot extends Interval {
         ));
       }
 
-      delete pots[guildID];
+      pots[guildID] = null;
     }
   }
 }

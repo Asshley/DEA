@@ -38,10 +38,6 @@ class ChatService {
         ));
       }
 
-      setTimeout(() => {
-        delete this.messages[key];
-      }, perks.cooldown + cooldowns.miscellanea.messageCash);
-
       return msg._client.db.userRepo.modifyCash(msg.dbGuild, msg.member, amount);
     }
   }

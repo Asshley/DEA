@@ -37,7 +37,7 @@ class DrawWinner extends Command {
     const won = rawWon - fee;
 
     await msg._client.db.userRepo.modifyCash(msg.dbGuild, member, won);
-    delete pots[msg.channel.guild.id];
+    pots[msg.channel.guild.id] = null;
 
     return msg.channel.sendMessage(StringUtil.format(
       messages.commands.drawWinner.winner,
