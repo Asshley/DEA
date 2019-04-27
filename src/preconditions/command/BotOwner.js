@@ -1,5 +1,4 @@
 const { Precondition, PreconditionResult } = require('patron.js');
-const config = require('../../../data/config.json');
 
 class BotOwner extends Precondition {
   constructor() {
@@ -7,7 +6,7 @@ class BotOwner extends Precondition {
   }
 
   async run(command, msg) {
-    if (config.botOwners.includes(msg.author.id)) {
+    if (msg._client.config.botOwners.includes(msg.author.id)) {
       return PreconditionResult.fromSuccess();
     }
 

@@ -1,7 +1,6 @@
 const { Command, Argument } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
-const config = require('../../../data/config.json');
 
 class Blacklist extends Command {
   constructor() {
@@ -22,7 +21,7 @@ class Blacklist extends Command {
   }
 
   async run(msg, args) {
-    if (config.botOwners.includes(args.user.id)) {
+    if (msg._client.config.botOwners.includes(args.user.id)) {
       return msg.createErrorReply(messages.commands.blacklist.failed);
     }
 

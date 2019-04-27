@@ -13,7 +13,6 @@ const NumberUtil = require('../utility/NumberUtil.js');
 const StringUtil = require('../utility/StringUtil.js');
 const chatService = require('../services/ChatService.js');
 const handler = require('../services/handler.js');
-const config = require('../../data/config.json');
 const contexts = {
   [Context.Guild]: 'server',
   [Context.DM]: 'DMs'
@@ -35,17 +34,17 @@ class MessageCreate extends Event {
     const { channel: { guild }, dbGuild } = msg;
     const giveCash = guild && !dbGuild.channels.ignore.includes(msg.channel.id);
 
-    if (!msg.content.startsWith(config.prefix)) {
+    if (!msg.content.startsWith(msg._client.config.prefix)) {
       return giveCash ? chatService.applyCash(msg) : null;
     }
 
-    const command = await handler.parseCommand(msg, config.prefix.length);
+    const command = await handler.parseCommand(msg, msg._client.config.prefix.length);
 
     if (!command.success) {
       return;
     }
 
-    const result = await handler.run(msg, config.prefix.length);
+    const result = await handler.run(msg, msg._client.config.prefix.length);
 
     msg.lastCommand = command.commandName;
 
@@ -103,8 +102,9 @@ ${msg.cleanContent} | Reason: ${result.errorReason}`, 'DEBUG');
       message = `this command can't be used in \
 ${contexts[result.context] === 'server' ? 'a ' : ''}${contexts[result.context]}`;
     } else if (result.commandError === CommandError.InvalidArgCount) {
-      message = `you are incorrectly using this command.\n**Usage:** \`${config.prefix}\
-${result.command.getUsage()}\`\n**Example:** \`${config.prefix}${result.command.getExample()}\``;
+      message = `you are incorrectly using this command.\n**Usage:** \`${msg._client.config.prefix}\
+${result.command.getUsage()}\`\n**Example:** \`${msg._client.config.prefix}
+${result.command.getExample()}\``;
     } else {
       message = result.errorReason;
     }

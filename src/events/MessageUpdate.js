@@ -1,7 +1,6 @@
 const { CLIENT_EVENTS } = require('../utility/Constants.js');
 const Event = require('../structures/Event.js');
 const handler = require('../services/handler.js');
-const config = require('../../data/config.json');
 
 class MessageUpdate extends Event {
   async run(newMessage, oldMessage) {
@@ -9,7 +8,7 @@ class MessageUpdate extends Event {
       return;
     }
 
-    const command = await handler.parseCommand(oldMessage, config.prefix.length);
+    const command = await handler.parseCommand(oldMessage, newMessage._client.config.prefix.length);
 
     if (!command.success && !newMessage.editedCommand) {
       newMessage.editedCommand = true;

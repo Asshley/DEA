@@ -6,6 +6,7 @@ const IntervalService = require('./services/IntervalService.js');
 const EventService = require('./services/EventService.js');
 const path = require('path');
 const registry = require('./services/registry.js');
+const config = require('../data/config.json');
 
 class Main {
   static async init() {
@@ -17,7 +18,8 @@ class Main {
       token: process.env.BOT_TOKEN,
       erisOptions: Constants.CLIENT_OPTIONS,
       db,
-      registry
+      registry,
+      config
     });
     const events = await Patron.RequireAll(path.join(__dirname, 'events'));
     const intervals = await Patron.RequireAll(path.join(__dirname, 'intervals'));

@@ -2,7 +2,6 @@ const { Command, Argument } = require('patron.js');
 const ModerationService = require('../../services/ModerationService.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
-const config = require('../../../data/config.json');
 
 class Unmute extends Command {
   constructor() {
@@ -33,7 +32,7 @@ class Unmute extends Command {
   async run(msg, args) {
     if (!msg.dbGuild.roles.muted) {
       return msg.createErrorReply(StringUtil.format(
-        messages.commands.unmute.noMutedRole, config.prefix
+        messages.commands.unmute.noMutedRole, msg._client.config.prefix
       ));
     } else if (!args.member.roles.includes(msg.dbGuild.roles.muted)) {
       return msg.createErrorReply(messages.commands.unmute.notMuted);
@@ -43,7 +42,7 @@ class Unmute extends Command {
 
     if (!role) {
       return msg.createErrorReply(StringUtil.format(
-        messages.commands.unmute.deleteRole, config.prefix
+        messages.commands.unmute.deleteRole, msg._client.config.prefix
       ));
     }
 
@@ -60,7 +59,7 @@ class Unmute extends Command {
     return ModerationService.tryModLog({
       guild: msg.channel.guild,
       action: 'Unmute',
-      color: config.colors.unmute,
+      color: msg._client.config.colors.unmute,
       reason: args.reason,
       moderator: msg.author,
       user: args.member.user

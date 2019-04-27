@@ -6,7 +6,6 @@ const {
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
-const config = require('../../../data/config.json');
 const TO_MB = 1048576;
 
 class Statistics extends Command {
@@ -25,7 +24,7 @@ class Statistics extends Command {
 
     await msg.author.DMFields([
       'Authors',
-      config.authors.join('\n'),
+      msg._client.config.authors.join('\n'),
       'Framework',
       'patron.js',
       'Memory',

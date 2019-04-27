@@ -7,7 +7,6 @@ const Util = require('../../utility/Util.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const ModerationService = require('../../services/ModerationService.js');
 const messages = require('../../../data/messages.json');
-const config = require('../../../data/config.json');
 
 class Mute extends Command {
   constructor() {
@@ -55,7 +54,7 @@ class Mute extends Command {
 
     if (!msg.dbGuild.roles.muted) {
       return msg.createErrorReply(StringUtil.format(
-        messages.commands.mute.noMutedRole, config.prefix
+        messages.commands.mute.noMutedRole, msg._client.config.prefix
       ));
     } else if (args.member.roles.includes(msg.dbGuild.roles.muted)) {
       return msg.createErrorReply(messages.commands.mute.alreadyMuted);
@@ -63,7 +62,7 @@ class Mute extends Command {
 
     if (!role) {
       return msg.createErrorReply(StringUtil.format(
-        messages.commands.mute.deletedRole, config.prefix
+        messages.commands.mute.deletedRole, msg._client.config.prefix
       ));
     }
 
@@ -83,7 +82,7 @@ class Mute extends Command {
     return ModerationService.tryModLog({
       guild: msg.channel.guild,
       action: 'Mute',
-      color: config.colors.mute,
+      color: msg._client.config.colors.mute,
       reason: args.reason,
       moderator: msg.author,
       user: args.member.user,

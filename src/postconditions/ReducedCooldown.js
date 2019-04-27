@@ -5,7 +5,6 @@ const {
   INVESTMENT_NAMES
 } = require('../utility/Constants.js');
 const handler = require('../services/handler.js');
-const config = require('../../data/config.json');
 
 class ReducedCooldown extends Postcondition {
   constructor() {
@@ -15,7 +14,7 @@ class ReducedCooldown extends Postcondition {
   run(msg, result) {
     if (msg.dbUser.investments.includes(INVESTMENT_NAMES.CONVOY) && result.success !== false) {
       return MULTI_MUTEX.sync(msg.channel.guild.id, async () => {
-        const { command } = await handler.parseCommand(msg, config.prefix.length);
+        const { command } = await handler.parseCommand(msg, msg._client.config.prefix.length);
 
         if (!command.hasCooldown) {
           return;

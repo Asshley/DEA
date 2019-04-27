@@ -2,7 +2,6 @@ const { CLIENT_EVENTS } = require('../utility/Constants.js');
 const Logger = require('../utility/Logger.js');
 const Event = require('../structures/Event.js');
 const StringUtil = require('../utility/StringUtil.js');
-const config = require('../../data/config.json');
 
 class Ready extends Event {
   run() {
@@ -10,7 +9,7 @@ class Ready extends Event {
 has successfully connected.`, 'INFO');
 
     return this.emitter.editStatus({
-      name: StringUtil.format(config.activity, config.prefix)
+      name: StringUtil.format(this.emitter.config.activity, this.emitter.config.prefix)
     });
   }
 }

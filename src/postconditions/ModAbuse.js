@@ -1,7 +1,6 @@
 const { Postcondition } = require('patron.js');
 const { MULTI_MUTEX } = require('../utility/Util.js');
 const ModerationService = require('../services/ModerationService.js');
-const config = require('../../data/config.json');
 const MINUTE = 3e5;
 const MINUTE_AMOUNT = 5;
 const HOUR = 36e5;
@@ -14,7 +13,7 @@ class ModAbuse extends Postcondition {
   }
 
   run(msg, result) {
-    const run = msg.dbGuild.autoModeration && !config.botOwners.includes(msg.author.id);
+    const run = msg.dbGuild.autoModeration && !msg._client.config.botOwners.includes(msg.author.id);
 
     if (run && result.success !== false) {
       const key = `${msg.author.id}-${msg.channel.guild.id}`;
@@ -47,7 +46,7 @@ ${last - first <= MINUTE && value.length >= MINUTE_AMOUNT ? '5 minutes.' : 'an h
           await ModerationService.tryModLog({
             guild: msg.channel.guild,
             action: 'Auto Blacklist',
-            color: config.colors.ban,
+            color: msg._client.config.colors.ban,
             reason,
             moderator: msg._client.user,
             user: msg.author

@@ -1,5 +1,4 @@
 const StringUtil = require('../utility/StringUtil.js');
-const config = require('../../data/config.json');
 
 class ModerationService {
   static getPermLevel(dbGuild, member) {
@@ -66,7 +65,7 @@ reason: ${reason}.`}`, { guild });
       options.author = {
         name: `${data.moderator.username}#${data.moderator.discriminator}`,
         icon: data.moderator.avatarURL,
-        url: config.botLink
+        url: data.guild.shard.client.config.botLink
       };
     }
 
