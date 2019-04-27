@@ -654,9 +654,9 @@ path-key@^2.0.1:
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-2.0.1.tgz#411cadb574c5a140d3a4b1910d40d80cc9f40b40"
   integrity sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=
 
-"patron.js@github:LJNeon/patron.js":
+"patron.js@github:Asshley/patron.js":
   version "3.1.0"
-  resolved "https://codeload.github.com/LJNeon/patron.js/tar.gz/636f0c70b34be43393542ba33d7acb81cc25c938"
+  resolved "https://codeload.github.com/Asshley/patron.js/tar.gz/262410edf6c95bba3d5ae86133a97c74990d77a1"
 
 prelude-ls@~1.1.2:
   version "1.1.2"

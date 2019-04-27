@@ -20,6 +20,7 @@
       "notSet": "this rank role has not been set.",
       "successful": "you have successfully removed the rank role {0}."
     },
+    "setAutoModeration": "you have successfully {0} the mod abuse feature.",
     "setModLog": "you have sucessfully set the mod log channel to {0}.",
     "setMutedRole": "you have successfully set the muted role to {0}",
     "unignoreChannel": {
