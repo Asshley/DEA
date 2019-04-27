@@ -5,7 +5,6 @@ const {
 } = require('../../utility/Constants.js');
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const Pot = require('../../structures/Pot.js');
 const messages = require('../../../data/messages.json');
 
 class DrawWinner extends Command {
@@ -33,7 +32,7 @@ class DrawWinner extends Command {
 
     const winner = pot.draw();
     const member = msg.channel.guild.members.get(winner.id);
-    const rawWon = Pot.totalCash(pot);
+    const rawWon = pot.value;
     const fee = rawWon * POT_FEE;
     const won = rawWon - fee;
 

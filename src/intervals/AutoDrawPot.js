@@ -2,7 +2,6 @@ const {
   RESTRICTIONS: { COMMANDS: { POT: { MINIMUM_MEMBERS } } },
   MISCELLANEA: { POT_FEE, TO_PERCENT_AMOUNT }
 } = require('../utility/Constants.js');
-const Pot = require('../structures/Pot.js');
 const StringUtil = require('../utility/StringUtil.js');
 const NumberUtil = require('../utility/NumberUtil.js');
 const Interval = require('../structures/Interval.js');
@@ -30,7 +29,7 @@ class AutoDrawPot extends Interval {
       const pot = pots[guildID];
       const winner = pot.draw();
       const member = guild.members.get(winner.id);
-      const rawWon = Pot.totalCash(pot);
+      const rawWon = pot.value;
       const fee = rawWon * POT_FEE;
       const profit = rawWon - fee;
       const dbGuild = await guild.dbGuild();

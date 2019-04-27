@@ -6,7 +6,7 @@ const {
 const PAD_AMOUNT = 2;
 const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
-const _Pot = require('../../structures/Pot.js');
+const PotUtil = require('../../utility/PotUtil.js');
 const messages = require('../../../data/messages.json');
 
 class Pot extends Command {
@@ -49,7 +49,7 @@ class Pot extends Command {
       ));
     }
 
-    const totalCash = _Pot.totalCash(pot);
+    const totalCash = pot.value;
 
     if (!Number.isFinite(totalCash + args.amount)) {
       return msg.createErrorReply(StringUtil.format(
@@ -77,7 +77,10 @@ class Pot extends Command {
   }
 
   async createPot(member, dbGuild, amount, channel) {
-    const pot = new _Pot(member.id, channel.id);
+    const pot = PotUtil.from({
+      member: member.id,
+      channel: channel.id
+    });
     const potMember = pot.addMember(member, amount);
 
     this.pots[member.guild.id] = pot;
@@ -90,7 +93,7 @@ class Pot extends Command {
     const response = pot.members.sort((a, b) => b.deposited - a.deposited).map(x => {
       const user = client.users.get(x.id);
       const amount = NumberUtil.toUSD(x.deposited);
-      const odds = _Pot.calculateOdds(pot, x.id);
+      const odds = PotUtil.getOdds(pot, x.id);
       const tag = `${user.username}#${user.discriminator}`;
 
       return `${tag}: ${amount} (${odds}%)`;
@@ -111,7 +114,7 @@ class Pot extends Command {
     const options = {
       title: `Current Pot - ${username}#${discriminator}`,
       footer: {
-        text: `${NumberUtil.toUSD(_Pot.totalCash(pot))}${timeLeft}`
+        text: `${NumberUtil.toUSD(pot.value)}${timeLeft}`
       }
     };
 
