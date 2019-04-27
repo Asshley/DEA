@@ -156,7 +156,7 @@
       "maxMembers": "this gang has the maximum amount of members in it.",
       "inGang": "{0} is already in a gang.",
       "needPerms": "you cannot invite anyone to your gang since you're not a leader nor elder.",
-      "invite": "{0} is trying join your gang {1}, reply with \"{2}\" within 5 minutes to accept this.",
+      "invite": "{0} is trying join your gang `{1}`, reply with \"{2}\" within 5 minutes to accept this.",
       "cantDM": "I am unable to inform {0} of your join request.",
       "DM": "the leader has successfully been informed of your join request.",
       "joinedGang": "{0} has already joined a gang.",
