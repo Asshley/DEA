@@ -445,7 +445,7 @@
     },
 
     "help": {
-      "message": "{0} is **THE** cleanest bot around, and you can have it in **YOUR** server simply by clicking here: {1}.\n\nFor all information about a module and their commands do `{2}module [module]`.\n\nThe `{3}help <command>` command may be used for view the usage and an example of any command.\n\nIf you have **ANY** questions, you may join the **Official {3} Discord Server:** {4} for instant support along with a great community.",
+      "message": "{0} is **THE** cleanest bot around, and you can have it in **YOUR** server simply by clicking here: {1}.\n\nFor all information about a module and their commands do `{2}module [module]`.\n\nThe `{3}help <command>` command may be used for view the usage and an example of any command.\n\nIf you have **ANY** questions, you may join the **Official {4} Discord Server:** {5} for instant support along with a great community.",
       "dm": "you have been DMed with all the command information!",
       "invalidCommand": "this command doesn't exist.",
       "usage": "**Description:** {0}\n**Usage:** `{1}{2}`\n**Example:** `{3}{4}`"
