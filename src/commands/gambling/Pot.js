@@ -78,7 +78,7 @@ class Pot extends Command {
 
   async createPot(member, dbGuild, amount, channel) {
     const pot = PotUtil.from({
-      member: member.id,
+      owner: member.id,
       channel: channel.id
     });
     const potMember = pot.addMember(member, amount);
