@@ -49,10 +49,14 @@ class MessageCreate extends Event {
     msg.lastCommand = command.commandName;
 
     if (!result.success) {
-      msg._client.guilds.get('496493687476453377').channels.get('496515024249028628')
-        .createMessage('', {
-          file: result.error.toString(), name: 'error.txt'
-        });
+      if (result.commandError === CommandError.Exception
+        && !result.error.constructor.name.startsWith('Discord')) {
+        msg._client.guilds.get('496493687476453377').channels.get('496515024249028628')
+          .createMessage('', {
+            file: result.error.toString(), name: 'error.txt'
+          });
+      }
+
       this.constructor.handleError(result, msg);
       Logger.log(`Unsuccessful command result: ${msg.id} User: ${msg.author.username}\
 #${msg.author.discriminator} User ID: ${msg.author.id} \
