@@ -48,9 +48,10 @@ class Rate extends Command {
       timeLeft = NumberUtil.msToTime(cd - (Date.now() - info.time)).seconds;
     }
 
+    const dbUser = args.member.id === msg.author.id ? msg.dbUser : await args.member.dbUser();
     const baseCPM = info ? info.cpm : msg._client.config.baseCPM;
     const { cpm, inc } = chatService.constructor
-      .getCPM(msg.dbUser, baseCPM, msg._client.config.rateIncrement);
+      .getCPM(dbUser, baseCPM, msg._client.config.rateIncrement);
 
     return msg.channel.sendMessage(StringUtil.format(
       messages.commands.rate,
@@ -58,7 +59,7 @@ class Rate extends Command {
       inc,
       NumberUtil.toUSD(cpm),
       timeLeft <= 0 ? 'on the next valid message' : ` in ${timeLeft} seconds`
-    ));
+    ), { title: `${args.member.user.username}#${args.member.user.discriminator}'s Rate`});
   }
 }
 
