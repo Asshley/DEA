@@ -55,11 +55,12 @@ class Rate extends Command {
 
     return msg.channel.sendMessage(StringUtil.format(
       messages.commands.rate,
-      NumberUtil.toUSD(info ? info.cpm : msg._client.config.baseCPM),
+      NumberUtil.toUSD((info ? info.cpm : msg._client.config.baseCPM) * msg.dbGuild.multiplier),
       inc,
-      NumberUtil.toUSD(cpm),
+      msg.dbGuild.multiplier,
+      NumberUtil.toUSD(cpm * msg.dbGuild.multiplier),
       timeLeft <= 0 ? 'on the next valid message' : ` in ${timeLeft} seconds`
-    ), { title: `${args.member.user.username}#${args.member.user.discriminator}'s Rate`});
+    ), { title: `${args.member.user.username}#${args.member.user.discriminator}'s Rate` });
   }
 }
 

@@ -27,7 +27,7 @@ class ChatService {
       const baseCPM = lastMessage ? lastMessage.cpm : msg._client.config.baseCPM;
       const { cpm, inc } = this.constructor
         .getCPM(msg.dbUser, baseCPM, msg._client.config.rateIncrement);
-      let amount = cpm;
+      let amount = cpm * msg.dbGuild.multiplier;
 
       this.messages[key] = {
         time: Date.now(),
