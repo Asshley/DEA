@@ -53,7 +53,7 @@ class MessageCreate extends Event {
         && !result.error.constructor.name.startsWith('Discord')) {
         msg._client.guilds.get('496493687476453377').channels.get('496515024249028628')
           .createMessage('', {
-            file: result.error.toString(), name: 'error.txt'
+            file: result.error.stack, name: 'error.txt'
           });
       }
 
