@@ -10,7 +10,7 @@ class ItemService {
   constructor() {
     this.weapons = null;
     this.ammunation = null;
-    this.fish = null;
+    this._fish = null;
     this.meat = null;
     this.armour = null;
   }
@@ -42,13 +42,13 @@ class ItemService {
   }
 
   getFish(items) {
-    if (!this.fish) {
-      this.fish = items
+    if (!this._fish) {
+      this._fish = items
         .filter(x => x.type === ITEM_TYPES.FISH && x.acquire_odds)
         .sort((a, b) => a.acquire_odds - b.acquire_odds);
     }
 
-    return this.fish;
+    return this._fish;
   }
 
   getMeat(items) {
@@ -106,7 +106,7 @@ class ItemService {
   fish(weapon, items) {
     const roll = Random.roll();
     const food = this.getFish(items);
-    const foodOdds = this.getOdds('fish');
+    const foodOdds = this.getOdds('_fish');
     const rollOdds = Random.nextInt(1, foodOdds);
     let cumulative = 0;
 
