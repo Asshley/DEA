@@ -21,7 +21,7 @@ class SetAutoModeration extends Command {
     });
 
     return msg.createReply(
-      StringUtil.format(messages.commands.setAutoModeration.successful, !autoModeration)
+      StringUtil.format(messages.commands.setAutoModeration, !autoModeration)
     );
   }
 }
