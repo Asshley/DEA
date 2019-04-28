@@ -27,7 +27,7 @@ class ModRoles extends Command {
     for (let i = 0; i < roles.length; i++) {
       const rank = msg.channel.guild.roles.get(roles[i].id);
 
-      description += `${rank}: ${roles[i].permissionLevel}\n`;
+      description += `${rank ? 'DELETED RANK' : rank.mention}: ${roles[i].permissionLevel}\n`;
     }
 
     return msg.channel.sendMessage(StringUtil.format(
