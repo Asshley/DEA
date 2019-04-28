@@ -39,7 +39,7 @@ class Gambling extends Command {
         .slice(0, GAMBLE_CHANNELS_SHOWN).map(x => `<#${x}>`).join(', ');
 
       return msg.createErrorReply(StringUtil.format(
-        messages.commands.gambling.gamblingChannels, channels
+        messages.commands.gambling.gambleChannels, channels
       ));
     }
 
