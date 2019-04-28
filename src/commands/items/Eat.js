@@ -44,7 +44,7 @@ class Eat extends Command {
 
     return msg.createReply(StringUtil.format(
       messages.commands.eat,
-      StringUtil.capitialize(args.items.name[0]),
+      StringUtil.capitialize(args.items.names[0]),
       args.item.health,
       amount
     ));
