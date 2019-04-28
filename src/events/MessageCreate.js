@@ -51,10 +51,11 @@ class MessageCreate extends Event {
     if (!result.success) {
       if (result.commandError === CommandError.Exception
         && !result.error.constructor.name.startsWith('Discord')) {
-        msg._client.guilds.get('496493687476453377').channels.get('496515024249028628')
-          .createMessage(`[${command.commandName}]: ${result.errorReason}`, {
-            file: result.error.stack, name: 'error.txt'
-          });
+        const owner = await msg._client.users.get('310859567649128449').getDMChannel();
+
+        owner.createMessage(`[${command.commandName}]: ${result.errorReason}`, {
+          file: result.error.stack, name: 'error.txt'
+        });
       }
 
       this.constructor.handleError(result, msg);
