@@ -20,9 +20,9 @@ class SetAutoModeration extends Command {
       }
     });
 
-    return msg.createReply(
-      StringUtil.format(messages.commands.setAutoModeration, !autoModeration)
-    );
+    return msg.createReply(StringUtil.format(
+      messages.commands.setAutoModeration, autoModeration ? 'disabled' : 'enabled'
+    ));
   }
 }
 
