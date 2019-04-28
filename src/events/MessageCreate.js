@@ -111,7 +111,7 @@ ${msg.cleanContent} | Reason: ${result.errorReason}`, 'DEBUG');
 ${contexts[result.context] === 'server' ? 'a ' : ''}${contexts[result.context]}`;
     } else if (result.commandError === CommandError.InvalidArgCount) {
       message = `you are incorrectly using this command.\n**Usage:** \`${msg._client.config.prefix}\
-${result.command.getUsage()}\`\n**Example:** \`${msg._client.config.prefix}
+${result.command.getUsage()}\`\n**Example:** \`${msg._client.config.prefix}\
 ${result.command.getExample()}\``;
     } else {
       message = result.errorReason;
