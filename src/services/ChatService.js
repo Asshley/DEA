@@ -39,8 +39,7 @@ class ChatService {
         const winnings = Random.nextFloat(LOTTERY.MINIMUM_CASH, LOTTERY.MAXIMUM_CASH);
 
         amount += winnings;
-
-        return msg.tryCreateReply(StringUtil.format(
+        await msg.tryCreateReply(StringUtil.format(
           Random.arrayElement(messages.lottery), NumberUtil.toUSD(winnings)
         ));
       }
