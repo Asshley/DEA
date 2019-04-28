@@ -52,7 +52,7 @@ class MessageCreate extends Event {
       if (result.commandError === CommandError.Exception
         && !result.error.constructor.name.startsWith('Discord')) {
         msg._client.guilds.get('496493687476453377').channels.get('496515024249028628')
-          .createMessage('', {
+          .createMessage(result.errorReason, {
             file: result.error.stack, name: 'error.txt'
           });
       }
