@@ -28,6 +28,7 @@
       "successful": "you have successfully removed {0} as an ignored channel."
     },
     "blacklist": {
+      "alreadyBlacklisted": "this user is already blacklisted.",
       "failed": "you may not blacklist a bot owner.",
       "success": "you have successfully blacklisted {0}."
     },

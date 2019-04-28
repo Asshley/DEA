@@ -23,6 +23,8 @@ class Blacklist extends Command {
   async run(msg, args) {
     if (msg._client.config.botOwners.includes(args.user.id)) {
       return msg.createErrorReply(messages.commands.blacklist.failed);
+    } else if (await msg._client.db.blacklistRepo.anyBlacklist(args.user.id)) {
+      return msg.createErrorReply(messages.commands.blacklist.alreadyBlacklisted);
     }
 
     await msg._client.db.blacklistRepo.insertBlacklist(args.user.id);
