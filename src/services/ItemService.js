@@ -14,13 +14,14 @@ class ItemService {
       fish: null,
       meat: null,
       armour: null
-    }
+    };
   }
 
   getOdds(prop) {
     const { items } = this;
 
-    return items[prop] ? items[prop].reduce((a, b) => a + (b.crate_odds || b.acquire_odds), 0) : null;
+    return items[prop] ? items[prop]
+      .reduce((a, b) => a + (b.crate_odds || b.acquire_odds), 0) : null;
   }
 
   getWeapons(items) {
