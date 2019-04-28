@@ -8,65 +8,69 @@ const NumberUtil = require('../utility/NumberUtil.js');
 
 class ItemService {
   constructor() {
-    this.weapons = null;
-    this.ammunation = null;
-    this._fish = null;
-    this.meat = null;
-    this.armour = null;
+    this.items = {
+      weapons: null,
+      ammunation: null,
+      fish: null,
+      meat: null,
+      armour: null
+    }
   }
 
   getOdds(prop) {
-    return this[prop] ? this[prop].reduce((a, b) => a + (b.crate_odds || b.acquire_odds), 0) : null;
+    const { items } = this;
+
+    return items[prop] ? items[prop].reduce((a, b) => a + (b.crate_odds || b.acquire_odds), 0) : null;
   }
 
   getWeapons(items) {
-    if (!this.weapons) {
+    if (!this.items.weapons) {
       const types = [ITEM_TYPES.GUN, ITEM_TYPES.KNIFE, ITEM_TYPES.ARMOUR];
 
-      this.weapons = items
+      this.items.weapons = items
         .filter(x => types.includes(x.type) && x.crate_odds)
         .sort((a, b) => a.crate_odds - b.crate_odds);
     }
 
-    return this.weapons;
+    return this.items.weapons;
   }
 
   getAmmunation(items) {
-    if (!this.ammunation) {
-      this.ammunation = items
+    if (!this.items.ammunation) {
+      this.items.ammunation = items
         .filter(x => x.type === ITEM_TYPES.BULLET && x.crate_odds)
         .sort((a, b) => a.crate_odds - b.crate_odds);
     }
 
-    return this.ammunation;
+    return this.items.ammunation;
   }
 
   getFish(items) {
-    if (!this._fish) {
-      this._fish = items
+    if (!this.items.fish) {
+      this.items.fish = items
         .filter(x => x.type === ITEM_TYPES.FISH && x.acquire_odds)
         .sort((a, b) => a.acquire_odds - b.acquire_odds);
     }
 
-    return this._fish;
+    return this.items.fish;
   }
 
   getMeat(items) {
-    if (!this.meat) {
-      this.meat = items
+    if (!this.items.meat) {
+      this.items.meat = items
         .filter(x => x.type === ITEM_TYPES.MEAT && x.acquire_odds)
         .sort((a, b) => a.acquire_odds - b.acquire_odds);
     }
 
-    return this.meat;
+    return this.items.meat;
   }
 
   getArmour(items) {
-    if (!this.armour) {
-      this.armour = items.filter(x => x.type === ITEM_TYPES.ARMOUR);
+    if (!this.items.armour) {
+      this.items.armour = items.filter(x => x.type === ITEM_TYPES.ARMOUR);
     }
 
-    return this.armour;
+    return this.items.armour;
   }
 
   openCrate(crate, items) {
@@ -106,7 +110,7 @@ class ItemService {
   fish(weapon, items) {
     const roll = Random.roll();
     const food = this.getFish(items);
-    const foodOdds = this.getOdds('_fish');
+    const foodOdds = this.getOdds('fish');
     const rollOdds = Random.nextInt(1, foodOdds);
     let cumulative = 0;
 
