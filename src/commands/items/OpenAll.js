@@ -40,7 +40,7 @@ class OpenAll extends Command {
 
     if (msg.dbUser.inventory[name] > MAX_OPENABLE) {
       const openCap = await msg.createReply(StringUtil.format(
-        messages.commands.openAll, MAX_OPENABLE
+        messages.commands.openAll.max, MAX_OPENABLE
       ));
 
       await openCap.delete(DELAY);
