@@ -136,7 +136,7 @@ class Shoot extends Command {
 
   async revive(msg, member) {
     await msg.createReply(StringUtil.format(
-      messages.commmands.shoot.revived,
+      messages.commands.shoot.revived,
       StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
     ));
     await member.tryDM(StringUtil.format(
