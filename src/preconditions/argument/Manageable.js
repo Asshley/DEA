@@ -1,8 +1,8 @@
 const { ArgumentPrecondition, PreconditionResult } = require('patron.js');
 
-class Bannable extends ArgumentPrecondition {
+class Manageable extends ArgumentPrecondition {
   constructor() {
-    super({ name: 'bannable' });
+    super({ name: 'manageable' });
   }
 
   async run(command, msg, argument, args, value) {
@@ -19,8 +19,8 @@ class Bannable extends ArgumentPrecondition {
       return PreconditionResult.fromSuccess();
     }
 
-    return PreconditionResult.fromError(command, 'I am unable to ban this user.');
+    return PreconditionResult.fromError(command, 'I am unable to manage this user.');
   }
 }
 
-module.exports = new Bannable();
+module.exports = new Manageable();

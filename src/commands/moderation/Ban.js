@@ -26,7 +26,7 @@ class Ban extends Command {
           key: 'user',
           type: 'user',
           example: '"Chimney Up My Ass#0007"',
-          preconditions: ['bannable']
+          preconditions: ['manageable']
         }),
         new Argument({
           name: 'reason',

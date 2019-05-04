@@ -18,7 +18,7 @@ class Kick extends Command {
           key: 'member',
           type: 'member',
           example: '"Slutty Margret#2222"',
-          preconditions: ['nomoderator', 'kickable']
+          preconditions: ['nomoderator', 'manageable']
         }),
         new Argument({
           name: 'reason',

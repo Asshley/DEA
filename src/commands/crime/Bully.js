@@ -20,7 +20,7 @@ class Bully extends Command {
           key: 'member',
           type: 'member',
           example: '"Johnny Boy#7052"',
-          preconditions: ['noself', 'nomoderator']
+          preconditions: ['noself', 'nomoderator', 'manageable']
         }),
         new Argument({
           name: 'nickname',
