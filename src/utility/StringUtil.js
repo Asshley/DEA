@@ -21,8 +21,8 @@ class StringUtil {
     return str.replace('_', ' ').replace(REGEXES.CAPITALIZE, StringUtil.upperFirstChar);
   }
 
-  static pad(string, size, char = '0', start = true) {
-    return String(string)[start ? 'padStart' : 'padEnd'](size, char);
+  static pad(string, size, char = '0') {
+    return string.padStart(size, char);
   }
 }
 
