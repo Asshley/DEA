@@ -106,7 +106,7 @@ class Pot extends Command {
       const msLeft = Date.now() - pot.readyAt;
       const { minutes, seconds } = NumberUtil.msToTime(POT_EXPIRES - msLeft);
 
-      timeLeft = ` | ${StringUtil.pad(minutes, PAD_AMOUNT)}:${StringUtil.pad(seconds, PAD_AMOUNT)}`;
+      timeLeft = ` | ${StringUtil.pad(String(minutes), PAD_AMOUNT)}:${StringUtil.pad(String(seconds), PAD_AMOUNT)}`;
     }
 
     const { username, discriminator } = client.users.get(pot.owner);
