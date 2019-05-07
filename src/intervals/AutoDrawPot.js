@@ -39,7 +39,7 @@ class AutoDrawPot extends Interval {
       const channel = this.client.channels.get(pot.channel);
 
       if (channel) {
-        return channel.trySendMessage(StringUtil.format(
+        await channel.trySendMessage(StringUtil.format(
           messages.intervals.autoDrawPot,
           StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`),
           POT_FEE * TO_PERCENT_AMOUNT,
