@@ -53,13 +53,13 @@ class Rape extends Command {
     await msg._client.db.userRepo.modifyCashExact(msg.dbGuild, args.member, -cost);
     await MessageUtil.notify(args.member, StringUtil.format(
       messages.commands.rape.dm,
-      StringUtil.boldify(`${msg.author.username}#${msg.author.dimscriminator}`),
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
       costStr
     ), 'rape');
 
     return msg.createReply(StringUtil.format(
       messages.commands.rape.successful,
-      StringUtil.boldify(`${msg.author.username}#${msg.author.dimscriminator}`),
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
       costStr
     ));
   }
