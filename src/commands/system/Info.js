@@ -1,7 +1,6 @@
 const { Command, Context } = require('patron.js');
 const {
   RESTRICTIONS: { LOTTERY, MINIMUM_MESSAGE_LENGTH },
-  MISCELLANEA: { CASH_PER_MESSAGE },
   CHANNEL_TYPES
 } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
@@ -25,7 +24,7 @@ class Info extends Command {
       msg._client.user.username,
       NumberUtil.msToTime(cooldowns.miscellanea.messageCash).seconds,
       MINIMUM_MESSAGE_LENGTH,
-      NumberUtil.toUSD(CASH_PER_MESSAGE),
+      NumberUtil.toUSD(msg._client.config.baseCPM),
       LOTTERY.MAXIMUM_CASH,
       msg._client.config.prefix,
       msg._client.config.prefix,
