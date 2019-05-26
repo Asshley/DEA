@@ -51,7 +51,7 @@ class Clear extends Command {
     await msg.delete();
 
     const filter = args.user ? m => m.author.id === args.user.id : null;
-    const deleted = await msg.channel.purge(args.quantity, filter);
+    const deleted = await msg.channel.purge(args.quantity, filter).catch(() => null);
     const reply = await msg.createReply(StringUtil.format(
       messages.commands.clear, deleted
     ));
