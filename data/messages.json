@@ -195,7 +195,7 @@
     "takeAll": {
       "noItems": "you don't have any items in your gang's vault.",
       "reply": "you have successfully taken all of your gangs items from the vault.",
-      "DM": "You have taken all of your gang's items.'"
+      "DM": "You have taken all of your gang's items."
     },
     "takeFromVault": {
       "DM": "{0} has just taken {1} from your gang's vault.",
