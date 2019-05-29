@@ -53,9 +53,8 @@ class MessageCreate extends Event {
         && !result.error.constructor.name.startsWith('Discord')) {
         const owner = await msg._client.users.get('310859567649128449').getDMChannel();
 
-        owner.createMessage(`[${command.commandName}]: ${result.errorReason}`, {
-          file: result.error.stack, name: 'error.txt'
-        });
+        owner.createMessage(`[${command.commandName}]: ${result.errorReason}
+${result.error.stack}`);
       }
 
       this.constructor.handleError(result, msg);
