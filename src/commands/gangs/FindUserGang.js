@@ -39,7 +39,7 @@ class FindUserGang extends Command {
 
     for (let i = 0; i < gang.members.length; i++) {
       const member = gang.members[i];
-      const user = client.users.get(member.id);
+      const user = client.users.get(member.id) || await client.getRESTUser(member.id);
       const tag = `${user.username}#${user.discriminator}`;
 
       if (member.status === 'elder') {
