@@ -54,7 +54,7 @@ class MessageCreate extends Event {
         const owner = await msg._client.users.get('310859567649128449').getDMChannel();
 
         owner.createMessage(`[${command.commandName}]: ${result.errorReason}
-${result.error.stack}`);
+\`\`\`\n${result.error.stack}\n\`\`\``);
       }
 
       this.constructor.handleError(result, msg);
