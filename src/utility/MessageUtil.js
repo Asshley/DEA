@@ -52,6 +52,10 @@ class MessageUtil {
   }
 
   static async notify(member, message, type) {
+    if (!member) {
+      return false;
+    }
+
     const dbUser = await member.dbUser();
 
     if (dbUser.notifications.includes(type.toLowerCase())) {
