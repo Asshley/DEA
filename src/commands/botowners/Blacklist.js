@@ -1,5 +1,7 @@
 const { Command, Argument } = require('patron.js');
+const { DEFAULTS: { BLACKLIST } } = require('../../utility/Constants.js');
 const StringUtil = require('../../utility/StringUtil.js');
+const NumberUtil = require('../../utility/NumberUtil.js');
 const messages = require('../../../data/messages.json');
 
 class Blacklist extends Command {
@@ -13,8 +15,16 @@ class Blacklist extends Command {
           name: 'user',
           key: 'user',
           type: 'user',
-          example: 'Jesus Christ#4444',
-          remainder: true
+          example: 'Jesus Christ#4444'
+        }),
+        new Argument({
+          name: 'hours',
+          key: 'hours',
+          type: 'int',
+          example: '24',
+          defaultValue: BLACKLIST,
+          preconditionOptions: [{ minimum: 0 }],
+          preconditions: ['minimum']
         })
       ]
     });
@@ -27,10 +37,14 @@ class Blacklist extends Command {
       return msg.createErrorReply(messages.commands.blacklist.alreadyBlacklisted);
     }
 
-    await msg._client.db.blacklistRepo.insertBlacklist(args.user.id);
+    const ms = NumberUtil.hoursToMs(args.hours);
+
+    await msg._client.db.blacklistRepo.insertBlacklist(args.user.id, Date.now() + ms);
 
     return msg.createReply(StringUtil.format(
-      messages.commands.blacklist.success, `${args.user.username}#${args.user.discriminator}`
+      messages.commands.blacklist.success,
+      `${args.user.username}#${args.user.discriminator}`,
+      args.hours
     ));
   }
 }

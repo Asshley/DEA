@@ -30,7 +30,7 @@
     "blacklist": {
       "alreadyBlacklisted": "this user is already blacklisted.",
       "failed": "you may not blacklist a bot owner.",
-      "success": "you have successfully blacklisted {0}."
+      "success": "you have successfully blacklisted {0} for {1} hours."
     },
     "removeBlacklist": "you have successfully removed {0}'s blacklist.",
     "addBounty": "you've successfully added a bounty of {0} to {1}, making their total bounty {2}.",

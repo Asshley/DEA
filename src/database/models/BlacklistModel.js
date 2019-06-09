@@ -1,6 +1,9 @@
+const { DEFAULTS: { BLACKLIST } } = require('../../utility/Constants.js');
+
 class BlacklistModel {
-  constructor(userId) {
+  constructor(userId, time) {
     this.userId = userId;
+    this.time = time || BLACKLIST;
   }
 }
 

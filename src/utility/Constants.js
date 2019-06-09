@@ -135,7 +135,8 @@ module.exports.MAX_AMOUNTS = {
 
 module.exports.DEFAULTS = {
   MUTE: 24,
-  CHILL: 30
+  CHILL: 30,
+  BLACKLIST: 86400000
 };
 
 module.exports.ODDS = {

@@ -20,7 +20,8 @@ class LeaveGang extends Command {
       return msg.createErrorReply(messages.commands.leaveGang.leader);
     }
 
-    const leader = msg.channel.guild.members.get(gang.leaderId) || await msg._client.getRESTUser(gang.leaderId);
+    const leader = msg.channel.guild
+      .members.get(gang.leaderId) || await msg._client.getRESTUser(gang.leaderId);
     const gangIndex = msg.dbGuild.gangs.findIndex(x => x.name === gang.name);
     const update = {
       $pull: {

@@ -11,8 +11,8 @@ class BlacklistRepository extends BaseRepository {
     return this.findOne(new BlacklistQuery(userId));
   }
 
-  insertBlacklist(userId) {
-    return this.insertOne(new Blacklist(userId));
+  insertBlacklist(userId, time) {
+    return this.insertOne(new Blacklist(userId, time));
   }
 
   deleteBlacklist(userId) {
