@@ -15,7 +15,7 @@ class Blacklist extends Command {
           name: 'user',
           key: 'user',
           type: 'user',
-          example: 'Jesus Christ#4444'
+          example: '"Jesus Christ#4444"'
         }),
         new Argument({
           name: 'hours',
