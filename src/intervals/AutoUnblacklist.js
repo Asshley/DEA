@@ -12,7 +12,7 @@ class AutoUnblacklist extends Interval {
     for (let i = 0; i < blacklists.length; i++) {
       const blacklist = blacklists[i];
 
-      if (blacklist.time > Date.now()) {
+      if (blacklist.time !== 0 && blacklist.time > Date.now()) {
         continue;
       }
 
