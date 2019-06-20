@@ -34,7 +34,8 @@ class FindGang extends Command {
     }
 
     const { _client: client } = msg;
-    const { username, discriminator } = client.users.get(gang.leaderId);
+    const { username, discriminator } = client.users.get(gang.leaderId)
+      || await client.getRESTUser(gang.leaderId);
     const leader = `${username}#${discriminator}`;
     let members = '';
     let elders = '';
