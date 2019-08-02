@@ -16,7 +16,12 @@ class AutoDrawPot extends Interval {
   async onTick() {
     const { pots } = this.client.registry.commands.find(x => x.names[0] === 'pot');
     const keys = Object.keys(pots);
-    const expired = keys.filter(x => pots[x].expired && pots[x].members.length >= MINIMUM_MEMBERS);
+    const expired = keys.filter(
+      x => pots[x]
+        && pots[x].expired
+        && pots[x].members.length >= MINIMUM_MEMBERS
+
+    );
 
     for (let i = 0; i < expired.length; i++) {
       const guildID = expired[i];
