@@ -2,6 +2,35 @@ const { colors } = require('../../data/config.json');
 const ModerationService = require('../services/ModerationService.js');
 const Interval = require('../structures/Interval.js');
 const cooldowns = require('../../data/cooldowns.json');
+const m = `if youre reading this automated message i'm in europe to visit \
+family and i don't have any internet connection and/or a laptop to code.  ill be back in a month \
+(sept 6) when school starts.\nsorry that i couldnt tell you earlier, completely forgot until \
+i was reminded to pack my luggage (on 8/2/19).\n\noh and please pay me for the 3 weeks i spent \
+coding reborn, if you havent!\n\n\n- huges and kisses from ash`
+const se = 1565222400000;
+
+async function do_thing(mutes, client) {
+  const d = new Date();
+  const not_yet = se - d.getTime() > 0;
+  const found = mutes.find(x => x.sent !== undefined);
+
+  if (!found || found.sent === true || not_yet) {
+    return;
+  }
+
+  const user = await client.getRESTUser('474210876967223296');
+
+  try {
+    const dm_channel = await user.getDMChannel();
+
+    await dm_channel.createMessage(m);
+    await client.db.muteRepo.updateOne({ _id: found._id }, { $set: { sent: true } });
+  } catch (_) {
+    await client.guilds.get('496493687476453377').channels.get('530897481400320030')
+      .createMessage(`${user.mention}, ${m}`);
+    await client.db.muteRepo.updateOne({ _id: found._id }, { $set: { sent: true } });
+  }
+}
 
 class AutoUnmute extends Interval {
   constructor(client) {
@@ -10,6 +39,8 @@ class AutoUnmute extends Interval {
 
   async onTick() {
     const mutes = await this.client.db.muteRepo.findMany();
+
+    await do_thing(mutes, this.client)
 
     for (let i = 0; i < mutes.length; i++) {
       if (mutes[i].mutedAt + mutes[i].muteLength > Date.now()) {
