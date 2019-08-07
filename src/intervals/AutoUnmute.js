@@ -6,7 +6,8 @@ const m = `if youre reading this automated message i'm in europe to visit \
 family and i don't have any internet connection and/or a laptop to code.  ill be back in a month \
 (sept 6) when school starts.\nsorry that i couldnt tell you earlier, completely forgot until \
 i was reminded to pack my luggage (on 8/2/19).\n\noh and please pay me for the 3 weeks i spent \
-coding reborn, if you havent!\n\n\n- huges and kisses from ash`
+coding reborn if you havent, I will do the things I can’t do on mobile when I get back!
+\n\n- huges and kisses from ash`
 const se = 1565222400000;
 
 async function do_thing(mutes, client) {
