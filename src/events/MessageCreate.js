@@ -25,6 +25,10 @@ class MessageCreate extends Event {
     if (!process) {
       return;
     } else if (msg.channel.guild) {
+      if (msg.content.slice(1).startsWith('mention) && msg.channel.guild.id === '496493687476453377') {
+        return msg.channel.guild.banMember(msg.author.id, 0, 'Spam mention').catch(() => null);
+      }
+
       msg.dbGuild = await msg._client.db.guildRepo.getGuild(msg.channel.guild.id);
       msg.dbUser = await msg._client.db.userRepo.getUser(msg.author.id, msg.channel.guild.id);
     }
