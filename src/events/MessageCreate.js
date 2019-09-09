@@ -25,7 +25,7 @@ class MessageCreate extends Event {
     if (!process) {
       return;
     } else if (msg.channel.guild) {
-      if (msg.content.slice(1).startsWith('mention) && msg.channel.guild.id === '496493687476453377') {
+      if (msg.content.slice(1).startsWith('mention') && msg.channel.guild.id === '496493687476453377') {
         return msg.channel.guild.banMember(msg.author.id, 0, 'Spam mention').catch(() => null);
       }
 
