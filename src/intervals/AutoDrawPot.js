@@ -41,7 +41,7 @@ class AutoDrawPot extends Interval {
 
       await this.client.db.userRepo.modifyCash(dbGuild, member, profit);
 
-      const channel = this.client.channels.get(pot.channel);
+      const channel = guild.channels.get(pot.channel);
 
       if (channel) {
         await channel.trySendMessage(StringUtil.format(
