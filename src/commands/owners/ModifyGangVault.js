@@ -66,7 +66,7 @@ class ModifyGangWealth extends Command {
     const plural = Util.pluralize(args.item.names[0], args.amount);
 
     return msg.createReply(StringUtil.format(
-      messages.commadns.modifyGangVault.success,
+      messages.commands.modifyGangVault.success,
       args.amount,
       plural,
       gang.leaderId === msg.author.id ? 'your gang' : gang.name
