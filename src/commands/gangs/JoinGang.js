@@ -33,6 +33,11 @@ class JoinGang extends Command {
     }
 
     const leader = msg.channel.guild.members.get(args.gang.leaderId);
+    
+    if (!leader) {
+      return msg.createErrorReply('The leader of this gang has left the server.');
+    }
+
     const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString();
     const dm = await leader.tryDM(StringUtil.format(
       messages.commands.joinGang.invite,
