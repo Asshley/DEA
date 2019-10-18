@@ -153,12 +153,10 @@ class Trade extends Command {
   }
 
   async updateDatabase(db, { giver, giving, amount }, { reciever, wanting, amount2 }) {
-    const sameItem = giving === wanting;
-
     var giverUpdate = {};
     var recieverUpdate = {};
 
-    if (sameItem) {
+    if (giving === wanting) {
       giverUpdate["$inc"] = {
         [`inventory.${giving}`]: amount2-amount
       }
@@ -171,7 +169,7 @@ class Trade extends Command {
         [`inventory.${giving}`]: -amount,
         [`inventory.${wanting}`]: amount2
       }
-      recieverUpdate["$inc"]: {
+      recieverUpdate["$inc"] = {
         [`inventory.${wanting}`]: -amount2,
         [`inventory.${giving}`]: amount
       }
