@@ -153,17 +153,23 @@ class Trade extends Command {
   }
 
   async updateDatabase(db, { giver, giving, amount }, { reciever, wanting, amount2 }) {
-    await db.userRepo.updateUser(giver.id, giver.guild.id, {
-      $inc: {
+    const update = {
+      giver: {
         [`inventory.${giving}`]: -amount, [`inventory.${wanting}`]: amount2
-      }
-    });
-
-    return db.userRepo.updateUser(reciever.id, reciever.guild.id, {
-      $inc: {
+      },
+      reciever: {
         [`inventory.${wanting}`]: -amount2, [`inventory.${giving}`]: amount
       }
-    });
+    };
+
+    if (giving === wanting) {
+      update.giver[`inventory.${wanting}`] = amount2 - amount;
+      update.reciever[`inventory.${giving}`] = amount - amount2;
+    }
+
+    await db.userRepo.updateUser(giver.id, giver.guild.id, { $inc: update.giver });
+
+    return db.userRepo.updateUser(reciever.id, reciever.guild.id, { $inc: update.reciever });
   }
 }
 
