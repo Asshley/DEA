@@ -266,7 +266,7 @@
     "transfer": "you have successfully transfered {0} to {1}. Transaction fee: {2}. Balance: {3}.",
     "vaultLeaderboard": {
       "none": "there is nobody on the vault leaderboard.",
-      "message": "{0}. {1}: ${2}\n"
+      "message": "{0}. {1} ({2}): {3}\n"
     },
     "wantedLeaderboard": {
       "none": "there is nobody on the wanted leaderboard.",
