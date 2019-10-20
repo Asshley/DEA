@@ -72,7 +72,7 @@ class Trade extends Command {
     }
 
     const user = msg._client.users.get(args.member.id);
-    const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString();
+    const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString().slice(0, 5);
     const dm = await user.tryDM(StringUtil.format(
       messages.commands.trade.dm,
       StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
