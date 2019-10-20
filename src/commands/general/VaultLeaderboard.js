@@ -37,6 +37,7 @@ class VaultLeaderboard extends Command {
           messages.commands.vaultLeaderboard.message,
           m + 1,
           StringUtil.boldify(gang.name),
+          gang.index,
           Object.values(gang.vault).reduce(fn)
         );
       }
