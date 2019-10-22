@@ -32,7 +32,7 @@ class Vote extends Command {
   }
 
   async run(msg, args) {
-    const { days } = NumberUtil.msToTime(TIME_REQUIRED).days;
+    const { days } = NumberUtil.msToTime(TIME_REQUIRED);
     const { dbGuild } = msg;
 
     if (args.poll.elderOnly && Date.now() - msg.member.joinedAt < TIME_REQUIRED) {
