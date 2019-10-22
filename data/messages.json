@@ -428,7 +428,7 @@
       "maxChars": "you may not have more than {0} characters in your answer.",
       "success": "you have successfully created a poll with the name `{0}`."
     },
-    "poll": "**Index:** {0}\n**Creator:** {1} ({2})\n**Answers:** \n{3}\n**Ending:** {4} days, {5} hours, {6} minutes, {7}\n**Mod Only:** {8}",
+    "poll": "**Index:** {0}\n**Creator:** {1} ({2})\n**Answers:** \n{3}\n**Ending:** {4} days, {5} hours, {6} minutes, {7}\n**Mod Only:** {8}\n**Elder Only:** {9}",
     "polls": {
       "none": "there's currently no active polls in this server.",
       "message": "{0}. {1}\n",
