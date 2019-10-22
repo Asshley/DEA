@@ -43,7 +43,8 @@ class Poll extends Command {
       `${creator.username}#${creator.discriminator}`, creator.id,
       choices,
       days, hours, minutes, seconds,
-      args.poll.modsOnly ? 'Yes' : 'No'
+      args.poll.modsOnly ? 'Yes' : 'No',
+      args.poll.eldersOnly ? 'Yes' : 'No'
     ), { title: args.poll.name });
   }
 }
