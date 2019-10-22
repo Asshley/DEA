@@ -8,6 +8,7 @@ const NumberUtil = require('../../utility/NumberUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Random = require('../../utility/Random.js');
 const messages = require('../../../data/messages.json');
+const GANG_DOUBLE_WINS = 2;
 
 class Double extends Command {
   constructor() {
@@ -32,8 +33,9 @@ class Double extends Command {
     const roll = Random.roll();
     const inGang = msg.dbGang;
     const odds = inGang ? DOUBLE_ODDS.GANG_ODDS : DOUBLE_ODDS.ODDS;
+    const doubleWins = inGang ? GANG_DOUBLE_WINS : DOUBLE_WINS;
 
-    if (value < DOUBLE_WINS && roll < odds) {
+    if (value < doubleWins && roll < odds) {
       await msg._client.db.userRepo.updateUser(
         msg.author.id, msg.channel.guild.id, { $mul: { cash: 2 } }
       );
