@@ -35,11 +35,11 @@ class Vote extends Command {
     const { days } = NumberUtil.msToTime(TIME_REQUIRED);
     const { dbGuild } = msg;
 
-    if (args.poll.elderOnly && Date.now() - msg.member.joinedAt < TIME_REQUIRED) {
+    if (args.poll.eldersOnly && Date.now() - msg.member.joinedAt < TIME_REQUIRED) {
       return msg.createErrorReply(StringUtil.format(
         messages.commands.vote.requirement, days
       ));
-    } else if (args.poll.modOnly && ModerationService.getPermLevel(dbGuild, msg.member) < 1) {
+    } else if (args.poll.modsOnly && ModerationService.getPermLevel(dbGuild, msg.member) < 1) {
       return msg.createErrorReply(messages.commands.vote.modOnly);
     } else if (args.poll.choices[args.choice].voters.includes(msg.author.id)) {
       return msg.createErrorReply(messages.commands.vote.sameChoice);
