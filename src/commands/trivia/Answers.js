@@ -34,7 +34,9 @@ class Answers extends Command {
       );
 
       if (description.length > MAX_LENGTH) {
-        const dm = await msg.author.tryDM(description, { title: 'Trivia Answers' });
+        const dm = await msg.author.tryDM(description, {
+          title: 'Trivia Answers', guild: msg.channel.guild
+        });
 
         if (!dm) {
           return msg.createErrorReply(messages.commands.answers.cantDM);
@@ -47,7 +49,9 @@ class Answers extends Command {
     }
 
     if (!StringUtil.isNullOrWhiteSpace(description)) {
-      await msg.author.tryDM(description, { title: 'Trivia Answers' });
+      await msg.author.tryDM(description, {
+        title: 'Trivia Answers', guild: msg.channel.guild
+      });
     }
 
     return msg.createReply(messages.commands.answers.success);
