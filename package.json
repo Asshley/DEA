@@ -12,9 +12,9 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^7.0.0",
-    "eris": "github:abalabahaha/eris#dev",
+    "eris": "github:abalabahaha/eris#pull/548/head",
     "mongodb": "^3.2.3",
-    "patron.js": "github:Asshley/patron.js"
+    "patron.js": "github:LJNeon/patron.js#pull/18/head"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
