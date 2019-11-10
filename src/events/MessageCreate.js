@@ -34,7 +34,7 @@ class MessageCreate extends Event {
     const { channel: { guild }, dbGuild } = msg;
     const giveCash = guild && !dbGuild.channels.ignore.includes(msg.channel.id);
 
-    if (!msg.content.startsWith(msg._client.config.prefix)) {
+    if (!msg.content.startsWith(msg._client.config.prefix) && msg.type === 0) {
       return giveCash ? chatService.applyCash(msg) : null;
     }
 
