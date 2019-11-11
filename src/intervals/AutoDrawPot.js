@@ -48,7 +48,7 @@ class AutoDrawPot extends Interval {
           messages.intervals.autoDrawPot,
           StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`),
           POT_FEE * TO_PERCENT_AMOUNT,
-          NumberUtil.toUSD(process),
+          NumberUtil.toUSD(profit),
           winner.odds
         ));
       }
