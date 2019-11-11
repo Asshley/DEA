@@ -28,7 +28,7 @@ class Thaw extends Command {
   }
 
   async run(msg, args) {
-    const perms = msg.channel.permissionOverwrites.get(msg.channel.guild.id);
+    const perms = await this.getOverwrite(msg.channel, msg.channel.guild.id);
 
     if (this.getCumulativePermissions(msg.channel).has('sendMessages')) {
       return msg.createErrorReply(messages.commands.thaw.alreadyThawed);
@@ -57,7 +57,9 @@ class Thaw extends Command {
     let overwrite = channel.permissionOverwrites.get(id);
 
     if (!overwrite) {
-      overwrite = await channel.editPermission(id, 0, 0, 'role');
+      await channel.editPermission(id, 0, 0, 'role');
+
+      overwrite = channel.permissionOverwrites.get(id);
     }
 
     return overwrite;
