@@ -62,17 +62,17 @@ class Chill extends Command {
       extraInfoType: 'Duration',
       extraInfo: `${time} seconds\n**Channel:** ${msg.channel.name} (${msg.channel.mention})`
     });
+    await msg.createReply(StringUtil.format(messages.commands.chill.chilled, time));
     await msg.channel.editPermission(
       perms.id, allow & ~Permissions.sendMessages, deny | Permissions.sendMessages, perms.type
     );
-    await msg.createReply(StringUtil.format(messages.commands.chill.chilled, time));
     await Util.delay(args.time * TO_SECONDS);
 
     if (!this.getCumulativePermissions(msg.channel).has('sendMessages')) {
-      await msg.createReply(messages.commands.chill.thawed);
       await msg.channel.editPermission(
         perms.id, allow & ~Permissions.sendMessages, deny & ~Permissions.sendMessages, perms.type
       );
+      await msg.createReply(messages.commands.chill.thawed);
     }
   }
 
