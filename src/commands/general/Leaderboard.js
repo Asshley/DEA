@@ -32,7 +32,8 @@ class Leaderboard extends Command {
         break;
       }
 
-      const user = msg._client.users.get(users[i].userId);
+      const user = msg._client.users.get(users[i].userId)
+        || await msg._client.getRESTUser(users[i].userId).catch(() => null);
 
       if (!user) {
         users.splice(i, 1);
