@@ -25,19 +25,17 @@ class Leaderboard extends Command {
     const users = await msg._client.db.userRepo.findMany({ guildId: msg.channel.guild.id });
     let message = '';
 
-    users.sort((a, b) => b.cash - a.cash);
+    users.sort((a, b) => isNaN(b.cash) ? -1 : b.cash - a.cash);
 
     for (let i = 0; i < users.length; i++) {
       if (i + 1 > LEADERBOARD_CAP) {
         break;
       }
 
-      const user = msg._client.users.get(users[i].userId)
-        || await msg._client.getRESTUser(users[i].userId).catch(() => null);
+      const user = msg._client.users.get(users[i].userId);
 
       if (!user) {
-        users.splice(i, 1);
-        i--;
+        users.splice(i--, 1);
         continue;
       }
 
