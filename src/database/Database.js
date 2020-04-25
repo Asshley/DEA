@@ -6,7 +6,9 @@ const BlacklistRepository = require('./repositories/BlacklistRepository.js');
 
 class Database {
   async connect(connectionURL) {
-    const connection = await MongoClient.connect(connectionURL, { useNewUrlParser: true });
+    const connection = await MongoClient.connect(connectionURL, {
+      useNewUrlParser: true, useUnifiedTopology: true
+    });
     const db = connection.db(connection.s.options.dbName);
 
     this.blacklistRepo = new BlacklistRepository(await db.createCollection('blacklists'));
