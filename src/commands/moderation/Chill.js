@@ -96,7 +96,6 @@ class Chill extends Command {
 
     if (!overwrite) {
       await channel.editPermission(id, 0, 0, 'role');
-      
       overwrite = channel.permissionOverwrites.get(id);
     }
 

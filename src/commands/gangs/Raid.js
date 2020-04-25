@@ -107,7 +107,7 @@ class Raid extends Command {
     }
 
     await MessageUtil.notify(raider.leader, StringUtil.format(
-      messages.commands.raid.failedRaidedDM, prepend, amount, raider.gang,
+      messages.commands.raid.failedRaidedDM, prepend, amount, raider.gang
     ), 'raid');
     await MessageUtil.notify(raided.leader, StringUtil.format(
       messages.commands.raid.failedDM, raided.gang, amount

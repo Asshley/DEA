@@ -4,6 +4,7 @@ const Random = require('../../utility/Random.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const Util = require('../../utility/Util.js');
 const messages = require('../../../data/messages.json');
+const MAX_LEN = 5;
 
 class Trade extends Command {
   constructor() {
@@ -72,7 +73,7 @@ class Trade extends Command {
     }
 
     const user = msg._client.users.get(args.member.id);
-    const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString().slice(0, 5);
+    const key = Random.nextInt(0, Number.MAX_SAFE_INTEGER).toString().slice(0, MAX_LEN);
     const dm = await user.tryDM(StringUtil.format(
       messages.commands.trade.dm,
       StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),

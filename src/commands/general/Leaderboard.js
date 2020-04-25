@@ -25,7 +25,8 @@ class Leaderboard extends Command {
     const users = await msg._client.db.userRepo.findMany({ guildId: msg.channel.guild.id });
     let message = '';
 
-    users.sort((a, b) => isNaN(b.cash) ? -1 : b.cash - a.cash);
+    // eslint-disable-next-line no-confusing-arrow
+    users.sort((a, b) => Number.isNaN(b.cash) ? -1 : b.cash - a.cash);
 
     for (let i = 0; i < users.length; i++) {
       if (i + 1 > LEADERBOARD_CAP) {
