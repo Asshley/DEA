@@ -1,1 +1,0 @@
-procfile: worker: npm start
