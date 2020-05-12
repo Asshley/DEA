@@ -256,6 +256,7 @@
       "none": "there are no mod roles yet.",
       "message": "{0}\n**Permission Levels:**\n{1}: Moderator\n{2}: Administrator\n{3}: Owner"
     },
+    "singleUse": "your single use invite is https://discord.gg/{0}.",
     "money": "{0}'s balance: {1}.",
     "rank": "**Balance:** {0}\n**Health:** {1}\n**Position:** {2}{3}{4}",
     "ranks": {
