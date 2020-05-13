@@ -2,7 +2,7 @@ const { Command } = require('patron.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const ModerationService = require('../../services/ModerationService.js');
 const messages = require('../../../data/messages.json');
-const SECONDS = 1000;
+const SECONDS = 60;
 const MINUTES = 60;
 const EXPIRES = SECONDS * MINUTES;
 
