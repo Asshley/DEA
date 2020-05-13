@@ -26,7 +26,8 @@ class SingleUse extends Command {
       action: 'Single Use Invite',
       reason: `Invite Code: ${invite.code}`,
       color: msg._client.config.colors.invite,
-      moderator: msg.author
+      moderator: msg._client.user,
+      user: msg.author
     });
 
     return msg.createReply(StringUtil.format(messages.commands.singleUse, invite.code));
