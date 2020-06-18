@@ -221,7 +221,7 @@
       "noReply": "your opponent has not agreed to the bet.",
       "question": "what is {0}?",
       "starting": "the bet will be starting shortly.",
-      "winner": "{0} has won {1} for winning the bet with {1}.",
+      "winner": "{0} has won {1} for winning the bet with {2}.",
       "noWinner": "since neither you nor your opponent answered correctly, the money has been sent to help fund Vanalk's server."
     },
     "cooldowns": "all of {0} commands are ready for use.",
