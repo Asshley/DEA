@@ -25,7 +25,7 @@
     "autoTrivia": 300000,
     "autoRegenerateHealth": 3600000,
     "autoDrawPot": 60000,
-    "autoResetRate": 3600000,
+    "autoResetRate": 7200000,
     "autoUnblacklist": 300000
   },
 
