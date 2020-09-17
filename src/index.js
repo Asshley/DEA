@@ -7,10 +7,13 @@ const EventService = require('./services/EventService.js');
 const path = require('path');
 const registry = require('./services/registry.js');
 const config = require('../data/config.json');
+const dotenv = require('dotenv');
 
 class Main {
   static async init() {
-    require('dotenv').config();
+    const envPath = path.join(__dirname, '..', '.env');
+
+    dotenv.config({ path: envPath });
     await Patron.RequireAll(path.join(__dirname, 'extensions'));
 
     const db = new Database();
