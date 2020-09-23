@@ -231,6 +231,10 @@
       "alreadyDisabled": "you have already disabled {0}.",
       "success": "you've successfully disabled the following DM notifications:\n`{0}`."
     },
+    "notifications": {
+      "none": "you don't have any disabled notifications.",
+      "format": "you have the following notifications disabled: {0}."
+    },
     "drawWinner": {
       "inactive": "there is no active pot in this server.",
       "notHost": "only the creator of the pot may draw the winner.",
