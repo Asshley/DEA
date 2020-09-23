@@ -419,7 +419,10 @@
       "confirm": "are you sure you wish to reset all {0} related data within your server? Reply with \"y(es)\" to continue.",
       "success": "you have successfully reset all data in your server."
     },
-    "resetCooldowns": "you have successfully reset all of {0} cooldowns.",
+    "resetCooldowns": {
+      "one": "you have successfully reset all of {0} cooldowns.",
+      "multiple": "you have successfully reset their cooldowns."
+    },
     "resetUser": "you have successfully reset all of {0} data.",
     "setMultiplier": "you have successfully set the cash multiplier to {0}.",
     "setRegenHealth": "you have successfully set the server's regen amount to {0} per hour.",

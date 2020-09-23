@@ -13,9 +13,9 @@ class ResetCooldowns extends Command {
           name: 'member',
           key: 'member',
           type: 'member',
-          example: 'Big Willy#1234',
+          example: '"Big Willy#1234"',
           defaultValue: ArgumentDefault.Member,
-          remainder: true
+          infinite: true,
         })
       ]
     });
@@ -24,15 +24,24 @@ class ResetCooldowns extends Command {
   async run(msg, args) {
     const commands = msg._client.registry.commands.filter(command => command.hasCooldown);
 
-    for (let i = 0; i < commands.length; i++) {
-      commands[i].cooldowns.users[`${args.member.id}-${msg.channel.guild.id}`] = null;
+    for (let k = 0; k < args.member.length; k++) {
+      const mem = args.member[k];
+
+      for (let i = 0; i < commands.length; i++) {
+        commands[i].cooldowns.users[`${mem.id}-${msg.channel.guild.id}`] = null;
+      }
     }
 
-    return msg.createReply(StringUtil.format(
-      messages.commands.resetCooldowns,
-      args.member.id === msg.author.id ? 'your' : `${StringUtil
-        .boldify(`${args.member.user.username}#${args.member.user.discriminator}`)}'s`
-    ));
+    if (args.member.length === 1) {
+      return msg.createReply(StringUtil.format(
+        messages.commands.resetCooldowns.one,
+        args.member.id === msg.author.id ? 'your' : `${StringUtil
+          .boldify(`${args.member[0].user.username}#${args.member[0].user.discriminator}`)}'s`
+      ));
+    }
+
+    return msg.createReply(messages.commands.resetCooldowns.multiple);
+
   }
 }
 
