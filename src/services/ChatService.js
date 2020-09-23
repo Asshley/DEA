@@ -9,7 +9,7 @@ const StringUtil = require('../utility/StringUtil.js');
 const NumberUtil = require('../utility/NumberUtil.js');
 const messages = require('../../data/messages.json');
 const cooldowns = require('../../data/cooldowns.json');
-const DEA = "496493687476453377";
+const DEA = '496493687476453377';
 
 class ChatService {
   constructor() {
@@ -37,8 +37,8 @@ class ChatService {
       };
 
       if (ODDS.LOTTERY >= Random.roll()) {
-        const maxCash = msg.channel.guild.id === DEA ? LOTTERY.DEA_MAXIMUM_CASH : LOTTERY.MAXIMUM_CASH;
-        const minCash = msg.channel.guild.id === DEA ? LOTTERY.DEA_MINIMUM_CASH : LOTTERY.MINIMUM_CASH;
+        const maxCash = msg.guildID === DEA ? LOTTERY.DEA_MAXIMUM_CASH : LOTTERY.MAXIMUM_CASH;
+        const minCash = msg.guildID === DEA ? LOTTERY.DEA_MINIMUM_CASH : LOTTERY.MINIMUM_CASH;
         const winnings = Random.nextFloat(minCash, maxCash);
 
         amount += winnings;
