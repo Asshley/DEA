@@ -14,6 +14,7 @@ const DEA = '496493687476453377';
 class ChatService {
   constructor() {
     this.messages = {};
+    this.lastReset = Date.now();
   }
 
   async applyCash(msg) {

@@ -8,11 +8,19 @@ class AutoRegenerateHealth extends Interval {
   }
 
   async onTick() {
+    const diff = cooldowns.miscellanea.rateReset - (Date.now() - chatService.lastReset);
+
+    if (diff > 0) {
+      return;
+    }
+
     const keys = Object.keys(chatService.messages);
 
     for (let i = 0; i < keys.length; i++) {
       chatService.messages[keys[i]].cpm = this.client.config.baseCPM;
     }
+
+    chatService.lastReset = Date.now();
   }
 }
 

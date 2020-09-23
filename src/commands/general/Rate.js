@@ -5,6 +5,7 @@ const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
 const cooldowns = require('../../../data/cooldowns.json');
 const chatService = require('../../services/ChatService.js');
+const PAD = 2;
 
 class Rate extends Command {
   constructor() {
@@ -52,6 +53,17 @@ class Rate extends Command {
     const baseCPM = info ? info.cpm : msg._client.config.baseCPM;
     const { cpm, inc } = chatService.constructor
       .getCPM(dbUser, baseCPM, msg._client.config.rateIncrement);
+    const resets = cooldowns.miscellanea.rateReset - (Date.now() - chatService.lastReset);
+    let resetAt = 'Rate resets ';
+
+    if (resets <= 0) {
+      resetAt = 'soon';
+    } else {
+      const { minutes, seconds } = NumberUtil.msToTime(resets);
+
+      resetAt = `in ${StringUtil.pad(String(minutes), PAD)}:\
+${StringUtil.pad(String(seconds), PAD)}`;
+    }
 
     return msg.channel.sendMessage(StringUtil.format(
       messages.commands.rate,
@@ -60,7 +72,10 @@ class Rate extends Command {
       msg.dbGuild.multiplier,
       NumberUtil.toUSD(cpm * msg.dbGuild.multiplier),
       timeLeft <= 0 ? 'on the next valid message' : ` in ${timeLeft} seconds`
-    ), { title: `${args.member.user.username}#${args.member.user.discriminator}'s Rate` });
+    ), {
+      title: `${args.member.user.username}#${args.member.user.discriminator}'s Rate`,
+      footer: { text: resetAt }
+    });
   }
 }
 

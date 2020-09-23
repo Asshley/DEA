@@ -25,12 +25,13 @@
     "autoTrivia": 300000,
     "autoRegenerateHealth": 3600000,
     "autoDrawPot": 60000,
-    "autoResetRate": 7200000,
+    "autoResetRate": 30000,
     "autoUnblacklist": 300000
   },
 
   "miscellanea": {
     "reducedMessageCash": 25000,
-    "messageCash": 30000
+    "messageCash": 30000,
+    "rateReset": 3600000
   }
 }
