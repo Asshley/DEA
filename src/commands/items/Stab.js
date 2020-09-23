@@ -1,7 +1,7 @@
 const { Command, Argument } = require('patron.js');
 const {
   MAX_AMOUNTS: { HEALTH: MAX_HEALTH },
-  INVESTMENTS: { SNOWCAP },
+  INVESTMENTS,
   INVESTMENT_NAMES,
   MISCELLANEA: { DECIMAL_ROUND_AMOUNT, GANG: { CASH_FOR_KILL } },
   RESTRICTIONS: { COMMANDS: { GANG: { MINIMUM_AMOUNT } } }
@@ -14,6 +14,7 @@ const MessageUtil = require('../../utility/MessageUtil.js');
 const items = require('../../../data/items.json');
 const messages = require('../../../data/messages.json');
 const cooldowns = require('../../../data/cooldowns.json');
+const SNOWCAP_ODDS = 80;
 
 class Stab extends Command {
   constructor() {
@@ -58,49 +59,11 @@ class Stab extends Command {
   }
 
   async stab(msg, member, item) {
-    const { db } = msg._client;
     const roll = Random.roll();
     const dbUser = await member.dbUser();
 
     if (roll <= item.accuracy) {
-      const damage = await itemService.reduceDamage(dbUser, item.damage, items);
-
-      if (dbUser.health - damage <= 0) {
-        if (dbUser.investments.includes(INVESTMENT_NAMES.SNOWCAP)) {
-          return this.revive(msg, member);
-        }
-
-        const earned = await this.loot(msg.member, member, msg);
-
-        await MessageUtil.notify(member, StringUtil.format(
-          messages.commands.stab.killedDM,
-          StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
-        ), 'killed');
-
-        return msg.createReply(StringUtil.format(
-          messages.commands.stab.killed,
-          StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`),
-          NumberUtil.format(earned)
-        ));
-      }
-
-      await db.userRepo.updateUser(member.id, msg.channel.guild.id, {
-        $inc: {
-          health: -damage
-        }
-      });
-      await MessageUtil.notify(member, StringUtil.format(
-        messages.commands.stab.userDM,
-        StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
-        damage,
-        dbUser.health - damage
-      ), 'stab');
-
-      return msg.createReply(StringUtil.format(
-        messages.commands.stab.reply,
-        damage,
-        StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
-      ));
+      return this.stabSuccess(msg, member, dbUser, item);
     }
 
     return msg.createReply(messages.commands.stab.failed);
@@ -127,27 +90,69 @@ class Stab extends Command {
     return dbUser.bounty + dbUser.cash + amount;
   }
 
-  async revive(msg, member) {
-    await msg.createReply(StringUtil.format(
-      messages.commands.stab.revived,
-      StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
-    ));
-    await member.tryDM(StringUtil.format(
-      messages.commands.stab.revivedDM,
-      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
-    ), { guild: msg.channel.guild });
+  async stabSuccess(msg, member, dbUser, item) {
+    const damage = await itemService.reduceDamage(dbUser, item.damage, items);
 
-    const update = {
-      $pull: {
-        investments: INVESTMENT_NAMES.SNOWCAP
-      },
-      $set: {
-        revivable: SNOWCAP.TIME,
-        health: MAX_HEALTH
+    if (dbUser.health - damage <= 0) {
+      if (dbUser.investments.includes(INVESTMENT_NAMES.SNOWCAP)) {
+        const revived = await this.revive(msg, member);
+
+        if (revived) {
+          return;
+        }
       }
-    };
 
-    return msg._client.db.userRepo.updateUser(member.id, msg.channel.guild.id, update);
+      const earned = await this.loot(msg.member, member, msg);
+
+      await MessageUtil.notify(member, StringUtil.format(
+        messages.commands.stab.killedDM,
+        StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
+      ), 'killed');
+
+      return msg.createReply(StringUtil.format(
+        messages.commands.stab.killed,
+        StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`),
+        NumberUtil.format(earned)
+      ));
+    }
+
+    await msg._client.db.userRepo.updateUser(member.id, msg.channel.guild.id, {
+      $inc: { health: -damage }
+    });
+    await MessageUtil.notify(member, StringUtil.format(
+      messages.commands.stab.userDM,
+      StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`),
+      damage, dbUser.health - damage
+    ), 'stab');
+
+    return msg.createReply(StringUtil.format(
+      messages.commands.stab.reply,
+      damage, StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
+    ));
+  }
+
+  async revive(msg, member) {
+    const update = {
+      $pull: { investments: INVESTMENT_NAMES.SNOWCAP },
+      $set: { revivable: INVESTMENTS.SNOWCAP.TIME }
+    };
+    const success = Random.roll() >= SNOWCAP_ODDS;
+
+    if (success) {
+      await msg.createReply(StringUtil.format(
+        messages.commands.shoot.revived,
+        StringUtil.boldify(`${member.user.username}#${member.user.discriminator}`)
+      ));
+      await member.tryDM(StringUtil.format(
+        messages.commands.shoot.revivedDM,
+        StringUtil.boldify(`${msg.author.username}#${msg.author.discriminator}`)
+      ), { guild: msg.channel.guild });
+      update.$set.health = MAX_HEALTH;
+    }
+
+    await msg._client.db.userRepo.updateUser(member.id, msg.channel.guild.id, update);
+
+    return success;
   }
 
   async takeWealth(msg, gang) {
