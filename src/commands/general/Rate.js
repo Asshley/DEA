@@ -57,11 +57,11 @@ class Rate extends Command {
     let resetAt = 'Rate resets ';
 
     if (resets <= 0) {
-      resetAt = 'soon';
+      resetAt += 'soon';
     } else {
       const { minutes, seconds } = NumberUtil.msToTime(resets);
 
-      resetAt = `in ${StringUtil.pad(String(minutes), PAD)}:\
+      resetAt += `in ${StringUtil.pad(String(minutes), PAD)}:\
 ${StringUtil.pad(String(seconds), PAD)}`;
     }
 
