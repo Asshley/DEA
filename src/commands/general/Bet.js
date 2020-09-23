@@ -90,18 +90,34 @@ class Bet extends Command {
       const [winner] = result;
       const loser = winner.member.id === opponent.id ? msg.member : opponent;
 
-      await msg._client.db.userRepo.modifyCash(msg.dbGuild, winner.member, amount);
-      await msg._client.db.userRepo.modifyCash(msg.dbGuild, loser, -amount);
-
-      return msg.channel.sendMessage(StringUtil.format(
-        messages.commands.bet.winner,
-        StringUtil.boldify(`${winner.author.username}#${winner.author.discriminator}`),
-        NumberUtil.toUSD(amount),
-        StringUtil.boldify(`${loser.user.username}#${loser.user.discriminator}`)
-      ));
+      return this.addCash(msg, winner, loser, amount);
     }
 
     return msg.createErrorReply(messages.commands.bet.noWinner);
+  }
+
+  async addCash(msg, winner, loser, amount) {
+    const val = NumberUtil.fromValue(amount);
+    const dbWinner = await msg._client.db.userRepo.getUser(winner.author.id, msg.guildID);
+    const dbLoser = await msg._client.db.userRepo.getUser(loser.id, msg.guildID);
+    const dollars = NumberUtil.toUSD(amount);
+    const initiatorNoCash = dbWinner.cash < val;
+
+    if (initiatorNoCash || dbLoser.cash < val) {
+      const resp = winner.author.id === msg.author.id ? 'initiatorNoCash' : 'opponentNoCash';
+
+      return msg.createErrorReply(StringUtil.format(messages.commands.bet[resp], dollars));
+    }
+
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, winner.member, amount);
+    await msg._client.db.userRepo.modifyCash(msg.dbGuild, loser, -amount);
+
+    return msg.channel.sendMessage(StringUtil.format(
+      messages.commands.bet.winner,
+      StringUtil.boldify(`${winner.author.username}#${winner.author.discriminator}`),
+      NumberUtil.toUSD(amount),
+      StringUtil.boldify(`${loser.user.username}#${loser.user.discriminator}`)
+    ));
   }
 
   async isInGame(challenger, opponent, msg) {

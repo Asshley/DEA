@@ -7,6 +7,10 @@ const formatter = Intl.NumberFormat('en-US', {
 });
 
 class NumberUtil {
+  static fromValue(input) {
+    return input * DIVISOR;
+  }
+
   static value(input) {
     return input / DIVISOR;
   }

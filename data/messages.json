@@ -216,6 +216,8 @@
       "reply": "you have successfully withdrawn {0} from your gang. {1}'s Wealth: {2}."
     },
     "bet": {
+      "initiatorNoCash": "you no longer have {0}.",
+      "opponentNoCash": "your opponent no longer has {0}.",
       "inGame": "{0} already in a bet with {1}.",
       "verify": "{0}, reply with `yes` to accept the bet.",
       "noReply": "your opponent has not agreed to the bet.",
