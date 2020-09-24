@@ -32,6 +32,6 @@
   "miscellanea": {
     "reducedMessageCash": 25000,
     "messageCash": 30000,
-    "rateReset": 3600000
+    "rateReset": 7200000
   }
 }
