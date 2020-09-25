@@ -13,7 +13,7 @@
   "dependencies": {
     "dotenv": "^7.0.0",
     "eris": "github:abalabahaha/eris",
-    "mongodb": "3.2.3",
+    "mongodb": "3.5.7",
     "patron.js": "github:LJNeon/patron.js#pull/18/head"
   },
   "optionalDependencies": {
