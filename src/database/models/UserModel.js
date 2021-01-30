@@ -7,6 +7,7 @@ class UserModel {
     this.health = 100;
     this.revivable = null;
     this.inventory = {};
+    this.portfolio = {};
     this.investments = [];
     this.notifications = [];
   }

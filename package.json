@@ -14,7 +14,8 @@
     "dotenv": "^7.0.0",
     "eris": "github:abalabahaha/eris",
     "mongodb": "3.5.7",
-    "patron.js": "github:LJNeon/patron.js#pull/18/head"
+    "patron.js": "github:LJNeon/patron.js#pull/18/head",
+    "tradingview-scraper": "^0.3.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
