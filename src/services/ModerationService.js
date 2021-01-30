@@ -62,10 +62,13 @@ reason: ${reason}.`}`, { guild });
     };
 
     if (data.moderator) {
+      const botLink = `https://discordapp.com/oauth2/authorize\
+?client_id=${data.guild.shard.client.user.id}&scope=bot&permissions=8`;
+
       options.author = {
         name: `${data.moderator.username}#${data.moderator.discriminator}`,
         icon: data.moderator.avatarURL,
-        url: data.guild.shard.client.config.botLink
+        url: botLink
       };
     }
 

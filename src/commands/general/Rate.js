@@ -73,7 +73,7 @@ ${StringUtil.pad(String(seconds), PAD)}`;
       inc,
       msg.dbGuild.multiplier,
       NumberUtil.toUSD(cpm * msg.dbGuild.multiplier),
-      timeLeft <= 0 ? 'on the next valid message' : ` in ${timeLeft} seconds`
+      timeLeft <= 0 ? 'on the next valid message' : `in ${timeLeft} seconds`
     ), {
       title: `${args.member.user.username}#${args.member.user.discriminator}'s Rate`,
       footer: { text: resetAt }

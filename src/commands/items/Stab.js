@@ -134,9 +134,9 @@ class Stab extends Command {
   async revive(msg, member) {
     const update = {
       $pull: { investments: INVESTMENT_NAMES.SNOWCAP },
-      $set: { revivable: INVESTMENTS.SNOWCAP.TIME }
+      $set: { revivable: Date.now() + INVESTMENTS.SNOWCAP.TIME }
     };
-    const success = Random.roll() >= SNOWCAP_ODDS;
+    const success = Random.roll() <= SNOWCAP_ODDS;
 
     if (success) {
       await msg.createReply(StringUtil.format(

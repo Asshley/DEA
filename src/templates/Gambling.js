@@ -22,7 +22,7 @@ class Gambling extends Command {
           key: 'bet',
           type: 'cash',
           example: '500',
-          preconditionOptions: [{ minimum: GAMBLING.MINIMUM_BET }],
+          preconditionOptions: [{ minimum: GAMBLING.MINIMUM_BET }, { fetch: true }],
           preconditions: ['minimumcash', 'cash']
         })
       ]

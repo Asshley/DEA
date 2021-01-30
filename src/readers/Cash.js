@@ -9,12 +9,14 @@ class Cash extends TypeReader {
   }
 
   async read(command, message, argument, args, input) {
+    const { cash } = await message._client.db.userRepo.getUser(message.author.id, message.guildID);
+
     if (input.toLowerCase() === 'all') {
       this.inputtedAll = true;
 
-      return TypeReaderResult.fromSuccess(NumberUtil.value(message.dbUser.cash));
+      return TypeReaderResult.fromSuccess(NumberUtil.value(cash));
     } else if (input.toLowerCase() === 'half') {
-      return TypeReaderResult.fromSuccess(NumberUtil.value(message.dbUser.cash / HALF_DIVISOR));
+      return TypeReaderResult.fromSuccess(NumberUtil.value(cash / HALF_DIVISOR));
     }
 
     this.inputtedAll = false;

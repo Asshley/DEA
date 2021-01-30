@@ -420,6 +420,7 @@
       "success": "you have successfully removed the mod role {0}."
     },
     "reset": {
+      "unconfirmed": "the command has been cancelled",
       "confirm": "are you sure you wish to reset all {0} related data within your server? Reply with \"y(es)\" to continue.",
       "success": "you have successfully reset all data in your server."
     },

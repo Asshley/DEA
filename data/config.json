@@ -39,6 +39,5 @@
   "prefix": "$",
   "activity": "{0}help",
   "authors": ["Ash"],
-  "botLink": "https://discordapp.com/oauth2/authorize?client_id=502598213790990336&scope=bot&permissions=8",
   "serverLink": "https://discord.gg/nQvecMF"
 }

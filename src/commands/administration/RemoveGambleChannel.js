@@ -10,7 +10,8 @@ class RemoveGambleChannel extends Command {
         'removegamble',
         'removegambling',
         'deletegamble',
-        'deletegambling'
+        'deletegambling',
+        'removegam'
       ],
       groupName: 'administration',
       description: 'Sets the gambling channel.',
@@ -42,7 +43,7 @@ class RemoveGambleChannel extends Command {
     await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, update);
 
     return msg.createReply(
-      StringUtil.format(messages.commands.removeGambleChannel.sucessful, args.channel.mention)
+      StringUtil.format(messages.commands.removeGambleChannel.successful, args.channel.mention)
     );
   }
 }

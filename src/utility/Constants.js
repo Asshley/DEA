@@ -45,6 +45,8 @@ module.exports.CLIENT_OPTIONS = {
   compress: true,
   restMode: true,
   messageLimit: 10,
+  intents: 4719,
+  getAllUsers: true,
   disabledEvents: {
     CHANNEL_UPDATE: true,
     PRESENCE_UPDATE: true,
@@ -102,7 +104,7 @@ reducing all of your cooldowns by 50%.',
   },
   SNOWCAP: {
     COST: 5e4,
-    DESCRIPTION: 'A combination of brick and weed is enough to revive you one time.',
+    DESCRIPTION: 'A combination of brick and weed is enough to give you an 80% chance of revival.',
     TIME: 2592e5
   }
 };
@@ -191,23 +193,23 @@ module.exports.RESTRICTIONS = {
       MAXIMUM_WEALTH: 0.2
     },
     JUMP: {
-      MAXIMUM_CASH: 500,
-      MINIMUM_CASH: 250
+      MAXIMUM_CASH: 50000,
+      MINIMUM_CASH: 25000
     },
     SCAM: {
-      MAXIMUM_CASH: 250,
-      MINIMUM_CASH: 50
+      MAXIMUM_CASH: 25000,
+      MINIMUM_CASH: 5000
     },
     STEAL: {
-      MAXIMUM_CASH: 1000,
-      MINIMUM_CASH: 500
+      MAXIMUM_CASH: 100000,
+      MINIMUM_CASH: 50000
     },
     CHILL: {
       MAXIMUM_TIME: 3600,
       MINIMUM_TIME: 5
     },
     CLEAR: {
-      MAXIMUM_MESSAGES: 500,
+      MAXIMUM_MESSAGES: 5000,
       MINIMUM_MESSAGES: 2
     },
     WITHDRAW: {

@@ -49,7 +49,7 @@ class Eval extends Command {
           'Eval',
           `\`\`\`js\n${args.code}\`\`\``,
           'Error',
-          `\`\`\`js\n${err.stack
+          `\`\`\`js\n${(err.stack || String(err))
             .slice(0, ERR_LENGTH)}\`\`\``
         ],
         false,

@@ -7,6 +7,7 @@ const {
 const GangUtil = require('../../utility/GangUtil.js');
 const StringUtil = require('../../utility/StringUtil.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class CreateGang extends Command {
   constructor() {
@@ -14,6 +15,7 @@ class CreateGang extends Command {
       names: ['creategang', 'makegang'],
       groupName: 'gangs',
       description: 'Create a gang.',
+      cooldown: cooldowns.commands.createGang,
       preconditions: ['notingang'],
       args: [
         new Argument({

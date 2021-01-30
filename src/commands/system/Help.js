@@ -30,11 +30,14 @@ class Help extends Command {
   }
 
   async run(msg, args) {
+    const botLink = `https://discordapp.com/oauth2/authorize\
+?client_id=${msg._client.user.id}&scope=bot&permissions=8`;
+
     if (StringUtil.isNullOrWhiteSpace(args.command)) {
       await msg.author.DM(StringUtil.format(
         messages.commands.help.message,
         msg._client.user.username,
-        msg._client.config.botLink,
+        botLink,
         msg._client.config.prefix,
         msg._client.config.prefix,
         msg._client.user.username,

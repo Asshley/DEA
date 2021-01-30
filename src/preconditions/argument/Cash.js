@@ -6,8 +6,16 @@ class Cash extends ArgumentPrecondition {
     super({ name: 'cash' });
   }
 
-  async run(command, msg, argument, args, value) {
-    const realValue = NumberUtil.value(msg.dbUser.cash);
+  async run(command, msg, argument, args, value, options = {}) {
+    let cash;
+
+    if (options.fetch) {
+      ({ cash } = await msg._client.db.userRepo.getUser(msg.author.id, msg.guildID));
+    } else {
+      ({ cash } = msg.dbUser);
+    }
+
+    const realValue = NumberUtil.value(cash);
     let val = value;
 
     if (command.names[0] === 'rob' && argument.typeReader.inputtedAll) {

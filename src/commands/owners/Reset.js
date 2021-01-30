@@ -29,6 +29,8 @@ class Reset extends Command {
 
       return msg.createReply(messages.commands.reset.success);
     }
+
+    return msg.createReply(messages.commands.reset.unconfirmed);
   }
 }
 

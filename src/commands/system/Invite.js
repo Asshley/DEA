@@ -13,9 +13,12 @@ class Invite extends Command {
   }
 
   run(msg) {
+    const botLink = `https://discordapp.com/oauth2/authorize\
+?client_id=${msg._client.user.id}&scope=bot&permissions=8`;
+
     return msg.createReply(StringUtil.format(
       messages.commands.invite,
-      msg._client.config.botLink,
+      botLink,
       msg._client.user.username,
       msg._client.config.serverLink
     ));

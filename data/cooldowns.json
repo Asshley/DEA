@@ -16,7 +16,9 @@
     "jump": 14400000,
     "steal": 21600000,
     "scam": 7200000,
-    "rape": 14400000
+    "rape": 14400000,
+    "createGang": 21600000,
+    "destroyGang": 21600000
   },
 
   "intervals": {

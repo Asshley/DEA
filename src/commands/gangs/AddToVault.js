@@ -10,7 +10,7 @@ const messages = require('../../../data/messages.json');
 class AddToVault extends Command {
   constructor() {
     super({
-      names: ['addtovault', 'addvault', 'deposititem', 'addtogang'],
+      names: ['addtovault', 'addvault', 'deposititem', 'addtogang', 'atv'],
       groupName: 'gangs',
       description: 'Add an item to a gangs vault.',
       preconditions: ['ingang'],

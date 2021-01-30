@@ -34,8 +34,9 @@ ${StringUtil.upperFirstChar(investment.toLowerCase())}.`);
     }
 
     const investmentObject = INVESTMENTS[investment];
+    const revivable = dbUser.revivable - Date.now() > 0;
 
-    if (investment === INVESTMENT_NAMES.SNOWCAP && dbUser.revivable - Date.now() > 0) {
+    if (investment.toLowerCase() === INVESTMENT_NAMES.SNOWCAP && revivable) {
       return PreconditionResult.fromError(command, `you need to wait \
 ${NumberUtil.msToTime(investmentObject.TIME).days} days before purchasing this investment again.`);
     }

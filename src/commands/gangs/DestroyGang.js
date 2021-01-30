@@ -1,5 +1,6 @@
 const { Command } = require('patron.js');
 const messages = require('../../../data/messages.json');
+const cooldowns = require('../../../data/cooldowns.json');
 
 class DestroyGang extends Command {
   constructor() {
@@ -7,6 +8,7 @@ class DestroyGang extends Command {
       names: ['destroygang', 'desgang'],
       groupName: 'gangs',
       description: 'Destroy your gang.',
+      cooldown: cooldowns.commands.destroyGang,
       preconditions: ['ingang', 'gangowner']
     });
   }
@@ -14,9 +16,7 @@ class DestroyGang extends Command {
   async run(msg) {
     await msg._client.db.guildRepo.updateGuild(msg.channel.guild.id, {
       $pull: {
-        gangs: {
-          name: msg.dbGang.name
-        }
+        gangs: { name: msg.dbGang.name }
       }
     });
 
