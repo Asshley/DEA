@@ -6,7 +6,14 @@ const messages = require('../../../data/messages.json');
 class Portfolio extends Command {
   constructor() {
     super({
-      names: ['portfolio'],
+      names: [
+        'portfolio',
+        'shares',
+        'port',
+        'folio',
+        'profits',
+        'tendies'
+      ],
       groupName: 'stocks',
       description: 'See a user\'s portfolio.',
       args: [
@@ -28,22 +35,27 @@ class Portfolio extends Command {
     let reply = '';
     let totalProfits = 0;
     let totalPercentageProfits = 0;
+    let totalWealth = 0;
 
     for (let i = 0; i < keys.length; i++) {
       if (dbUser.portfolio[keys[i]].shares > 0) {
         const key = keys[i];
         const stock = await msg._client.tradingView.getTicker(key);
         const { shares } = dbUser.portfolio[key].shares;
-        const { spent } = dbUser.portfolio[key].spent;
+        const { spent } = dbUser.portfolio[key];
         const sharesPrice = NumberUtil.fromValue((stock.lp || stock.bid) * shares);
         const wealth = sharesPrice - spent;
         const percentageProfit = NumberUtil.fromValue(wealth / sharesPrice);
 
         totalProfits += wealth;
         totalPercentageProfits += percentageProfit;
+        totalWealth += sharesPrice;
+
+        const fmtTicker = StringUtil.boldify(key.toUpperCase());
+        const fmtShares = NumberUtil.display(shares);
+
         reply += StringUtil.format(
-          messages.commands.portfolio.message, key.toUpperCase(), shares,
-          NumberUtil.format(wealth),
+          messages.commands.portfolio.message, fmtTicker, fmtShares, NumberUtil.format(wealth),
           NumberUtil.value(Math.round(NumberUtil.fromValue(percentageProfit)))
         );
       }
@@ -60,9 +72,12 @@ class Portfolio extends Command {
     }
 
     const total = NumberUtil.value(Math.round(NumberUtil.fromValue(totalPercentageProfits)));
-    const format = `${NumberUtil.format(totalProfits)} (${total})\n\n${reply}`;
+    const format = `${NumberUtil.format(totalProfits)} (${total}%)\n\n${reply}`;
+    const options = { title: `${tag}'s Portfolio:` };
 
-    return msg.channel.sendMessage(format, { title: `${tag}'s Portfolio:` });
+    return msg.channel.sendMessage(
+      `**Wealth**: ${NumberUtil.format(totalWealth)}\n\n**Profits**: ${format}`, options
+    );
   }
 }
 

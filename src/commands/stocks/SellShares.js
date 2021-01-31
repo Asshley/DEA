@@ -15,46 +15,60 @@ class SellShares extends Command {
       description: 'Buy shares in a stock of your choosing.',
       args: [
         new Argument({
-          name: 'shares',
-          key: 'shares',
-          type: 'int',
-          example: '3'
-        }),
-        new Argument({
           name: 'ticker',
           key: 'ticker',
           type: 'string',
           example: 'gme'
+        }),
+        new Argument({
+          name: 'shares',
+          key: 'shares',
+          type: 'int',
+          example: '3',
+          defaultValue: '',
+          preconditions: ['minimum'],
+          preconditionOptions: [{ minimum: 1 }]
         })
       ]
     });
   }
 
   async run(msg, args) {
-    const stock = await msg._client.tradingView.getTicker(args.ticker).catch(() => null);
+    const lower = args.ticker.toLowerCase();
+    const stock = await msg._client.tradingView.getTicker(lower).catch(() => null);
 
     if (!stock) {
-      return msg.createErrorReply(`the stock \`${args.ticker}\` doesn't exist.`);
+      return msg.createErrorReply(`the stock \`${lower}\` doesn't exist.`);
     }
 
-    const price = NumberUtil.fromValue((stock.lp || stock.bid) * args.shares);
+    const numShares = args.shares || msg.dbUser.portfolio[lower].shares;
 
-    if (msg.dbUser.portfolio[args.ticker].shares < args.shares) {
+    if (!numShares || numShares < args.shares) {
       return msg.createReply(`you do not have ${args.shares} shares of ${stock.short_name}.`);
     }
 
-    const shares = `portfolio.${args.ticker}.shares`;
-    const spent = `portfolio.${args.ticker}.spent`;
-    const moneyDifference = price - msg.dbUser.portfolio[args.ticker].spent;
+    const price = NumberUtil.fromValue((stock.lp || stock.bid) * numShares);
+    const shares = `portfolio.${lower}.shares`;
+    const spent = `portfolio.${lower}.spent`;
+    const profit = price - msg.dbUser.portfolio[lower].spent;
+    const returnProfit = price + profit;
 
-    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
-      $inc: {
-        [shares]: -args.shares, cash: moneyDifference, [spent]: -moneyDifference
-      }
-    });
+    if (args.shares) {
+      await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
+        $inc: {
+          [shares]: -numShares, cash: returnProfit, [spent]: -returnProfit
+        }
+      });
+    } else {
+      await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
+        $unset: { [`portfolio.${lower}`]: '' }, $inc: { cash: returnProfit }
+      });
+    }
 
-    return msg.createReply(`you've successfully sold ${args.shares} shares of\
-${stock.short_name} for ${NumberUtil.format(price)}`);
+    const fmtShares = NumberUtil.display(numShares);
+
+    return msg.createReply(`you've successfully sold ${fmtShares} shares of ${stock.short_name} \
+for ${NumberUtil.format(returnProfit)}, making ${NumberUtil.format(profit)} in profit.`);
   }
 }
 

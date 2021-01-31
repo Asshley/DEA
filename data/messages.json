@@ -310,7 +310,7 @@
     },
     "portfolio": {
       "none": "{0} nothing in {1} portfolio.",
-      "message": "{0}: {1} shares {2} ({3}%)\n"
+      "message": "{0}: {1} shares; {2} ({3}%)\n"
     },
     "openAll": {
       "max": "you can only open a maximum of {0} crates at a time.",
