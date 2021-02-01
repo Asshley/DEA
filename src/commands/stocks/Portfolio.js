@@ -12,7 +12,8 @@ class Portfolio extends Command {
         'port',
         'folio',
         'profits',
-        'tendies'
+        'tendies',
+        'pf'
       ],
       groupName: 'stocks',
       description: 'See a user\'s portfolio.',
@@ -44,10 +45,10 @@ class Portfolio extends Command {
         const { shares } = dbUser.portfolio[key].shares;
         const { spent } = dbUser.portfolio[key];
         const sharesPrice = NumberUtil.fromValue((stock.lp || stock.bid) * shares);
-        const wealth = sharesPrice - spent;
-        const percentageProfit = NumberUtil.fromValue(wealth / sharesPrice);
+        const profits = sharesPrice - spent;
+        const percentageProfit = NumberUtil.fromValue(profits / sharesPrice);
 
-        totalProfits += wealth;
+        totalProfits += profits;
         totalPercentageProfits += percentageProfit;
         totalWealth += sharesPrice;
 
@@ -55,7 +56,7 @@ class Portfolio extends Command {
         const fmtShares = NumberUtil.display(shares);
 
         reply += StringUtil.format(
-          messages.commands.portfolio.message, fmtTicker, fmtShares, NumberUtil.format(wealth),
+          messages.commands.portfolio.message, fmtTicker, fmtShares, NumberUtil.format(profits),
           NumberUtil.value(Math.round(NumberUtil.fromValue(percentageProfit)))
         );
       }

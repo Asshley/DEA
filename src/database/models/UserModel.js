@@ -10,7 +10,6 @@ class UserModel {
     this.investments = [];
     this.notifications = [];
     this.portfolio = {};
-    this.watchlist = [];
   }
 }
 

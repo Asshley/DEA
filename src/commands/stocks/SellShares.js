@@ -43,7 +43,7 @@ class SellShares extends Command {
 
     const numShares = args.shares || msg.dbUser.portfolio[lower].shares;
 
-    if (!numShares || numShares < args.shares) {
+    if (!numShares || args.shares > numShares) {
       return msg.createReply(`you do not have ${args.shares} shares of ${stock.short_name}.`);
     }
 
@@ -51,24 +51,25 @@ class SellShares extends Command {
     const shares = `portfolio.${lower}.shares`;
     const spent = `portfolio.${lower}.spent`;
     const profit = price - msg.dbUser.portfolio[lower].spent;
-    const returnProfit = price + profit;
-
-    if (args.shares) {
-      await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
-        $inc: {
-          [shares]: -numShares, cash: returnProfit, [spent]: -returnProfit
-        }
-      });
-    } else {
-      await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
-        $unset: { [`portfolio.${lower}`]: '' }, $inc: { cash: returnProfit }
-      });
-    }
-
     const fmtShares = NumberUtil.display(numShares);
 
+    if (msg.dbUser.portfolio[lower].shares - numShares > 0) {
+      await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
+        $inc: {
+          [shares]: -numShares, cash: price, [spent]: -price
+        }
+      });
+
+      return msg.createReply(`you've successfully sold ${fmtShares} shares of ${stock.short_name} \
+for ${NumberUtil.format(price)}, making ${NumberUtil.format(profit)} in profit.`);
+    }
+
+    await msg._client.db.userRepo.updateUser(msg.author.id, msg.channel.guild.id, {
+      $unset: { [`portfolio.${lower}`]: '' }, $inc: { cash: price }
+    });
+
     return msg.createReply(`you've successfully sold ${fmtShares} shares of ${stock.short_name} \
-for ${NumberUtil.format(returnProfit)}, making ${NumberUtil.format(profit)} in profit.`);
+for ${NumberUtil.format(price)}.`);
   }
 }
 
